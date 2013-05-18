@@ -6,11 +6,11 @@
 {% autoescape false %}
 Hello {{ user.username }} !
 
-Welcome to codebender.
+Welcome to wisebender.
 To finish activating your account - please visit {{ confirmationUrl }}
 
 Regards,
-the codebender team
+the wisebender team
 
 {% endautoescape %}
 {% endblock %}
@@ -21,5 +21,5 @@ the codebender team
     Including a template as done here allows keeping things DRY by using
     the template inheritance in it
 #}
-{% include 'AceUserBundle:User:confirmation_email.html.twig' %}
+{#% include 'AceUserBundle:User:confirmation_email.html.twig' %}
 {% endblock %}
