@@ -25,7 +25,7 @@ twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
     globals:
-        site_name: "codebender"
+        site_name: "wisebender"
         email_addr: %email.addr%
         compiler: %compiler%
         sender: %sender%
@@ -90,7 +90,7 @@ fos_user:
     from_email:
        address:        %email.addr%
        #address:        purple.coder@yahoo.co.uk
-       sender_name:    codebender
+       sender_name:    wisebender
     registration:
        confirmation:
             enabled: true
