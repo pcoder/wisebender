@@ -1,7 +1,7 @@
 wisebender
 ==========
 
-An online Wiselib-based source compilation infrastructure for the cloud. This is a fork of [codebender.cc](www.codebender.cc). The (Wiselib)[www.wiselib.org] framework is difficult and time-consuming in installation, given the fact that we have so many different platforms. This project aims at easing this by providing user with cloud infrastructure to compile Wiselib-based apps.
+An online Wiselib-based source compilation infrastructure for the cloud. This is a fork of [codebender.cc](www.codebender.cc). The [Wiselib](www.wiselib.org) framework is difficult and time-consuming in installation, given the fact that we have so many different platforms. This project aims at easing this by providing user with cloud infrastructure to compile Wiselib-based apps.
 
 
 Proposition
@@ -9,11 +9,11 @@ Proposition
 
 Allow Wiselib-based code to be compiled on the cloud in of the following three ways.
 
-	1. Fork Wiselib GitHub code and allow the user to modify the code on the platform
+1. Fork Wiselib GitHub code and allow the user to modify the code on the platform
 
-	2. Upload the user to upload his/her own Wiselib-based code
+2. Upload the user to upload his/her own Wiselib-based code
 
-	3. Import a Wiselib-based code on GitHub repository into Wisebender and then compile it.
+3. Import a Wiselib-based code on GitHub repository into Wisebender and then compile it.
 
 
 Installation
