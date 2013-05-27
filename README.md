@@ -3,6 +3,8 @@ wisebender
 
 An online Wiselib-based source compilation infrastructure for the cloud. This is a fork of [codebender.cc](www.codebender.cc). The [Wiselib](www.wiselib.org) framework is difficult and time-consuming in installation, given the fact that we have so many different platforms. This project aims at easing this by providing user with cloud infrastructure to compile Wiselib-based apps.
 
+This repository was created to manage the source code for the GSoC 2013 - [Wiselib Online Editing Project](https://google-melange.appspot.com/gsoc/project/google/gsoc2013/m_ravi/6001)
+
 
 Proposition
 -----------
