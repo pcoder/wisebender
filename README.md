@@ -3,7 +3,7 @@ Wisebender
 
 An online Wiselib-based source compilation infrastructure for the cloud. This is a fork of [codebender.cc](www.codebender.cc). The [Wiselib](www.wiselib.org) framework is difficult and time-consuming in installation, given the fact that we have so many different platforms, and installation/configuration for each platform is (i) _different_, (ii) _difficult_, and (iii) _time consuming_. Many developers prefer using preinstalled [Wiselib-based virtual machine](http://www.ibr.cs.tu-bs.de/alg/wisebed/). This may not be the quickest and the easiest way of developing applications based on Wiselib. Hence, this project aims at easing the aforementioned problems by providing user with cloud infrastructure to write/import/compile Wiselib-based source code on the fly.
 
-This repository was created to manage the source code for the GSoC 2013 - [Wiselib Online Editing Service Project](https://google-melange.appspot.com/gsoc/project/google/gsoc2013/m_ravi/6001)
+This repository was created to manage the source code for the GSoC 2013 - [Wiselib Online Editing Service Project](https://google-melange.appspot.com/gsoc/project/google/gsoc2013/m_ravi/6001). More information on the status of the project and my experiences on the work can be found at the [Wisebender blog](http://wisebender.wordpress.com).
 
 
 Proposition
