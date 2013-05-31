@@ -27,7 +27,8 @@ Installation
 
 	mkdir -p Symfony/app/cache
 	chmod 766 Symfony/app/cache
-
+	mkdir -p Symfony/app/logs
+	chmod 766 Symfony/app/logs
 	php Symfony/app/check.php
 
 Check that you have all the necessary stuff and add if any highly recommended PHP modules are missing.
