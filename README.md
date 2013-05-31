@@ -26,22 +26,27 @@ Installation
 	cd wisebender
 
 	mkdir -p Symfony/app/cache
-	chmod 766 Symfony/app/cache
+	chmod 777 Symfony/app/cache
 	mkdir -p Symfony/app/logs
-	chmod 766 Symfony/app/logs
+	chmod 777 Symfony/app/logs
+	
 	php Symfony/app/check.php
 
 Check that you have all the necessary stuff and add if any highly recommended PHP modules are missing.
 
-Make sure that the logs folder is created and is writable.
-	mkdir -p Symfony/app/logs
-	chmod 766 Symfony/app/logs/
-
 Create `parameters.ini` in `Symfony/app/config` folder. A sample `parameter.ini.dist` file is provided. Make sure to change the parameters according to your requirement.
+
+If you are using MySQL, the pdo driver may not have been installed by default. You can install it using:
+
+	sudo apt-get install php5-mysql
+
+And then restart the apache server.
+	
+	sudo service apache2 restart
 
 Create a database that is needed by the application and set the appropriate database parameters in the parameters.ini file.
 
-	create database wisebender;
+	mysql> create database wisebender;
 
 Create the database schema for the application using doctrine.
 	php app/console doctrine:schema:update --force
