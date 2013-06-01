@@ -89,7 +89,6 @@ fos_user:
        mailer: fos_user.mailer.twig_swift
     from_email:
        address:        %email.addr%
-       #address:        purple.coder@yahoo.co.uk
        sender_name:    wisebender
     registration:
        confirmation:

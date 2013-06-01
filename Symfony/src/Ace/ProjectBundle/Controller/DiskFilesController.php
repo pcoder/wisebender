@@ -27,8 +27,21 @@ class DiskFilesController extends FilesController
             mkdir($this->dir.$this->type);
         }
         $current_user = $this->sc->getToken()->getUser();
+        //$test = $this->get('security.context')->getToken()->getUser();	
+	/* if(is_object($current_user) && method_exists($current_user, 'getUsername')) 
+	{
+	    $name = $current_user->getUsername();
+	}else{
+	    if(is_string($current_user)){
+	    	$name = $current_user;	
+	    }else{
+	        $name = "anon1.";
+	    }
+	}*/
+        var_dump($current_user);
+	 
         $name = $current_user->getUsername();
-        if(!is_dir($this->dir.$this->type."/".$name))
+	if(!is_dir($this->dir.$this->type."/".$name))
         {
             mkdir($this->dir.$this->type."/".$name);
         }
@@ -157,6 +170,16 @@ class DiskFilesController extends FilesController
     private function getDir($id)
     {
         $current_user = $this->sc->getToken()->getUser();
+        /*if(is_object($current_user) && method_exists($current_user, 'getUsername')) 
+        {   
+            $name = $current_user->getUsername();
+        }else{
+            if(is_string($current_user)){
+                $name = $current_user;  
+            }else{
+                $name = "anon1.";
+            }   
+        }*/
 
         $name = $current_user->getUsername();
         return $this->dir.$this->type."/".$name."/".$id."/";

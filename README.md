@@ -42,13 +42,14 @@ If you are using MySQL, the pdo driver may not have been installed by default. Y
 
 And then restart the apache server.
 	
-	sudo service apache2 restart
+	sudo /etc/init.d/apache2 restart
 
 Create a database that is needed by the application and set the appropriate database parameters in the parameters.ini file.
 
 	mysql> create database wisebender;
 
 Create the database schema for the application using doctrine.
+
 	php app/console doctrine:schema:update --force
 
 If everything goes fine, you should find the application up and running.
