@@ -9,16 +9,26 @@
 	       style="float:right; margin-top:-30px;">edit</a>
 	    <p id="name">{{ project_name }}</p>
 
-        <h5>Description:</h5>
+	    <h5>Privacy Settings:</h5>
+	    <a id="privacy_change_link" href="javascript:void(0)" onclick="changePrivacy();"
+	       style="float:right; margin-top:-30px;">change</a>
+
+	    <p id = "privacy_status">
+		    {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": true} %}
+	    </p>
+
+	    <h5>Description:</h5>
 	    <a id="description_change_link" href="javascript:void(0)" onclick="editDescription();"
 	       style="float:right; margin-top:-30px;">edit</a>
 
 	    <p id="description">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</p>
 
-        <h5>Embed Project</h5>
+	    {% if is_public %}
+	        <h5>Embed Project</h5>
 
-        <p>You can easily embed your project to your blog or website by copying the
-            following code.</p>
-        {% include 'AceGenericBundle:Default:project_embeddable_code.html.twig' with {'project_id': project_id} %}
+	        <p>You can easily embed your project to your blog or website by copying the
+	            following code.</p>
+	        {% include 'AceGenericBundle:Default:project_embeddable_code.html.twig' with {'project_id': project_id} %}
+	    {% endif %}
     </div>
 </div>

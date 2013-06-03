@@ -13,13 +13,11 @@
 	</tr>
 	</thead>
 	<tbody>
-	{% for project in projects %}
-		{% for id, info in project %}
+	{% for id, project in projects %}
 		<tr>
-		<td><a href="{{path('AceGenericBundle_project',{'id': id})}}">{{info['name']}}</a></td>
-		<td><a href="{{path('AceGenericBundle_user',{'user': info['owner']['username']})}}">{{info['owner']['username']}}</a></td>
+		<td><a href="{{path('AceGenericBundle_project',{'id': id})}}">{{project['name']}}</a></td>
+		<td><a href="{{path('AceGenericBundle_user',{'user': project['owner']['username']})}}">{{project['owner']['username']}}</a></td>
 		</tr>
-		{% endfor %}
 	{% endfor %}
 	</tbody>
 	</table>
@@ -35,16 +33,14 @@
 	</tr>
 	</thead>
 	<tbody>
-	{% for user in users %}
-		{% for info in user %}
+	{% for id, user in users %}
 		<tr>
-		<td><a href="{{path('AceGenericBundle_user',{'user':info['username']})}}">{{info['username']}}</a></td>
-		<td>{{info["firstname"]}} {{info["lastname"]}}</td>
+		<td><a href="{{path('AceGenericBundle_user',{'user':user['username']})}}">{{user['username']}}</a></td>
+		<td>{{user["firstname"]}} {{user["lastname"]}}</td>
 		<td>
-			{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": info["karma"]} %}
+			{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
 		</td>
 		</tr>
-		{% endfor %}
 	{% endfor %}
 	</tbody>
 	</table>

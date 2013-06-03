@@ -12,6 +12,12 @@ AceUtilitiesBundle_listfilenames:
    pattern:  /listfilenames/{id}/{show_ino}
    defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
 
+AceUtilitiesBundle_changeprivacy:
+   pattern:  /changeprivacy/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:changePrivacy }
+   requirements:
+      _method:  POST
+
 AceUtilitiesBundle_getprojectdescription:
    pattern:  /getprojectdescription/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
@@ -64,9 +70,6 @@ AceUtilitiesBundle_deletefile:
   requirements:
     _method:  POST
 
-AceUtilitiesBundle_listboards:
-  pattern:  /listboards
-  defaults: { _controller: ace_utilities.boardcontroller:listAction }
  
 AceUtilitiesBundle_upload:
     pattern: /upload/
@@ -85,3 +88,17 @@ AceUtilitiesBundle_filecreate:
   defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
   requirements:
     _method:  POST
+
+AceUtilitiesBundle_addboard:
+  pattern:  /addboard
+  defaults: { _controller: AceUtilitiesBundle:Default:addBoard }
+
+AceUtilitiesBundle_deleteboard:
+  pattern:  /deleteboard/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:deleteBoard }
+
+AceUtilitiesBundle_editBoard:
+  pattern: /setboarddescription
+  defaults: { _controller: AceUtilitiesBundle:Default:editBoard }
+  requirements:
+    _method: POST

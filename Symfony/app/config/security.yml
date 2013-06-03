@@ -29,8 +29,7 @@ security:
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register$, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/list/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -90,7 +89,7 @@ security:
                 path: /logout
             anonymous:    true
             remember_me:
-                    key:     "%mykey%" 
+                    key:      %mykey%
                     lifetime: 31536000
                     path:     /
                     domain:   ~

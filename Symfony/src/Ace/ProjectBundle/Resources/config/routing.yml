@@ -69,3 +69,10 @@
 # AceProjectBundle_checkexists:
 #     pattern: /exists/{token}
 #     defaults: { _controller: ace_project.projectmanager:checkExistsAction }
+#AceProjectBundle_setProjectPublic:
+#    pattern: /setpublic/{id}/
+#    defaults: { _controller: ace_project.sketchManager:setProjectPublicAction}
+#
+#AceProjectBundle_setProjectPrivate:
+#    pattern: /setprivate/{id}/
+#    defaults: { _controller: ace_project.sketchManager:setProjectPrivateAction}

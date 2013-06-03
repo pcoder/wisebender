@@ -1,0 +1,53 @@
+{% extends '::container.html.twig' %}
+{% block title "codebender - private projects" %}
+
+{% block mainspan %}
+	<div class="page-header">
+		<h1>Private Projects</h1>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span3">
+			<a href="{{ asset("images/door-lock.jpg") }}" rel="lightbox" title="door lock">
+				<img class="img-screenshot" src="{{ asset("images/door-lock.jpg") }}">
+			</a>
+			<p>
+				Photo by <a href="http://www.fotopedia.com/users/rzYpIaDgM3w" target="_blank">Tijs Zwinkels</a>
+			</p>
+		</div>
+		<div class="span9">
+			<p style="text-align: justify">
+				We're really excited to announce our first premium feature, private projects! We are all open source
+				advocates, but sometimes you just want to keep something to yourself. If you are interested, please
+				shoot us an email at <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject
+				"Private Projects", to learn more about pricing and request a quote.
+			</p>
+		</div>
+	</div>
+	{% if records["success"] %}
+		<div class="row-fluid">
+			<div class="span12">
+				<h4>Currently Available</h4>
+				<p style="text-align: justify">
+					Below is a list of your current records. Here you can see a list of your subscriptions, promotions,
+					etc, and generally get a view of how many private projects are currently available to you and why.
+				</p>
+
+				<table class="table">
+					<tr><th>Description</th><th>Ending Date:</th><th>Private Projects #</th></tr>
+					{% for record in records["list"] %}
+						<tr>
+							<td>{{ record["description"] }}</td>
+							{% if not record["expires"] %}
+								<td>never</td>
+							{% else %}
+								<td>{{ record["expires"] }}</td>
+							{% endif %}
+							<td>{{ record["number"] }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

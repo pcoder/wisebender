@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ace\ProjectBundle\Document\ProjectFiles;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 
 class MongoFilesController extends FilesController
 {
@@ -23,7 +24,7 @@ class MongoFilesController extends FilesController
 	    $dm->persist($pf);
 	    $dm->flush();
 
-	    return json_encode(array("success" => true, "id" => $pf->getId()));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_PROJ_MSG, array("id" => $pf->getId()));
 	}
 	
 	public function deleteAction($id)
@@ -32,7 +33,7 @@ class MongoFilesController extends FilesController
 	    $dm = $this->dm;
 		$dm->remove($pf);
 		$dm->flush();
-		return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_PROJ_MSG);
 	}
 
 	
@@ -52,7 +53,7 @@ class MongoFilesController extends FilesController
 
 		$list[] = array("filename"=> $filename, "code" => $code);
 		$this->setFilesById($id, $list);
-		return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
 	}
 	
 	public function getFileAction($id, $filename)
@@ -76,10 +77,10 @@ class MongoFilesController extends FilesController
 			{
 				$file["code"] = $code;
 				$this->setFilesById($id, $list);
-				return json_encode(array("success" => true));
+                return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
 			}
 		}
-		return json_encode(array("success" => false));
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
 		
 	}
 	
@@ -96,10 +97,10 @@ class MongoFilesController extends FilesController
 			{
 				unset($list[$key]);
 				$this->setFilesById($id, $list);
-				return json_encode(array("success" => true));
+                return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FILE_MSG);
 			}
 		}
-		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
+        throw $this->createNotFoundException("This should never happen. fileExist is incosistent with listFiles");
 	}
 
 	public function renameFileAction($id, $filename, $new_filename)
@@ -118,12 +119,13 @@ class MongoFilesController extends FilesController
 				{
 					$list[$key]["filename"] = $new_filename;
 					$this->setFilesById($id, $list);
-					return json_encode(array("success" => true));
+					return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_RENAME_FILE_MSG);
 				}
 			}
+        // @codeCoverageIgnoreStart
 		}
-		$canCreateFile["old_filename"] = $filename;
-		return json_encode($canCreateFile);
+        // @codeCoverageIgnoreEnd
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_RENAME_FILE_MSG, array("id" => $id, "filename" => $new_filename, "error" => "This file already exists", "old_filename" => $filename));
 	}
 
 	public function getProjectById($id)

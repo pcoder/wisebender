@@ -1,5 +1,6 @@
 /* GLOBAL variables */
 var emailReg = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+var nameReg	 = /^[a-zA-Z_'-\s]*$/; //match letters/space and _ ' -  chars, empty is true
 
 /* Check if password meets requirements */
 function passvalid(pass)
@@ -14,20 +15,21 @@ function passvalid(pass)
 	var len = $("#"+pass).val().length;
 
 	if (len == 0)
-		return 2;
+		return "empty"; //2
 	else if(len < 6 || len > 255)
-		return 3;
+		return "outOfLimits"; //3
 	else
-	{
+	{	
+		var value = $("#"+pass).val();
 		for(var i=0 ; i < 4; i++)
 		{
-			if (regexp[i].test($("#"+pass).val()))
+			if (regexp[i].test(value))
 				sets++;
 		}
 		if (sets < 2)
-			return 4; //less than 2 charsets in pass
+			return "tooSimple"; //less than 2 charsets in pass - 4
 		else
-			return 1; //valid pass
+			return "valid"; //valid pass - 1
 	}
 };
 
@@ -35,7 +37,7 @@ function passvalid(pass)
 function isvalidpass(pass)
 {
 	var valid = passvalid(pass);
-	if (valid != 1)
+	if (valid != "valid")
 		valid = false;
 	else
 		valid = true;

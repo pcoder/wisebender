@@ -25,11 +25,13 @@ twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
     globals:
-        site_name: "wisebender"
+        site_name: "codebender"
         email_addr: %email.addr%
         compiler: %compiler%
         sender: %sender%
         library: %library%
+        islocalhost: %islocalhost%
+
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -89,7 +91,7 @@ fos_user:
        mailer: fos_user.mailer.twig_swift
     from_email:
        address:        %email.addr%
-       sender_name:    wisebender
+       sender_name:    codebender
     registration:
        confirmation:
             enabled: true
@@ -113,3 +115,5 @@ doctrine_mongodb:
             auto_mapping: true
 
 services:
+
+

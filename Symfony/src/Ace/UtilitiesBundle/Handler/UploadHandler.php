@@ -233,7 +233,7 @@ class UploadHandler
 		return $response["success"];
 	}
 	
-	public function createUploadedProject($file_name)
+	public function createUploadedProject($file_name, $code = "")
 	{
 		$user = json_decode($this->up->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
@@ -241,7 +241,7 @@ class UploadHandler
 		$project_name =  $exp[0];
 
 			$projectmanager = $this->up->get('ace_project.sketchmanager');
-			$response1 = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
+			$response1 = $projectmanager->createProjectAction($user["id"], $project_name, $code)->getContent();
 			$response1=json_decode($response1, true);
 			if($response1["success"]){
 				$sketch_id = $response1["id"];

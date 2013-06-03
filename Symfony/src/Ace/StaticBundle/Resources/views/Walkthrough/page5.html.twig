@@ -25,7 +25,7 @@
 	{% if not is_granted('ROLE_USER') %}
 		<hr class="soften">
 		<h4>Get a codebender account to code, flash your device and share your work online.</h4>
-		{% render 'ace_user.usercontroller:inlineRegisterAction' %}
+		{% render 'ace_user.usercontroller:inlineRegisterAction' with { 'referrer' : app.request.query.get('referrer'), 'referral_code' : app.request.query.get('referral_code')} %}
 	{% endif %}
 
 {% endblock %}

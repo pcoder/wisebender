@@ -44,6 +44,6 @@ services:
 
     ace_user.form.handler.registration:
         class: Ace\UserBundle\Form\Handler\RegistrationFormHandler
-        arguments: ["@fos_user.registration.form", "@request", "@fos_user.user_manager", "@fos_user.mailer", "@ace_user.usercontroller", "@ace_project.sketchmanager", "@ace_utilities.referralcodecontroller", %listapi%, %listid%]
+        arguments: ["@fos_user.registration.form", "@request", "@fos_user.user_manager", "@fos_user.mailer", %listapi%, %listid%]
         scope: request
         public: false

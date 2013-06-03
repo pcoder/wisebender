@@ -55,7 +55,9 @@
 				<strong>Invite a friend</strong> section bellow.
 			</p>
 			<p class="well">
-				<a href="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" target="_blank">{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}</a>
+				<a href="{{ url("AceGenericBundle_index") ~ "?referrer=" ~ app.user.username }}" target="_blank">
+					{{ url("AceGenericBundle_index") ~ "?referrer=" ~ app.user.username }}
+				</a>
 			</p>
 		</div>
 	</div>
@@ -69,7 +71,7 @@
 				</div>
 				<div class="span6">
 					<h5>Invite a friend</h5>
-					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" data-text="codebender - a web platform for Arduino programming. Register and unlock extras & gifts." data-size="large">
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ url("AceGenericBundle_index") ~ "?referrer=" ~ app.user.username }}" data-text="codebender - a web platform for Arduino programming. Register and unlock extras & gifts." data-size="large">
 						Invite a friend!
 					</a>
 				</div>

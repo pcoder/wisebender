@@ -57,100 +57,127 @@ class OptionsController extends Controller
 		if ('POST' === $this->request->getMethod()) {
 			
 		    $form->bindRequest($this->request);
-			
-			// Check if email is already in database
-			$email = $form->get('email')->getData();
-            if($email != NULL)
-			{
-				if($this->get('ace_user.usercontroller')->emailExistsAction($email)){
-					if($email !== $currentUser->getEmail())
-						$form->get('email')->addError(new FormError('This email address is already in use by another member'));
-				}
-			}
-			
-			// flag to state user password request
+		    
+		    // PRE-CHECKS
+						
+			// Check if user entered his own password
 			$currentPassword = $form->get('currentPassword')->getData();
-			if($currentPassword != NULL){
-				$passChange = $this->isCurrentPass($form, $currentPassword);
-				if(!$passChange)
-					$form->get('currentPassword')->addError(new FormError('Wrong password!'));
+			$authenticated = false;
+			if(strlen($currentPassword) != 0){
+				$authenticated = $this->isCurrentPass($currentPassword);
+				if(!$authenticated)
+					$form->get('currentPassword')->addError(new FormError("Sorry, wrong password!"));
 			}
-			else
-				$passChange = false;
-				
+			
+			// Check if email is changed and if it's available
+			$email = $form->get('email')->getData();
+			$emailChange = false;
+			$emailExists = json_decode($this->get('ace_user.usercontroller')->emailExistsAction($email)->getContent(), true);
+			if($emailExists == "true"){
+				if($email != $currentUser->getEmail())
+					$form->get('email')->addError(new FormError("This Email address is already in use by another member"));
+			}
+			else{
+				$emailChange = true;
+				if(!$authenticated)
+					$form->get('email')->addError(new FormError("Please provide your Current Password to change your Email"));
+			}
+			
+			// Check if user wants to change his password and if it's valid
+			$plainPassword = $form->get('plainPassword')->get('new')->getData();
+			$passChange = false;
+			if(strlen($plainPassword) != 0){
+				if($authenticated){
+					$passwordConstraint = new PasswordConstraint();
+					$error = $this->get('validator')->validateValue($plainPassword,	$passwordConstraint);
+					if(count($error) == 0)
+						$passChange = true;
+					else
+						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
+				}
+				else
+					$form->get('plainPassword')->addError(new FormError("Please provide your Current Password along with your New one."));									
+			}
+		
 			if ($form->isValid())
 			{
+				
 				$this->em->persist($currentUser);
 				
-				// update user object from form data only if it is changed
-				// avoid query unless necessary
-				$updated=false;
+				// 	UPDATE USER
+								 
+				// update user's non-sensitive data only if modified
+				// to avoid unnecessary db queries
+				$updateNonSensitive = false;
 				$firstname = $form->get('firstname')->getData();
 				if($firstname !== $currentUser->getFirstname()){
 					$currentUser->setFirstname($firstname);
-					$updated = true;
+					$updateNonSensitive = true;
 				}
 				
 				$lastname = $form->get('lastname')->getData();
 				if($lastname !== $currentUser->getLastname()){
 					$currentUser->setLastname($lastname);
-					$updated = true;
-				}
-				
-				$email = $form->get('email')->getData();
-				if($email !== $currentUser->getEmail()){
-					$currentUser->setEmail($email);
-					$updated = true;
+					$updateNonSensitive = true;
 				}
 				
 				$twitter = $form->get('twitter')->getData();
 				if($twitter !== $currentUser->getTwitter()){
 					$currentUser->setTwitter($twitter);
-					$updated = true;
+					$updateNonSensitive = true;
+				}
+				
+				$merge_vars = array();
+				$api = new MCAPI($this->listapi);
+				if($updateNonSensitive){
+					$merge_vars = array("FNAME"=>$firstname, "LNAME"=>$lastname);
+					$api->listUpdateMember($this->listid, $currentUser->getEmail(), $merge_vars, false);
 				}
 				
 				$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile Updated!';
-				$success = true;
 				
-				// check if new password is valid and update user password 
-				$newPassConstraint = new PasswordConstraint();
-				if($passChange){
-					$error = $this->get('validator')->validateValue(
-					$form->get('plainPassword')->get('new')->getData(),
-					$newPassConstraint);
-					
-					if(count($error)!=0){
-						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
-						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Profile Updated but your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.';
-						$success = false;
+				$updateEmail = false;
+				$updatePass = false;
+				
+				if($authenticated){
+					if($emailChange){
+						$merge_vars["EMAIL"] = $email;
+						$api->listUpdateMember($this->listid, $currentUser->getEmail(), $merge_vars, false); //update newsletter info BEFORE updating user
+						$currentUser->setEmail($email);
+						$updateEmail = true;
 					}
-					else{
+					if($passChange){
 						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
 						$this->um->updatePassword($currentUser);
-						$updated = true;
-						$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile and Password Updated Sucessfully!';
-						$success = true;
+						$updatePass = true;
 					}
 				}
-				
-				if($updated){
-					//update user's info in newsletter mailing list
-					$api = new MCAPI($this->listapi);
-					$merge_vars = array("FNAME"=>$firstname, "LNAME"=>$lastname, "EMAIL"=>$email);
-					$api->listUpdateMember($this->listid, $currentUser->getEmail(), $merge_vars, false);
-					
+				else{
+					if($emailChange || $passChange)
+						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Your Profile was updated <strong>except the fields that contain errors</strong>, please fix the errors and try again to update them too.';				
+				}
+				if($updateNonSensitive || $updateEmail || $updatePass){
+					// update user db
 					$this->em->flush();
-					$this->um->reloadUser($currentUser);
-				}				
+					$this->um->reloadUser($currentUser); //necessary to avoid problems with the security layer if user updates his password
+				}
 			}
-			else{
+			else
 				$message = '<span style="color:red; font-weight:bold"><i class="icon-remove-sign icon-large"></i> ERROR:</span> Your Profile was <strong>NOT updated</strong>, please fix the errors and try again.';
-				$success = false;
-			}
+				
 			//get errors from fields and store them in an assosiative array
 			$response = $this->getErrorMessages($form);
 			$response["message"] = $message;
-			$response["success"] = $success;
+			
+			/* Validation returns a "plainPassword" key for repeated's field errors
+			 * but there is no field with id "options_plainPassword". We set the key
+			 * to "plainPassword_confirm" so that js can display the error message in
+			 * "options_plainPassword_confirm" help block as it should. 
+			 */ 
+			if(isset($response["plainPassword"])){
+				$response["plainPassword_confirm"] = $response["plainPassword"];
+				unset($response["plainPassword"]);
+			}
 			
 			return new Response(json_encode($response));
         }
@@ -160,7 +187,7 @@ class OptionsController extends Controller
 
     }
     
-    private function isCurrentPass(Form $form, $currentPassword){
+    private function isCurrentPass($currentPassword){
 		
 			return $this->comparePassword($currentPassword);
 	}
@@ -194,9 +221,8 @@ class OptionsController extends Controller
 			$currentUser = $this->sc->getToken()->getUser();
 			$email = $this->request->get('email');
 			
-			// TODO: find out why $this->get('ace_user.usercontroller')->emailExistsAction($email) doesn't work
-			$exists = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
-			if($exists){
+			$emailExists = json_decode($this->get('ace_user.usercontroller')->emailExistsAction($email)->getContent(), true);
+			if($emailExists){
 					if($email !== $currentUser->getEmail())
 						$return = 'inUse'; //in use by another member
 					else

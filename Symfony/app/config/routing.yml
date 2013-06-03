@@ -1,3 +1,7 @@
+AceBoardBundle:
+    resource: "@AceBoardBundle/Resources/config/routing.yml"
+    prefix:   /board
+
 AceOwnerBundle:
     resource: "@AceOwnerBundle/Resources/config/routing.yml"
     prefix:   /owner

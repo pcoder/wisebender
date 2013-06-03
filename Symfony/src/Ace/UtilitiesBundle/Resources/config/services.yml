@@ -8,11 +8,6 @@ services:
     ace_utilities.handler:
         class:        Ace\UtilitiesBundle\Handler\DefaultHandler
 
-    ace_utilities.boardcontroller:
-        class:        Ace\UtilitiesBundle\Controller\BoardController
-        arguments:
-            entityManager: "@doctrine.orm.entity_manager"
-
     ace_utilities.referralcodecontroller:
         class:        Ace\UtilitiesBundle\Controller\ReferralCodeController
         arguments:

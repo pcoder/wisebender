@@ -17,10 +17,10 @@ $(document).ready(function () {
             $("#verify_div").html($("#verify_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig'%}{% endfilter %}');
 
 
-        $.getJSON("{{ url('AceGenericBundle_boardslist') }}", function (data) {
-        window.boards_list = JSON.parse(data);
+        $.getJSON("{{ url('AceBoardBundle_listboards') }}", function (data) {
+        window.boards_list = data;
 
-        if ($("#cb_cf").data().board){
+	        if ($("#cb_cf").data().board){
             for (var i = 0; i < window.boards_list.length; i++) {
                 if (window.boards_list[i]["name"] == $("#cb_cf").data().board)
                     window.selectedBoard = window.boards_list[i];

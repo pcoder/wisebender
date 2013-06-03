@@ -18,6 +18,12 @@ class DefaultController extends Controller
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$project_name = $this->getRequest()->request->get('project_name');
+        $is_public = true;
+
+		if($this->getRequest()->request->get('isPublic') !== null)
+		{
+			$is_public = $this->getRequest()->request->get('isPublic') === 'true' ? true : false;
+		}
 
 		$text = "";
 		if($this->getRequest()->request->get('code'))
@@ -30,7 +36,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
+		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
@@ -71,6 +77,22 @@ class DefaultController extends Controller
 		return $this->render('AceUtilitiesBundle:Default:list_filenames.html.twig', array('files' => $files));
 	}
 
+	public function changePrivacyAction($id)
+	{
+		$projectmanager = $this->get('ace_project.sketchmanager');
+
+		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
+		$is_public = $is_public["response"];
+
+		if($is_public)
+			$response = $projectmanager->setProjectPrivateAction($id)->getContent();
+		else
+			$response = $projectmanager->setProjectPublicAction($id)->getContent();
+
+		return new Response($response);
+	}
+
+    //TODO fix Response
 	public function getDescriptionAction($id)
 	{
 		$projectmanager = $this->get('ace_project.sketchmanager');
@@ -91,7 +113,7 @@ class DefaultController extends Controller
 
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
-		return new Response("hehe");
+        return new Response(json_encode($response));
 	}
 
 	public function setNameAction($id)
@@ -198,7 +220,7 @@ class DefaultController extends Controller
 
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
-
+        $response;
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		foreach($files as $key => $file)
 		{
@@ -207,7 +229,7 @@ class DefaultController extends Controller
 			if($response["success"] ==  false)
 				return new Response(json_encode($response));
 		}
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function cloneAction($id)
@@ -221,8 +243,110 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->cloneAction($user["id"], $id)->getContent();
 		$response = json_decode($response, true);
-		return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+        if($response['success'])
+        {
+            return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+        }
+		else
+        {
+            $this->get('session')->setFlash('error', "Error: ".$response['error']);
+            return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+        }
 	}
+
+    public function addBoardAction()
+    {
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+
+        if($_FILES["boards"]["error"]>0)
+        {
+            $this->container->get('session')->setFlash("error","Error: Upload failed with error code ".$_FILES["boards"]["error"].".");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        if($_FILES["boards"]["type"]!== "text/plain")
+        {
+            $this->container->get('session')->setFlash("error","Error: File type should be .txt.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        $current_user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+        $canAdd = json_decode($boardsmanager->canAddPersonalBoardAction($current_user['id'])->getContent(), true);
+
+        if(!$canAdd["success"])
+        {
+            $this->container->get('session')->setFlash("error","Error: Cannot add personal board.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        $available = $canAdd["available"];
+        $parsed = json_decode($boardsmanager->parsePropertiesFileAction(file_get_contents( $_FILES["boards"]["tmp_name"]))->getContent(), true);
+        if(!$parsed["success"])
+       {
+            $this->container->get('session')->setFlash("error","Error: Could not read Board Properties File.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        $boards = $parsed['boards'];
+
+        if(count($boards)>$available)
+        {
+            $this->container->get('session')->setFlash("error","Error: You can add up to ".$available." boards (tried to add ".count($boards).").");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        foreach ($boards as $b)
+        {
+            $isBoard = json_decode($boardsmanager->isValidBoardAction($b)->getContent(), true);
+            if(!$isBoard["success"])
+            {
+                $this->container->get('session')->setFlash("error","Error: File does not have the required structure.");
+                return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+            }
+        }
+
+        foreach ($boards as $b)
+        {
+            $added = json_decode($boardsmanager->addBoardAction($b, $current_user['id'])->getContent(), true);
+            if(!$added["success"])
+            {
+                $this->container->get('session')->setFlash("error","Error: Could not add board '".$b["name"]."'. Process stopped.");
+                return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+            }
+        }
+        $this->container->get('session')->setFlash("notice",count($boards)." boards were successfully added.");
+        return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+
+    }
+
+    public function deleteBoardAction($id)
+    {
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+        $response = $boardsmanager->deleteBoardAction($id)->getContent();
+        $response = json_decode($response, true);
+        if($response['success'])
+        {
+            $this->container->get('session')->setFlash("notice",$response['message']);
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        else
+        {
+            $this->get('session')->setFlash('error', "Error: ".$response['message']);
+            return $this->redirect($this->generateUrl('AceGenericBundle_boards'));
+        }
+
+    }
+
+    public function editBoardAction()
+    {
+
+        $id = $this->getRequest()->request->get('id');
+        $description = $this->getRequest()->request->get('desc');
+        $name = $this->getRequest()->request->get('name');
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+
+        $response = json_decode($boardsmanager->editAction($id, $name, $description)->getContent(), true);
+        return new Response(json_encode($response));
+    }
 
 	public function createFileAction($id)
 	{
@@ -234,9 +358,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+		return new Response(json_encode($response));
 	}
 
 	public function deleteFileAction($id)
@@ -249,9 +371,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function imageAction()
@@ -263,7 +383,6 @@ class DefaultController extends Controller
 
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["username"],'image' => $image));
 	}
-
 
 	public function uploadAction()
 	{
@@ -299,14 +418,8 @@ class DefaultController extends Controller
 				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
 				 fclose($file);
 
-			     $sketch_id = $upload_handler->createUploadedProject($project_name);
-					if(isset($sketch_id)){
-						if(!$upload_handler->createUploadedFile($sketch_id, $file_name, $code)){
-							$info = $upload_handler->post("Error creating file.");
-							$json = json_encode($info);
-							return new Response($json);
-						}
-					}else {
+			     $sketch_id = $upload_handler->createUploadedProject($project_name, $code);
+					if(!isset($sketch_id)){
 							$info = $upload_handler->post("Error creating Project.");
 							$json = json_encode($info);
 							return new Response($json);
@@ -376,14 +489,8 @@ class DefaultController extends Controller
 			if($count == 1){
 
 				if(mb_detect_encoding($code, 'UTF-8', true) !== false){
-					$sketch_id = $upload_handler->createUploadedProject($project_name);
-					if(isset($sketch_id)){
-						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
-							$info = $upload_handler->post("Error creating file.");
-							$json = json_encode($info);
-							return new Response($json);
-						}
-					}else {
+					$sketch_id = $upload_handler->createUploadedProject($project_name, $code);
+					if(!isset($sketch_id)){
 							$info = $upload_handler->post("Error creating Project.");
 							$json = json_encode($info);
 							return new Response($json);
@@ -437,7 +544,7 @@ class DefaultController extends Controller
 		}
 	}
 
-public function uploadfilesAction($id){
+	public function uploadfilesAction($id){
 
 		$sketch_id = $id;
 

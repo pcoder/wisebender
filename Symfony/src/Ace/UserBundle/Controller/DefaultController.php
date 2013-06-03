@@ -63,7 +63,6 @@ class DefaultController extends Controller
 
 	public function getCurrentUserAction()
 	{
-		$response = array("success" => false);
 		$current_user = $this->sc->getToken()->getUser();
 		if($current_user !== "anon.")
 		{
@@ -71,9 +70,13 @@ class DefaultController extends Controller
 			$data = json_decode($this->getUserAction($name)->getContent(), true);
 			if ($data["success"] === false)
 			{
-				throw $this->createNotFoundException('No user found with id '.$name);
+				throw $this->createNotFoundException('No user found with username '.$name);
 			}
 			$response = $data;
+		}
+		else
+		{
+			$response = array("success" => false);
 		}
 		return new Response(json_encode($response));
 
@@ -98,7 +101,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
+			$result[$user->getId()] = array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma());
 		}
 		return new Response(json_encode($result));
 	}
@@ -113,7 +116,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
+			$result[$user->getId()] = array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma());
 		}
 		return new Response(json_encode($result));
 	}
@@ -128,7 +131,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
+			$result[$user->getId()] = array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma());
 		}
 		return new Response(json_encode($result));
 	}
@@ -138,17 +141,22 @@ class DefaultController extends Controller
 
 		/** @var User $user */
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
-		/** @var User $referrer */
-		$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
-
-		if($referrer != NULL)
+		if ($user != NULL)
 		{
-			$referrer->setReferrals($referrer->getReferrals()+1);
-			$referrer->setKarma($referrer->getKarma()+20);
-			$referrer->setPoints($referrer->getPoints() + 20);
-			$user->setReferrer($referrer);
-			$this->em->flush();
-			return new Response(json_encode(array("success" => true)));
+			/** @var User $referrer */
+			$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
+
+			if($referrer != NULL)
+			{
+				$referrer->setReferrals($referrer->getReferrals() + 1);
+				$referrer->setKarma($referrer->getKarma() + 20);
+				$referrer->setPoints($referrer->getPoints() + 20);
+				$user->setReferrer($referrer);
+				$this->em->flush();
+				return new Response(json_encode(array("success" => true)));
+			}
+			return new Response(json_encode(array("success" => false)));
+
 		}
 
 		return new Response(json_encode(array("success" => false)));
@@ -158,39 +166,45 @@ class DefaultController extends Controller
 	{
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
 
-		//update object - no checks atm
-		$user->setKarma(intval($karma));
-		$this->em->flush();
-
-		return new Response(json_encode(array("success" => true)));
+		if ($user != NULL)
+		{
+			$user->setKarma(intval($karma));
+			$this->em->flush();
+			return new Response(json_encode(array("success" => true)));
+		}
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function setPointsAction($username, $points)
 	{
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
 
-		//update object - no checks atm
-		$user->setPoints(intval($points));
-		$this->em->flush();
-
-		return new Response(json_encode(array("success" => true)));
+		if($user != NULL)
+		{
+			$user->setPoints(intval($points));
+			$this->em->flush();
+			return new Response(json_encode(array("success" => true)));
+		}
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function setWalkthroughStatusAction($status)
 	{
-		/** @var User $current_user */
-		$current_user = $this->sc->getToken()->getUser();
-		if ($current_user !== "anon.")
+		$response = json_decode($this->getCurrentUserAction()->getContent(), true);
+		if($response["success"] === true)
 		{
+			/** @var User $current_user */
+			$current_user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($response["username"]);
 			if ($current_user->getWalkthroughStatus() < $status)
 			{
-				if($status == 5)
+				if ($status == 5)
 					$current_user->setPoints($current_user->getPoints() + 50);
 				$current_user->setWalkthroughStatus($status);
+				$this->em->flush();
 			}
+			return new Response(json_encode(array("success" => true)));
 		}
-		$this->em->flush();
-		return new Response(json_encode(array("success" => true)));
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function enabledAction()
@@ -219,10 +233,12 @@ class DefaultController extends Controller
 
 	}
 
-	public function inlineRegisterAction()
+	public function inlineRegisterAction($referrer=null, $referral_code=null)
 	{
-        $form = $this->container->get('fos_user.registration.form');
-	    return new Response($this->templating->render('AceUserBundle:Registration:register_inline.html.twig', array(
+		/** @var \Ace\UserBundle\Form\Handler\RegistrationFormHandler $formHandler */
+		$formHandler = $this->container->get('fos_user.registration.form.handler');
+		$form = $formHandler->generateReferrals($referrer, $referral_code);
+		return new Response($this->templating->render('AceUserBundle:Registration:register_inline.html.twig', array(
 	            'form' => $form->createView(),
 	            'theme' => $this->container->getParameter('fos_user.template.theme'),
 	        )));

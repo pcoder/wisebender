@@ -9,9 +9,9 @@ use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {
-	public function tftpAction()
+	public function tftpAction($utilities_handler = null)
 	{
-		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
+		$response = array("success" => false);
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
 		if(isset($data["ip"]) && isset($data["bin"]))
@@ -20,17 +20,17 @@ class DefaultController extends Controller
 			$bin = $data["bin"];
 			if($ip && $bin)
 			{
-				$data = "ERROR";
-
-				$utilities = new DefaultHandler();
-				$data = $utilities->get_data($this->container->getParameter('sender'), 'bin', $bin."&ip=".$ip);
-				$response->setContent($data);
-				$response->setStatusCode(200);
-				$response->headers->set('Content-Type', 'text/html');
+				if($utilities_handler == null)
+					$utilities_handler = new DefaultHandler();
+				$data = $utilities_handler->get_data($this->container->getParameter('sender'), 'bin', $bin."&ip=".$ip);
+				$response = $data;
 			}
-			return $response;
+			else
+				$response["output"] = "ip or binary was false and/or zero";
 		}
-		else return new Response(json_encode(array("success" => false)));
-	}
+		else
+			$response["output"] = "no ip or binary was set";
 
+		return new Response(json_encode($response));
+	}
 }

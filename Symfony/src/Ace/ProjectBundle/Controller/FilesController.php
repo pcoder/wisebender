@@ -3,6 +3,7 @@
 
 namespace Ace\ProjectBundle\Controller;
 
+use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,19 +35,19 @@ abstract class FilesController extends Controller
         foreach($list as $file)
         {
             if($file["filename"] == $filename)
-                return json_encode(array("success" => true));
+                return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_FILE_EXISTS_MSG);
         }
 
-        return json_encode(array("success" => false, "filename" => $filename, "error" => "File ".$filename." does not exist."));
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_FILE_EXISTS_MSG, array("filename" => $filename, "error" => "File ".$filename." does not exist."));
     }
 
     protected function canCreateFile($id, $filename)
     {
         $fileExists = json_decode($this->fileExists($id,$filename),true);
         if(!$fileExists["success"])
-            return json_encode(array("success" => true));
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CAN_CREATE_FILE_MSG);
         else
-            return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "This file already exists"));
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_CAN_CREATE_FILE_MSG, array("id" => $id, "filename" => $filename, "error" => "This file already exists"));
 
 
     }

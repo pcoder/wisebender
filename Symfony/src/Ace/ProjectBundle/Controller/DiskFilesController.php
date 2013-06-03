@@ -6,6 +6,7 @@ namespace Ace\ProjectBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
+use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 
 class DiskFilesController extends FilesController
 {
@@ -18,30 +19,17 @@ class DiskFilesController extends FilesController
     {
 
         $projects = scandir($this->dir);
+        $current_user = $this->sc->getToken()->getUser();
+        $name = $current_user->getUsername();
         do
         {
-            $id = uniqid($more_entropy=true);
+            $id = $name."/".uniqid($more_entropy=true);
         } while(in_array($id, $projects));
         if(!is_dir($this->dir.$this->type))
         {
             mkdir($this->dir.$this->type);
         }
-        $current_user = $this->sc->getToken()->getUser();
-        //$test = $this->get('security.context')->getToken()->getUser();	
-	/* if(is_object($current_user) && method_exists($current_user, 'getUsername')) 
-	{
-	    $name = $current_user->getUsername();
-	}else{
-	    if(is_string($current_user)){
-	    	$name = $current_user;	
-	    }else{
-	        $name = "anon1.";
-	    }
-	}*/
-        var_dump($current_user);
-	 
-        $name = $current_user->getUsername();
-	if(!is_dir($this->dir.$this->type."/".$name))
+        if(!is_dir($this->dir.$this->type."/".$name))
         {
             mkdir($this->dir.$this->type."/".$name);
         }
@@ -49,16 +37,16 @@ class DiskFilesController extends FilesController
         {
             mkdir($this->getDir($id));
         }
-        return json_encode(array("success" => true, "id" => $id));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_PROJ_MSG, array("id" => $id));
     }
 
     public function deleteAction($id)
     {
         $dir = $this->getDir($id);
         if($this->deleteDirectory($dir))
-            return json_encode(array("success" => true));
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_PROJ_MSG);
         else
-            return json_encode(array("success" => false, "error" => "No projectfiles found with id: ".$id));
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_PROJ_MSG, array("error" => "No projectfiles found with id: ".$id));
     }
 
     public function listFilesAction($id)
@@ -76,7 +64,7 @@ class DiskFilesController extends FilesController
         $dir = $this->getDir($id);
         file_put_contents($dir."/".$filename,$code);
 
-        return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
     }
 
     public function getFileAction($id, $filename)
@@ -97,9 +85,9 @@ class DiskFilesController extends FilesController
         if($this->fileExists($id,$dir.$filename))
         {
             file_put_contents($dir.$filename,$code);
-            return json_encode(array("success" => true));
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
         }
-        return json_encode(array("success" => false));
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
 
     }
 
@@ -110,7 +98,7 @@ class DiskFilesController extends FilesController
             return json_encode($fileExists);
         $dir = $this->getDir($id);
         unlink($dir.$filename);
-        return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FILE_MSG);
     }
 
     public function renameFileAction($id, $filename, $new_filename)
@@ -124,8 +112,9 @@ class DiskFilesController extends FilesController
         {
             $dir = $this->getDir($id);
             rename($dir.$filename, $dir.$new_filename);
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_RENAME_FILE_MSG);
         }
-        return json_encode($canCreateFile);
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_RENAME_FILE_MSG, array("id" => $id, "filename" => $new_filename, "error" => "This file already exists.", "old_filename" => $filename));
     }
 
 
@@ -169,20 +158,7 @@ class DiskFilesController extends FilesController
 
     private function getDir($id)
     {
-        $current_user = $this->sc->getToken()->getUser();
-        /*if(is_object($current_user) && method_exists($current_user, 'getUsername')) 
-        {   
-            $name = $current_user->getUsername();
-        }else{
-            if(is_string($current_user)){
-                $name = $current_user;  
-            }else{
-                $name = "anon1.";
-            }   
-        }*/
-
-        $name = $current_user->getUsername();
-        return $this->dir.$this->type."/".$name."/".$id."/";
+        return $this->dir.$this->type."/".$id."/";
     }
 
     public function __construct($directory, $type, SecurityContext $sc)

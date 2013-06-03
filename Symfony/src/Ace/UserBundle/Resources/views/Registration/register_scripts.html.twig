@@ -63,7 +63,7 @@ function update_password()
 		$("#register_password_id").addClass("error");
 		$("#register_info_id").text("Sorry, your password is too short. It needs to be at least 6 characters long.");
 	}
-	else if(passvalid("fos_user_registration_form_plainPassword_first") == 4)
+	else if(passvalid("fos_user_registration_form_plainPassword_first") == "tooSimple")
 	{
 		$("#register_password_id").addClass("error");
 		$("#register_info_id").text("Sorry, your password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.");

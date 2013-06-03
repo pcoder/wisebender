@@ -19,15 +19,20 @@ function warnDeleteProject(deletion_path)
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true"
+				<a rel="popover" data-delay=1500 class="project_link {% if file['is_public'] %}public_project{% else %}private_project{% endif %}" data-trigger="hover" data-html="true"
 				   style="overflow: hidden; text-overflow: ellipsis; width: 60%; width: -moz-calc(100% - 59px);
 				   width: -webkit-calc(100% - 59px); width: calc(100% - 59px);"
 				   data-placement="right" data-content="
+<p>
+{% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": file['is_public'], "verbose": true} %}
+</p>
 <h6>Description:</h6>
 <p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p>
 <h6>Files:</h6>
-<p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>"
+<p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>
+"
 				data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
+					{% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": file['is_public'], "verbose": false} %}
 					{{ file['name'] }}
 				</a>
 		        <button style=" float: right; margin-top: -25px; margin-right: 22px; padding: 0px;"
@@ -46,13 +51,13 @@ function warnDeleteProject(deletion_path)
 </ul>
 <ul class="nav nav-list" id="sidebar-list-footer">
 
-	<!-- <li class="active"><a href="#">Link</a></li> 
-	<li class="nav-header" id="Links">Links</li>-->
-	<!--<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>Examples &amp; Libraries</a></li>
+	<!-- <li class="active"><a href="#">Link</a></li> -->
+	<li class="nav-header" id="Links">Links</li>
+	<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>Examples &amp; Libraries</a></li>
 	<li><a href="{{ path('AceGenericBundle_boards') }}"><i class="icon-hdd"></i>Supported Boards</a></li>
 	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Getting Started</a></li>
+	<li><a href="{{ path('AceStaticBundle_upload_bootloader') }}"><i class="icon-upload"></i>Upload Bootloader</a></li>
 	<li><a href="{{ path('AceStaticBundle_tutorials') }}"><i class="icon-facetime-video"></i>Tutorials</a></li>
-        -->
 </ul>
 </div>
 

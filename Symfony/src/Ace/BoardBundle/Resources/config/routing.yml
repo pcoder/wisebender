@@ -1,0 +1,4 @@
+AceBoardBundle_listboards:
+  pattern:  /listboards
+  defaults: { _controller: ace_board.defaultcontroller:listAction }
+

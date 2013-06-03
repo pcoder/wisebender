@@ -24,16 +24,11 @@ class OptionsFormType extends AbstractType
 													'disabled'=>true,
 													'class' => 'option-form-input')))
             ->add('firstname', 'text',array('attr' => array(
-													'onkeyup' => 'validation(id)',
 													'class' => 'option-form-input')))
             ->add('lastname', 'text',array('attr' => array(
-													'onkeyup' => 'validation(id)',
 													'class' => 'option-form-input')))
             ->add('email', 'email', array('attr' => array(
-													'onkeyup' => 'preCheck(id)',
-													'onblur' => 'validation(id)',
-													'class' => 'option-form-input'),
-											))
+													'class' => 'option-form-input')))
             ->add('twitter', 'text', array('required' => false,
 											'attr' => array(
 													'class' => 'option-form-input')))
@@ -41,8 +36,7 @@ class OptionsFormType extends AbstractType
 														'label' => 'Current Password',
 														'required' => false,
 														'attr'=> array(
-																'onkeyup' => 'preCheck(id)',
-																'onblur' => 'validation(id)',
+																'max_length' => 255,
 																'placeholder'=> 'Type your current password',
 																'class' => 'option-form-input')))
             ->add('plainPassword', 'repeated', array(
@@ -54,7 +48,6 @@ class OptionsFormType extends AbstractType
 													'required' => false,
 													'options' => array(
 																'attr' => array(
-																		'onkeyup' => 'validation(id)',
 																		'max_length' => 255,
 																		'placeholder'=> 'Type your new password',
 																		'class' => 'option-form-input')),
@@ -63,19 +56,20 @@ class OptionsFormType extends AbstractType
     
     public function getDefaultOptions(array $options)
     {
+		$nameReg = '/^[a-zA-Z_\'-\s]*$/'; /* allow letters,spaces and the _ ' - chars in names */
 		$constraints = new Collection(array(
 			'fields' => array(
 					'firstname' => array(
 									new Regex( array(
-													'pattern' => '/\d/',
-													'match' => false,
+													'pattern' => $nameReg,
+													'match' => true,
 													'message' => 'Sorry, your Firstname cannot contain a number'
 													)),
 									),
 					'lastname' => array(
 									new Regex( array(
-													'pattern' => '/\d/',
-													'match' => false,
+													'pattern' => $nameReg,
+													'match' => true,
 													'message' => 'Sorry, your Lastname cannot contain a number'
 													)),
 									),

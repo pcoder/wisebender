@@ -23,7 +23,7 @@ class BundleGeneratorTest extends GeneratorTest
 
         $files = array(
             'FooBarBundle.php',
-            'Controller/SketchController.php',
+            'Controller/DefaultController.php',
             'Resources/views/Default/index.html.twig',
             'Resources/config/routing.yml',
             'Tests/Controller/DefaultControllerTest.php',
@@ -38,7 +38,7 @@ class BundleGeneratorTest extends GeneratorTest
         $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/FooBarBundle.php');
         $this->assertContains('namespace Foo\\BarBundle', $content);
 
-        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/SketchController.php');
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/DefaultController.php');
         $this->assertContains('public function indexAction', $content);
         $this->assertNotContains('@Route("/hello/{name}"', $content);
 
@@ -54,7 +54,7 @@ class BundleGeneratorTest extends GeneratorTest
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.yml'));
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.xml'));
 
-        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/SketchController.php');
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/DefaultController.php');
         $this->assertContains('@Route("/hello/{name}"', $content);
     }
 }

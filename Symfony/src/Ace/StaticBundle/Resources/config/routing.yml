@@ -18,17 +18,13 @@ AceStaticBundle_walkthrough:
     pattern:  /walkthrough/page/{page}
     defaults: { _controller: AceStaticBundle:Default:walkthrough }
 
-AceStaticBundle_contact:
-    pattern:  /contact
-    defaults: { _controller: AceStaticBundle:Default:contact }
-
-AceStaticBundle_contact_new:
-    pattern:  /contact_new
-    defaults: { _controller: AceStaticBundle:Default:contact }
-
-AceStaticBundle_notify:
-    pattern:  /notify
-    defaults: { _controller: AceStaticBundle:Default:notify }
+#AceStaticBundle_contact:
+#    pattern:  /contact
+#    defaults: { _controller: AceStaticBundle:Default:contact }
+#
+#AceStaticBundle_contact_new:
+#    pattern:  /contact_new
+#    defaults: { _controller: AceStaticBundle:Default:contact }
 
 AceStaticBundle_plugin:
     pattern:  /plugin
@@ -45,3 +41,11 @@ AceStaticBundle_info_points:
 AceStaticBundle_info_karma:
     pattern:  /info/karma
     defaults: { _controller: AceStaticBundle:Default:infoKarma }
+
+AceStaticBundle_info_private_projects:
+    pattern:  /info/private_projects
+    defaults: { _controller: AceStaticBundle:Default:infoPrivateProjects }
+
+AceStaticBundle_upload_bootloader:
+    pattern:  /upload/bootloader
+    defaults: { _controller: AceStaticBundle:Default:uploadBootloader}

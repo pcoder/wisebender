@@ -45,6 +45,9 @@ class ReferralCodeController extends Controller
 				}
 				else
 				{
+					$code->setAvailable($code->getAvailable() - 1);
+					$this->em->persist($code);
+					$this->em->flush();
 					return new Response(json_encode(array("success" => true, "points" => $code->getPoints())));
 				}
 			}

@@ -25,4 +25,5 @@ services:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@ace_project.mongofilecontroller"
             diskfilecontroller: "@ace_project.sketchdiskfilecontroller"
+            securitycontext: "@security.context"
             storagelayer: "%storagelayer%"

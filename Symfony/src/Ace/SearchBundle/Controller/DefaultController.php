@@ -22,5 +22,7 @@ class DefaultController extends Controller
 
 	        return $this->render('AceSearchBundle:Default:find.html.twig', array('query'=>$query, 'users'=>$users, 'projects'=>$projects));
         }
+
+	    return $this->redirect($this->generateUrl('AceGenericBundle_index'));
     }
 }

@@ -54,6 +54,6 @@ AceUserBundle_active:
     pattern: /active
     defaults: { _controller: ace_user.usercontroller:activeAction }
 
-AceUserBundle_inlineregister:
-    pattern: /inlineregister
-    defaults: { _controller: ace_user.usercontroller:inlineRegisterAction }
+#AceUserBundle_inlineregister:
+#    pattern: /inlineregister
+#    defaults: { _controller: ace_user.usercontroller:inlineRegisterAction }

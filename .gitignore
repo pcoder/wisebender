@@ -8,6 +8,7 @@ vendor/*
 web/uploads/*
 web/bundles/*
 */data/*
+.idea/*
 
 # Configuration files
 app/config/parameters.ini
