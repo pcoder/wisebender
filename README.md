@@ -34,7 +34,10 @@ Installation
 
 Check that you have all the necessary stuff and add if any highly recommended PHP modules are missing.
 
-Create `parameters.ini` in `Symfony/app/config` folder. A sample `parameter.ini.dist` file is provided. Make sure to change the parameters according to your requirement.
+Create `parameters.ini` in `Symfony/app/config` folder. A sample `parameter.ini.dist` file is provided. Make sure to change the parameters according to your requirement. If you are using hard disk drive for storage of your files (sketches); make sure you have `storagelayer` and `disk.directory` parameters defined 
+	
+	storagelayer="disk"
+	disk.directory="/home/wiselib/wisebender/Symfony/data"
 
 If you are using MySQL, the pdo driver may not have been installed by default. You can install it using:
 
