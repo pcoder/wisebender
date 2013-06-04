@@ -57,7 +57,7 @@ class DefaultController extends Controller
 		$utilities = $this->get('ace_utilities.handler');
 
 		$result = json_decode($utilities->get("http://api.twitter.com/1/statuses/user_timeline/".$user["twitter"].".json"), true);
-		if (!isset($result["errors"]))
+		if (!isset($result["errors"]) && !isset($result["error"]))
 		{
 			$lastTweet = $result[0]["text"]; // show latest tweet
 		}
