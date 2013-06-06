@@ -144,15 +144,11 @@ class DefaultController extends Controller
 	public function sidebarAction()
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
         $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
-
         $files_wiselib = json_decode($files_wiselib, true);
-        //var_dump($files_wiselib);
-
 		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $files_wiselib));
 	}
 
