@@ -1,6 +1,27 @@
+{% if files_wiselib %}
 <div class="css-treeview">
     <ul>
-        <li><input type="checkbox" id="item-0" /><label for="item-0">This Folder is Closed By Default</label>
+    {% for file in files_wiselib %}
+        {% if file['dir'] is empty%}
+     <li><input type="checkbox" id="item-0-0" /><label for="item-0-0">{{ file['file'] }}</label>
+         {% else %}
+        <li><input type="checkbox" id="item-0-0" /><label for="item-0-0">{{ file['dir'] }}</label>
+         {% endif %}
+    {% endfor %}
+    </ul>
+</div>
+{% else %}
+    testing
+{% endif %}
+
+<!--
+<div class="css-treeview">
+    <ul>
+        <li><input type="checkbox" id="item-0" data-delay=1500 class="project_link public_project" data-trigger="hover" data-html="true"
+                   style="overflow: hidden; text-overflow: ellipsis; width: 60%; width: -moz-calc(100% - 59px);
+				   width: -webkit-calc(100% - 59px); width: calc(100% - 59px);" /><label for="item-0" data-delay=1500 class="project_link public_project" data-trigger="hover" data-html="true"
+                                                        style="overflow: hidden; text-overflow: ellipsis; width: 60%; width: -moz-calc(100% - 59px);
+				   width: -webkit-calc(100% - 59px); width: calc(100% - 59px);">This Folder is Closed By Default</label>
             <ul>
                 <li><input type="checkbox" id="item-0-0" /><label for="item-0-0">Ooops! A Nested Folder</label>
                     <ul>
@@ -102,7 +123,7 @@
             </ul>
         </li>
     </ul>
-</div>
+</div>-->
 
 {% block javascripts_upload_head %}
     <link rel="stylesheet" href='{{ asset("css.treeview/treeview.css") }}'>

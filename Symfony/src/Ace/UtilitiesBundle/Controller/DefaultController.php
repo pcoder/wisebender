@@ -148,8 +148,11 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
+        $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
+        $files_wiselib = json_decode($files_wiselib, true);
 
-		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
+
+		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $files_wiselib));
 	}
 
 	public function downloadAction($id)

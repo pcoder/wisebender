@@ -65,6 +65,79 @@ class ProjectController extends Controller
 		return new Response(json_encode($list));
 	}
 
+    public function directoryToArray($directory, $recursive) {
+        $array_items = array();
+        if ($handle = opendir($directory)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    if (is_dir($directory. "/" . $file)) {
+                        if($recursive) {
+                            $array_items = array_merge($array_items, directoryToArray($directory. "/" . $file, $recursive));
+                        }
+                        $file = $directory . "/" . $file;
+                        $file = preg_replace("/\/\//si", "/", $file);
+                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master", "", $file);
+                        $array_items[] = array("dir" => $file, "file" => "");
+                    } else {
+                        $file = $directory . "/" . $file;
+                        $file = preg_replace("/\/\//si", "/", $file);
+                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master", "", $file);;
+                        $array_items[] = array("dir" => "", "file" => $file, "/", $file);
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $array_items;
+    }
+
+
+    public function listWiselibDirAction()
+    {
+        $private_access = false;
+        $current_user = $this->sc->getToken()->getUser();
+        if($current_user !== "anon.")
+            $private_access=true;
+
+        ///////////////////////////////////////////////////
+        $directory = "/home/wiselib/wisebender/Symfony/data/wiselib-master";
+        $recursive =false;
+        $array_items = $this->directoryToArray($directory, $recursive);
+        /*$array_items = array();
+        if ($handle = opendir($directory)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    if (is_dir($directory. "/" . $file)) {
+                        if($recursive) {
+                            $array_items = array_merge($array_items, $this->directoryToArray($directory. "/" . $file, $recursive));
+                        }
+                        $file = $directory . "/" . $file;
+                        $array_items[] = preg_replace("/\/\//si", "/", $file);
+                    } else {
+                        $file = $directory . "/" . $file;
+                        $array_items[] = preg_replace("/\/\//si", "/", $file);
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        ///////////////////////////////////////////////////
+        $private_access = false;
+        $current_user = $this->sc->getToken()->getUser();
+        if($current_user !== "anon." && $current_user->getID() == $owner)
+            $private_access=true;
+
+        $projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
+        $list = array();
+        foreach($projects as $project)
+        {
+            if($project->getIsPublic() || $private_access)
+                $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic());
+        }*/
+        ///////////////////////////////////////////////////
+        return new Response(json_encode($array_items));
+    }
+
 	public function createAction($owner, $name, $description, $isPublic)
 	{
 		$validName = json_decode($this->nameIsValid($name), true);
