@@ -27,3 +27,4 @@ services:
             diskfilecontroller: "@ace_project.sketchdiskfilecontroller"
             securitycontext: "@security.context"
             storagelayer: "%storagelayer%"
+            wiselib_src_dir: "%wiselib.src.dir%"

@@ -20,6 +20,7 @@ class ProjectController extends Controller
 	protected $fc;
     protected $sc;
     protected $sl = "unknown";
+    protected $wiselib_src_dir ="";
 
 
 	public function createprojectAction($user_id, $project_name, $code, $isPublic)
@@ -88,7 +89,7 @@ class ProjectController extends Controller
 
     public function listWiselibDirAction()
     {
-        $directory = "/home/wiselib/wisebender/Symfony/data/wiselib-master";
+        $directory = $this->wiselib_src_dir;
         $array_items = $this->dirToArray($directory);
         return new Response(json_encode($array_items));
     }

@@ -16,6 +16,7 @@ class SketchController extends ProjectController
 	protected $fc;
     protected $sc;
     protected $sl;
+    protected $wiselib_src_dir;
 
 
 	public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
@@ -149,10 +150,11 @@ class SketchController extends ProjectController
         return json_encode(array("success" => false, "error" => ".ino file does not exist."));
     }
 
-	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, SecurityContext $securitycontext, $storageLayer)
+	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, SecurityContext $securitycontext, $storageLayer, $wsd)
 	{
 	    $this->em = $entityManager;
         $this->sl = $storageLayer;
+        $this->wiselib_src_dir = $wsd;
         $this->sc = $securitycontext;
         if($this->sl == "disk")
         {
