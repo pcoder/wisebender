@@ -149,8 +149,9 @@ class DefaultController extends Controller
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
         $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
-        $files_wiselib = json_decode($files_wiselib, true);
 
+        $files_wiselib = json_decode($files_wiselib, true);
+        //var_dump($files_wiselib);
 
 		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $files_wiselib));
 	}

@@ -51,7 +51,12 @@ function warnDeleteProject(deletion_path)
 </ul>
 <ul class="nav nav-list" id="sidebar-list-footer">
     {% if files_wiselib %}
-    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib } %}
+    <div class="css-treeview">
+        <ul>
+    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib } only %}
+        </ul>
+    </div>
+
     {% endif %}
 </ul>
 
@@ -81,3 +86,6 @@ function warnDeleteProject(deletion_path)
     <a id="deleteProjectButton" href="" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
   </div>
 </div>
+{% block javascripts_upload_head %}
+    <link rel="stylesheet" href='{{ asset("css.treeview/treeview.css") }}'>
+{% endblock %}

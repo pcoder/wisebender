@@ -65,6 +65,29 @@ class ProjectController extends Controller
 		return new Response(json_encode($list));
 	}
 
+    function dirToArray($dir) {
+
+        $result = array();
+
+        $cdir = scandir($dir);
+        foreach ($cdir as $key => $value)
+        {
+            if (!in_array($value,array(".","..")))
+            {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
+                {
+                    $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value), "isdir" => true);
+                }
+                else
+                {
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function directoryToArray($directory, $recursive) {
         $array_items = array();
         if ($handle = opendir($directory)) {
@@ -76,12 +99,12 @@ class ProjectController extends Controller
                         }
                         $file = $directory . "/" . $file;
                         $file = preg_replace("/\/\//si", "/", $file);
-                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master", "", $file);
+                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master/", "", $file);
                         $array_items[] = array("dir" => $file, "file" => "");
                     } else {
                         $file = $directory . "/" . $file;
                         $file = preg_replace("/\/\//si", "/", $file);
-                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master", "", $file);;
+                        $file = str_replace("/home/wiselib/wisebender/Symfony/data/wiselib-master/", "", $file);;
                         $array_items[] = array("dir" => "", "file" => $file, "/", $file);
                     }
                 }
@@ -94,15 +117,10 @@ class ProjectController extends Controller
 
     public function listWiselibDirAction()
     {
-        $private_access = false;
-        $current_user = $this->sc->getToken()->getUser();
-        if($current_user !== "anon.")
-            $private_access=true;
-
         ///////////////////////////////////////////////////
         $directory = "/home/wiselib/wisebender/Symfony/data/wiselib-master";
         $recursive =false;
-        $array_items = $this->directoryToArray($directory, $recursive);
+        $array_items = $this->dirToArray($directory);
         /*$array_items = array();
         if ($handle = opendir($directory)) {
             while (false !== ($file = readdir($handle))) {
