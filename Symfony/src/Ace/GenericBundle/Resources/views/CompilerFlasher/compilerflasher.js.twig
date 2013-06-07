@@ -28,10 +28,10 @@ $(document).ready(function () {
         }
         else
         {
-            $("#verify_div").html('{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:boardlist_section.html.twig'%}{% endfilter %}' + $("#verify_div").html());
-            for (var i = 0; i < window.boards_list.length; i++)
-                $("#boards").append($('<option></option>').val(window.boards_list[i]["name"]).html(window.boards_list[i]["name"]));
-            loadBoard();
+            //$("#verify_div").html('{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:boardlist_section.html.twig'%}{% endfilter %}' + $("#verify_div").html());
+            //for (var i = 0; i < window.boards_list.length; i++)
+            //    $("#boards").append($('<option></option>').val(window.boards_list[i]["name"]).html(window.boards_list[i]["name"]));
+            //loadBoard();
         }
     });
 
