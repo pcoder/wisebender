@@ -76,7 +76,7 @@ class ProjectController extends Controller
         $cdir = scandir($dir);
         foreach ($cdir as $key => $value)
         {
-            if (!in_array($value,array(".","..", "doc", "apps", "util", "Makefile", ".gitignore", "Doxyfile", "README.md")))
+            if (!in_array($value,array(".","..", "doc", "apps", "util")))
             {
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
                 {
