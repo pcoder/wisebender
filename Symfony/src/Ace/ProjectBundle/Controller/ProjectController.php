@@ -66,13 +66,17 @@ class ProjectController extends Controller
 		return new Response(json_encode($list));
 	}
 
+    function endsWith($needle, $haystack) {
+        return preg_match('/' . preg_quote($needle, '/') . '$/', $haystack);
+    }
+
     function dirToArray($dir) {
 
         $result = array();
         $cdir = scandir($dir);
         foreach ($cdir as $key => $value)
         {
-            if (!in_array($value,array(".","..")))
+            if (!in_array($value,array(".","..", "doc", "apps", "util", "Makefile", ".gitignore", "Doxyfile", "README.md")))
             {
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
                 {
@@ -80,6 +84,7 @@ class ProjectController extends Controller
                 }
                 else
                 {
+                    if($this->endsWith(".cpp", $value) || $this->endsWith(".h", $value))
                     $result[] = $value;
                 }
             }
