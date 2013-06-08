@@ -147,7 +147,7 @@ class DefaultController extends Controller
         $permissions = json_decode($projectmanager->checkWriteProjectPermissionsAction($id)->getContent(), true);
         if ($permissions["success"])
         {
-            return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id));
+            return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id, "fpath" => $fpath));
         }
 
         $permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);

@@ -13,6 +13,7 @@ class DiskFilesController extends FilesController
     protected $dir;
     protected $type;
     protected $sc;
+    protected $wiselib_src_dir;
 
 
     public function createAction()
@@ -55,9 +56,23 @@ class DiskFilesController extends FilesController
         return json_encode(array("success" => true, "list" => $list));
     }
 
+    public function getFileCode($f)
+    {
+        $filename = $this->wiselib_src_dir.  DIRECTORY_SEPARATOR  . $f;
+        $list = array();
+        if (file_exists($filename)){
+            $file["filename"] = basename($f);
+            $file["code"] = file_get_contents($filename);
+            $list[] = $file;
+        }else{
+            var_dump("file " . $f . " does not exist!");
+        }
+        return json_encode(array("success" => true, "list" => $list));
+    }
+
+
     public function createFileAction($id, $filename, $code)
     {
-
         $canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
         if(!$canCreateFile["success"])
             return json_encode($canCreateFile);
@@ -135,7 +150,6 @@ class DiskFilesController extends FilesController
         return $list;
     }
 
-
     private function deleteDirectory($dir)
     {
         if (is_dir($dir))
@@ -161,13 +175,14 @@ class DiskFilesController extends FilesController
         return $this->dir.$this->type."/".$id."/";
     }
 
-    public function __construct($directory, $type, SecurityContext $sc)
+    public function __construct($directory, $type, SecurityContext $sc, $wsd)
     {
         if(!(substr_compare($directory, '/', 1, 1) === 0))
             $directory = $directory.'/';
         $this->dir = $directory;
         $this->type = $type;
         $this->sc = $sc;
+        $this->wiselib_src_dir=$wsd;
     }
 }
 

@@ -12,6 +12,7 @@ services:
             directory:    "%disk.directory%"
             type: "sketches"
             securitycontext: "@security.context"
+            wiselib_src_dir: "%wiselib.src.dir%"
 
 
     ace_project.mongofilecontroller:

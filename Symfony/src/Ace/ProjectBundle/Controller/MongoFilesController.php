@@ -158,6 +158,10 @@ class MongoFilesController extends FilesController
 		return $list;
 	}
 
+    public function getFileCode($file){
+        //TODO
+    }
+
 	public function __construct(DocumentManager $documentManager)
 	{
 	    $this->dm = $documentManager;

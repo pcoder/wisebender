@@ -358,6 +358,12 @@ class ProjectController extends Controller
 
 	}
 
+    public function getFileCode($file)
+    {
+            $list = $this->fc->getFileCode($file);
+            return new Response($list);
+    }
+
 	public function createFileAction($id, $filename, $code)
 	{
         $perm = json_decode($this->checkWriteProjectPermissions($id), true);
