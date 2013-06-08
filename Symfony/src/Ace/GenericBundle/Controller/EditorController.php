@@ -34,9 +34,12 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
+        $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
+        $files_wiselib = json_decode($files_wiselib, true);
+
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib));
 	}
 }

@@ -130,6 +130,71 @@ class DefaultController extends Controller
 		}
 	}
 
+    public function editAction($id, $embed = false)
+    {
+
+        /** @var SketchController $projectmanager */
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $projects = NULL;
+
+        $project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
+        if ($project["success"] === false)
+        {
+            return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "There is no such project!"));
+        }
+
+        $permissions = json_decode($projectmanager->checkWriteProjectPermissionsAction($id)->getContent(), true);
+        if ($permissions["success"])
+        {
+            return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id));
+        }
+
+        $permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);
+        if (!$permissions["success"])
+        {
+            return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access this project!"));
+        }
+
+        $owner = $projectmanager->getOwnerAction($id)->getContent();
+        $owner = json_decode($owner, true);
+        $owner = $owner["response"];
+
+        $name = $projectmanager->getNameAction($id)->getContent();
+        $name = json_decode($name, true);
+        $name = $name["response"];
+
+        $parent = $projectmanager->getParentAction($id)->getContent();
+        $parent = json_decode($parent, true);
+        if ($parent["success"])
+        {
+            $parent = $parent["response"];
+        }
+        else
+            $parent = NULL;
+
+        $files = $projectmanager->listFilesAction($id)->getContent();
+        $files = json_decode($files, true);
+
+        if ($files["success"])
+        {
+            $files = $files["list"];
+            foreach ($files as $key => $file)
+            {
+                $files[$key]["code"] = htmlspecialchars($file["code"]);
+            }
+
+            $json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project', array("id" => $id), true)), "user" => array("name" => $owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user', array('user' => $owner['username']), true)), "clone_url" => $this->get('router')->generate('AceUtilitiesBundle_clone', array('id' => $id), true), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download', array('id' => $id), true), "files" => $files);
+            $json = json_encode($json);
+
+            if ($embed)
+                return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
+            return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name' => $name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "parent" => $parent, "json" => $json));
+        }
+    }
+
+
+
+
 	public function projectfilesAction()
 	{
 		header('Access-Control-Allow-Origin: *');

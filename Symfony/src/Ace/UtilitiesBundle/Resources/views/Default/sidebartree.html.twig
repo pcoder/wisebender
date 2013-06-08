@@ -2,9 +2,9 @@
 {% for key, file in files_wiselib %}
     {% if (file["isdir"] is defined and file[dir_count] is defined) %}
         <li><input type="checkbox" id="item-0"/><label for="item-0"> {{ key }}</label>
-        <ul>{% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": file[dir_count] } %}</ul>
+        <ul>{% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": file[dir_count], "file_root": file_root ~ key ~ "/" } %}</ul>
     {% else %}
-        <li><a href="#">{{ file }}</a></li>
+        <li><a href="edit:{{ file_root }}{{ file }}">{{ file }}</a></li>
     {% endif %}
     {% set dir_count=0 %}
 {% endfor %}

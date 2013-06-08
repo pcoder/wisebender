@@ -21,7 +21,7 @@ function warnDeleteProject(deletion_path)
     {% if files_wiselib %}
     <div class="css-treeview">
         <ul>
-    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib } only %}
+    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib, "file_root": "" } only %}
         </ul>
     </div>
 
