@@ -11,8 +11,10 @@ AceGenericBundle_project:
     defaults: { _controller: AceGenericBundle:Default:project }
 
 AceGenericBundle_edit:
-    pattern:  /edit:{id}
+    pattern:  /edit:{fpath}
     defaults: { _controller: AceGenericBundle:Default:edit }
+    requirements:
+       fpath: "[a-zA-Z0-9\-_\/.]+"
 
 AceGenericBundle_projectfiles:
     pattern:  /files

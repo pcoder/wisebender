@@ -130,8 +130,9 @@ class DefaultController extends Controller
 		}
 	}
 
-    public function editAction($id, $embed = false)
+    public function editAction($fpath, $embed = false)
     {
+        $id =1;
 
         /** @var SketchController $projectmanager */
         $projectmanager = $this->get('ace_project.sketchmanager');
