@@ -103,7 +103,17 @@ class DiskFilesController extends FilesController
             return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
         }
         return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
+    }
 
+    public function setWiselibFileAction($id, $filename, $code)
+    {
+        $id = preg_replace("/\//si", "/", $id);
+        if(file_exists($id))
+        {
+            file_put_contents($id,$code);
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
+        }
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => "NIL - " .$id , "filename" => $filename));
     }
 
     public function deleteFileAction($id, $filename)

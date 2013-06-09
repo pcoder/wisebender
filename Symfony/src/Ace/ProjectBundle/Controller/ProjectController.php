@@ -413,6 +413,12 @@ class ProjectController extends Controller
 		return new Response($set);
 		
 	}
+
+    public function setWiselibFileAction($id, $filename, $code)
+    {
+        $set = $this->fc->setWiselibFileAction($this->wiselib_src_dir . DIRECTORY_SEPARATOR . $id, $filename, $code);
+        return new Response($set);
+    }
 		
 	public function deleteFileAction($id, $filename)
 	{

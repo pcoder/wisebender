@@ -56,7 +56,7 @@ function setOperationOutput(output) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data:JSON.stringify(window.files)}, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
         data = JSON.parse(data);
@@ -65,7 +65,7 @@ function save() {
             $("#save").removeClass("btn-success");
             $("#save_icon").removeClass("icon-white");
         }, 500);
-        // alert("Data received: " + data);
+        //alert("Data received: " + data);
     });
 }
 

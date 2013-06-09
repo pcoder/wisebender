@@ -57,6 +57,7 @@ AceUtilitiesBundle_savecode:
   defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
   requirements:
      _method:  POST
+     id: "[a-zA-Z0-9\-_\/.]+"
 
 AceUtilitiesBundle_createfile:
   pattern:  /createfile/{id}

@@ -7,7 +7,7 @@ use Ace\ProjectBundle\Controller\SketchController;
 
 class EditorController extends Controller
 {		
-	public function editAction($id, $fpath)
+	public function editAction($id, $fpath="")
 	{
 		/** @var SketchController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');

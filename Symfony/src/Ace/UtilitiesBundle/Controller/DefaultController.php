@@ -224,7 +224,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		foreach($files as $key => $file)
 		{
-			$response = $projectmanager->setFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
+			$response = $projectmanager->setWiselibFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
 			$response = json_decode($response, true);
 			if($response["success"] ==  false)
 				return new Response(json_encode($response));
