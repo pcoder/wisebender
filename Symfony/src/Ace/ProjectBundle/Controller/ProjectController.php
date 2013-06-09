@@ -70,17 +70,27 @@ class ProjectController extends Controller
         return preg_match('/' . preg_quote($needle, '/') . '$/', $haystack);
     }
 
-    function dirToArray($dir) {
+    function dirToArray($dir, $selected_dir="") {
 
         $result = array();
         $cdir = scandir($dir);
+        //var_dump($checked_folders);
         foreach ($cdir as $key => $value)
         {
             if (!in_array($value,array(".","..", "doc", "apps", "util")))
             {
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
                 {
-                    $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value), "isdir" => true);
+                    $str = substr($selected_dir, 0, strlen($value));
+                    //var_dump("Comparing  " . $str . " and " . $value);
+                    if(strcmp($str, $value) == 0 && substr($selected_dir, strlen($value), 1) == "/"){
+                        //var_dump($selected_dir . " has " . $value . " at 0th position?? and ends with a slash with length of " . $value);
+                        $selected_dir = substr($selected_dir,strlen($value)+1);
+                        //var_dump("Folder " . $dir . DIRECTORY_SEPARATOR . $value . " isChecked");
+                        $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $selected_dir), "isdir" => true, "isChecked" => true);
+                    }else{
+                        $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $selected_dir), "isdir" => true);
+                    }
                 }
                 else
                 {
@@ -92,10 +102,10 @@ class ProjectController extends Controller
         return $result;
     }
 
-    public function listWiselibDirAction()
+    public function listWiselibDirAction($selected_dir="")
     {
         $directory = $this->wiselib_src_dir;
-        $array_items = $this->dirToArray($directory);
+        $array_items = $this->dirToArray($directory, $selected_dir);
         return new Response(json_encode($array_items));
     }
 
