@@ -38,7 +38,7 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
-        $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
+        $files_wiselib = $projectmanager->listWiselibDirAction($fpath)->getContent();
         $files_wiselib = json_decode($files_wiselib, true);
 
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
