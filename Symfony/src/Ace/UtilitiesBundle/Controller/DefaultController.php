@@ -147,9 +147,17 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
-        $files_wiselib = $projectmanager->listWiselibDirAction()->getContent();
-        $files_wiselib = json_decode($files_wiselib, true);
-		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $files_wiselib));
+        //$files_wiselib = $projectmanager->listAction($user["id"])->getContent();
+        //$files_wiselib = json_decode($files_wiselib, true);
+        //var_dump($files_wiselib);
+
+        $project_id = "10";
+        $fw= $projectmanager->listWiselibDirAction($user["id"], $project_id, "")->getContent();
+        $fw = json_decode($fw, true);
+        //echo("<hr/>");
+        //var_dump($fw);
+        //die();
+		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $fw, 'show_projects' => true));
 	}
 
 	public function downloadAction($id)
@@ -253,6 +261,26 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('AceGenericBundle_index'));
         }
 	}
+
+    public function cloneWiselibAction()
+    {
+        syslog(LOG_INFO, "wiselib project cloned");
+
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        //$name = $this->getRequest()->request->get('name');
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response = $projectmanager->cloneWiselibAction($user["id"])->getContent();
+        $response = json_decode($response, true);
+        if($response['success'])
+        {
+            return $this->redirect($this->generateUrl('AceGenericBundle_edit',array('fpath' => 'main.cpp', 'project_id' => $response["id"])));
+        }
+        else
+        {
+            $this->get('session')->setFlash('error', "Error: ".$response['error']);
+            return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+        }
+    }
 
     public function addBoardAction()
     {

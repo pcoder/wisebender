@@ -9,6 +9,7 @@ class EditorController extends Controller
 {		
 	public function editAction($id, $fpath="")
 	{
+
 		/** @var SketchController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');
 
@@ -38,12 +39,16 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
-        $files_wiselib = $projectmanager->listWiselibDirAction($fpath)->getContent();
+        $owner = json_decode($projectmanager->getOwnerAction($id)->getContent(), true);
+        $owner = $owner["response"];
+        $owner_id = $owner['id'];
+
+
+        $files_wiselib = $projectmanager->listWiselibDirAction($owner_id, $id, $fpath)->getContent();
         $files_wiselib = json_decode($files_wiselib, true);
 
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
-
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath));
 	}
 }

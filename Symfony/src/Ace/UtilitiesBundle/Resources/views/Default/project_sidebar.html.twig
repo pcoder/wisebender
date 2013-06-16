@@ -1,0 +1,7 @@
+{% for key, file in files_wiselib %}
+    {% if (file["name"] is defined) %}
+        <li><a href="{{ path('AceGenericBundle_edit',{'fpath': 'empty', 'project_id': file['id'] }) }}">{{ file['name'] }}</a></li>
+    {% else %}
+testtttt
+    {% endif %}
+{% endfor %}

@@ -31,6 +31,8 @@ abstract class FilesController extends Controller
 
     protected abstract function listFiles($id);
 
+    public abstract function copyWiselibFiles($id);
+
     protected function fileExists($id, $filename)
     {
         $list = $this->listFiles($id);

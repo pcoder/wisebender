@@ -102,9 +102,25 @@ class ProjectController extends Controller
         return $result;
     }
 
-    public function listWiselibDirAction($selected_dir="")
+    public function listWiselibDirAction($owner, $id, $selected_dir="")
     {
-        $directory = $this->wiselib_src_dir;
+        $src_dir ="";
+        if($id==""){
+            $private_access = false;
+            $current_user = $this->sc->getToken()->getUser();
+            if($current_user !== "anon." && $current_user->getID() == $owner)
+                $private_access=true;
+
+            $projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
+            $list = array();
+            foreach($projects as $project)
+            {
+                if($project->getIsPublic() || $private_access)
+                    $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic());
+            }
+        }
+        $project = $this->getProjectById($id);
+        $directory = $this->fc->getDir($project->getProjectfilesId());
         $array_items = $this->dirToArray($directory, $selected_dir);
         return new Response(json_encode($array_items));
     }
@@ -195,8 +211,37 @@ class ProjectController extends Controller
 		{
 			return new Response(json_encode(array("success" => false, "id" => $id)));
 		}
-
 	}
+
+    public function cloneWiselibAction($owner)
+    {
+        //$perm = json_decode($this->checkReadProjectPermissions($id), true);
+        //if(!$perm['success'])
+        //{
+        //    return new Response(json_encode($perm));
+        //}
+
+        $new_name="Wiselib";
+        $nameExists = json_decode($this->nameExists($owner,$new_name), true);
+        while($nameExists["success"])
+        {
+            $new_name = $new_name."-copy";
+            $nameExists = json_decode($this->nameExists($owner,$new_name), true);
+        }
+        $response = json_decode($this->createAction($owner, $new_name, "The default clone of Wiselib. See https://github.com/ibr-alg/wiselib for more information.",true)->getContent(), true);
+        if($response["success"] == true){
+            $new_project = $this->getProjectById($response["id"]);
+            $new_project->setParent("");
+            $em = $this->em;
+            $em->persist($new_project);
+            $em->flush();
+
+            return new Response(json_encode(array("success" => true, "id" => $response["id"], "name" => $new_name)));
+        }else{
+            //TODO write tests for this case
+            return new Response(json_encode(array("success" => false)));
+        }
+    }
 
     public function renameAction($id, $new_name)
     {

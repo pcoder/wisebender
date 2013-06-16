@@ -44,6 +44,10 @@ AceUtilitiesBundle_clone:
   pattern:  /clone/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:clone }
 
+AceUtilitiesBundle_wiselib_clone:
+  pattern:  /clone_wiselib
+  defaults: { _controller: AceUtilitiesBundle:Default:cloneWiselib }
+
 AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }

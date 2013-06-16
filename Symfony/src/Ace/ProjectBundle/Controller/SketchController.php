@@ -65,8 +65,23 @@ class SketchController extends ProjectController
 		{
 			return new Response(json_encode($response));
 		}
-
 	}
+
+    public function cloneWiselibAction($owner)
+    {
+        $response = json_decode(parent::cloneWiselibAction($owner)->getContent(), true);
+        if($response["success"] == true)
+        {
+            $project = $this->getProjectById($response["id"]);
+            $this->fc->copyWiselibFiles($project->getProjectfilesId());
+            return new Response(json_encode(array("success" => true, "id" => $response["id"])));
+        }
+        else
+        {
+            return new Response(json_encode($response));
+        }
+
+    }
 
     public function renameAction($id, $new_name)
     {

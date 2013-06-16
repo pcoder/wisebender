@@ -65,7 +65,8 @@ class DiskFilesController extends FilesController
             $file["code"] = file_get_contents($filename);
             $list[] = $file;
         }else{
-            var_dump("file " . $f . " does not exist!");
+            // TODO: What if the main.cpp file does not exist.
+            //var_dump("file " . $f . " does not exist!");
         }
         return json_encode(array("success" => true, "list" => $list));
     }
@@ -160,6 +161,15 @@ class DiskFilesController extends FilesController
         return $list;
     }
 
+    public function copyWiselibFiles($id)
+    {
+        $dir = $this->getDir($id);
+        //var_dump("Copying files from " . $this->wiselib_src_dir . " to " . $dir);
+        //die();
+        $this->recurse_copy($this->wiselib_src_dir, $dir);
+        return;
+    }
+
     private function deleteDirectory($dir)
     {
         if (is_dir($dir))
@@ -179,8 +189,24 @@ class DiskFilesController extends FilesController
         else return false;
     }
 
+    function recurse_copy($src,$dst) {
+        $dir = opendir($src);
+        @mkdir($dst);
+        while(false !== ( $file = readdir($dir)) ) {
+            if (( $file != '.' ) && ( $file != '..' )) {
+                if ( is_dir($src . '/' . $file) ) {
+                    $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
+                }
+                else {
+                    copy($src . '/' . $file,$dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
+    }
 
-    private function getDir($id)
+
+    public function getDir($id)
     {
         return $this->dir.$this->type."/".$id."/";
     }

@@ -162,6 +162,9 @@ class MongoFilesController extends FilesController
         //TODO
     }
 
+    public function copyWiselibFiles($id){
+        //TODO
+    }
 	public function __construct(DocumentManager $documentManager)
 	{
 	    $this->dm = $documentManager;

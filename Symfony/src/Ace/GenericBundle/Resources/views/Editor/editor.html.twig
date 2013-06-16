@@ -1,5 +1,7 @@
 {% extends '::template.html.twig' %}
+{% if project_name is not defined %}
 {% set project_name = 'Wiselib' %}
+{% endif %}
 {% block title %} {{ project_name }} : wisebender{% endblock %}
 
 {% block stylesheets %}
@@ -346,7 +348,7 @@
                         {% if files_wiselib %}
                             <div class="css-treeview">
                                 <ul>
-                                    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": ""} only %}
+                                    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id} only %}
                                 </ul>
                             </div>
 
