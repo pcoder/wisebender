@@ -56,9 +56,9 @@ class DiskFilesController extends FilesController
         return json_encode(array("success" => true, "list" => $list));
     }
 
-    public function getFileCode($f)
+    public function getFileCode($f, $project_filesId)
     {
-        $filename = $this->wiselib_src_dir.  DIRECTORY_SEPARATOR  . $f;
+        $filename = $this->getDir($project_filesId) . $f;
         $list = array();
         if (file_exists($filename)){
             $file["filename"] = basename($f);
@@ -106,12 +106,12 @@ class DiskFilesController extends FilesController
         return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
     }
 
-    public function setWiselibFileAction($id, $filename, $code)
+    public function setWiselibFileAction($fpath, $id, $filename, $code)
     {
-        $id = preg_replace("/\//si", "/", $id);
-        if(file_exists($id))
+        $dir = $this->getDir($id);
+        if(file_exists($dir. $fpath))
         {
-            file_put_contents($id,$code);
+            file_put_contents($dir. $fpath,$code);
             return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
         }
         return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => "NIL - " .$id , "filename" => $filename));

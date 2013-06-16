@@ -30,7 +30,8 @@ class EditorController extends Controller
 //		$files = json_decode($files, true);
 //		$files = $files["list"];
 
-        $files = $projectmanager->getFileCode($fpath)->getContent();
+        $project = $projectmanager->getProjectById($id);
+        $files = $projectmanager->getFileCode($fpath, $project->getProjectfilesId())->getContent();
         $files = json_decode($files, true);
         $files = $files["list"];
 

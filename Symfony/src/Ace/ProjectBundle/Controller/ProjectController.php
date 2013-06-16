@@ -413,9 +413,9 @@ class ProjectController extends Controller
 
 	}
 
-    public function getFileCode($file)
+    public function getFileCode($file, $project_filesId)
     {
-            $list = $this->fc->getFileCode($file);
+            $list = $this->fc->getFileCode($file, $project_filesId);
             return new Response($list);
     }
 
@@ -469,9 +469,10 @@ class ProjectController extends Controller
 		
 	}
 
-    public function setWiselibFileAction($id, $filename, $code)
+    public function setWiselibFileAction($id, $project_id, $filename, $code)
     {
-        $set = $this->fc->setWiselibFileAction($this->wiselib_src_dir . DIRECTORY_SEPARATOR . $id, $filename, $code);
+        $project = $this->getProjectById($project_id);
+        $set = $this->fc->setWiselibFileAction($id, $project->getProjectfilesId(), $filename, $code);
         return new Response($set);
     }
 		

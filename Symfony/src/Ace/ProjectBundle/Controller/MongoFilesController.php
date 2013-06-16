@@ -158,7 +158,7 @@ class MongoFilesController extends FilesController
 		return $list;
 	}
 
-    public function getFileCode($file){
+    public function getFileCode($file, $project_filesId){
         //TODO
     }
 
