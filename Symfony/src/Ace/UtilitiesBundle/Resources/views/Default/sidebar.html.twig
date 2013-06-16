@@ -44,21 +44,6 @@ function warnDeleteProject(deletion_path)
         {% endfor %}
     {% endif %}
 </ul>
-    <!--
-<ul class="nav nav-list" id="sidebar-list-footer">
-    {% if files_wiselib %}
-    <div class="css-treeview">
-        <ul>
-            {% if (show_projects is defined) %}
-                {% include "AceUtilitiesBundle:Default:project_sidebar.html.twig" with { "files_wiselib": files_wiselib, "file_root": "" } only %}
-            {% else %}
-                {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib, "file_root": "" } only %}
-            {% endif %}
-        </ul>
-    </div>
-
-    {% endif %}
-</ul>-->
 
 <ul class="nav nav-list" id="sidebar-list-footer">
 

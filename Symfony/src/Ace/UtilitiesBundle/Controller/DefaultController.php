@@ -151,13 +151,13 @@ class DefaultController extends Controller
         //$files_wiselib = json_decode($files_wiselib, true);
         //var_dump($files_wiselib);
 
-        $project_id = "10";
-        $fw= $projectmanager->listWiselibDirAction($user["id"], $project_id, "")->getContent();
-        $fw = json_decode($fw, true);
+        //$project_id = "10";
+        //$fw= $projectmanager->listWiselibDirAction($user["id"], $project_id, "")->getContent();
+        //$fw = json_decode($fw, true);
         //echo("<hr/>");
         //var_dump($fw);
         //die();
-		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'files_wiselib' => $fw, 'show_projects' => true));
+		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
 	}
 
 	public function downloadAction($id)
