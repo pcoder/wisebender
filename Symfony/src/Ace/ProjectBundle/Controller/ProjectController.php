@@ -440,6 +440,34 @@ class ProjectController extends Controller
         }
         return new Response($retval);
 	}
+
+    /*
+     *  $rdir: This is the relative path of the file in the project without the beginning or trailing slash
+     *         Example: For a file 'wiselib.stable/algorithms/routing/dsdv/dsdv.h'
+     *                  $rdir = 'wiselib.stable/algorithms/routing/dsdv'
+     */
+
+    public function createWiselibFileAction($id, $rdir, $filename, $code)
+    {
+        $perm = json_decode($this->checkWriteProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+
+        $canCreate = json_decode($this->canCreateFile($project->getId(), $filename), true);
+        if($canCreate["success"])
+        {
+            $create = $this->fc->createWiselibFileAction($project->getProjectfilesId(), $rdir, $filename, $code);
+            $retval = $create;
+        }
+        else
+        {
+            $retval = json_encode($canCreate);
+        }
+        return new Response($retval);
+    }
 	
 	public function getFileAction($id, $filename)
 	{

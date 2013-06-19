@@ -7,12 +7,19 @@
         $.contextMenu({
             selector: '.context-menu-one',
             callback: function(key, options) {
+                //alert(JSON.stringify(options, null, 4));
                 var m = "clicked: " + key;
-                window.console && console.log(m) || alert(m);
+                alert($(this).attr("fpath") + " and pid = " + {{ project_id  }});
+                //window.console && console.log(m) || alert(m);
+
+                $.post("{{ path('AceUtilitiesBundle_createFile' }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test" }, function (data) {
+                    handleResponse(data);
+                    //   alert("Data received: " +JSON.stringify(data, null, 4));
+                });
             },
             items: {
-                "Add New File": {name: "Add New File", icon: "edit"},
-                "Add New Directory": {name: "Add New Directory", icon: "edit"}
+                "Add_New_File": {name: "Add New File", icon: "edit"},
+                "Add_New_Directory": {name: "Add New Directory", icon: "edit"}
             }
         });
 

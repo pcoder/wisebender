@@ -55,6 +55,10 @@ class MongoFilesController extends FilesController
 		$this->setFilesById($id, $list);
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
 	}
+
+    public function createWiselibFileAction($id, $rdir, $filename, $code){
+            //TODO: implementation
+    }
 	
 	public function getFileAction($id, $filename)
 	{

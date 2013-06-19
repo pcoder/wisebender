@@ -83,6 +83,28 @@ class DiskFilesController extends FilesController
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
     }
 
+    /*
+     *  $rdir: This is the relative path of the file in the project without the beginning or trailing slash
+     *         Example: For a file 'wiselib.stable/algorithms/routing/dsdv/dsdv.h'
+     *                  $rdir = 'wiselib.stable/algorithms/routing/dsdv'
+     */
+
+    public function createWiselibFileAction($id, $rdir, $filename, $code)
+    {
+        $canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
+        if(!$canCreateFile["success"])
+            return json_encode($canCreateFile);
+        $dir = $this->getDir($id);
+
+        if (!file_exists($dir . "/" .$rdir)) {
+            mkdir($dir . "/" .$rdir);
+        }
+
+        file_put_contents($dir."/" . $rdir . "/".$filename,$code);
+
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
+    }
+
     public function getFileAction($id, $filename)
     {
         $response = array("success" => false);

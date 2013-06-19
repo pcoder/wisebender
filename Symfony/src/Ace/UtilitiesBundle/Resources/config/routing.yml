@@ -107,3 +107,9 @@ AceUtilitiesBundle_editBoard:
   defaults: { _controller: AceUtilitiesBundle:Default:editBoard }
   requirements:
     _method: POST
+
+AceUtilitiesBundle_createFile:
+  pattern:  /createFile
+  defaults: { _controller: AceUtilitiesBundle:Default:createWiselibFile }
+  requirements:
+     _method:  POST
