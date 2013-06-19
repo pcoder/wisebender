@@ -11,12 +11,22 @@
                 var m = "clicked: " + key;
                 //alert($(this).attr("fpath") + " and pid = " + {{ project_id  }});
                 //window.console && console.log(m) || alert(m);
+                if(key=="Add_New_Directory"){
+                    //$("#WiselibFolderCreationModal").val($(this).data('id'))
+                    $('#WiselibFolderCreationModal').data('fpath', $(this).attr("fpath"));
+                    $('#WiselibFolderCreationModal').data('id', {{ project_id }});
+                    $("#WiselibFolderCreationModal").modal('show');
+                    //$.post("{{ path('AceUtilitiesBundle_createWiselibFile') }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test.cpp" }, function (data) {
 
-                $.post("{{ path('AceUtilitiesBundle_createWiselibFile') }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test.cpp" }, function (data) {
+                        //alert("Data received: " +JSON.stringify(data, null, 4));
+                        //handleResponse(data);
+                    //});
+                }else{
+                    $('#WiselibFileCreationModal').data('fpath', $(this).attr("fpath"));
+                    $('#WiselibFileCreationModal').data('id', {{ project_id }});
+                    $("#WiselibFileCreationModal").modal('show');
+                }
 
-                    //alert("Data received: " +JSON.stringify(data, null, 4));
-                    handleResponse(data);
-                });
             },
             items: {
                 "Add_New_File": {name: "Add New File", icon: "edit"},

@@ -398,15 +398,41 @@ class DefaultController extends Controller
 
 
         $fpath = $this->getRequest()->request->get('fpath');
-        $project_id = $this->getRequest()->request->get('project_id');
-        $filename = $this->getRequest()->request->get('filename');
+        $project_id = $this->getRequest()->request->get('id');
+        $filename = json_decode($this->getRequest()->request->get('filename'), true);
+
+
         // TODO: do parameter validation
 
         // TODO: check if the user has permission to write to the project
         //$data = json_decode($data, true);
 
         $projectmanager = $this->get('ace_project.sketchmanager');
-        $response = $projectmanager->createWiselibFileAction($project_id, $fpath, $filename, "")->getContent();
+        $response = $projectmanager->createWiselibFileAction($project_id, $fpath, $filename, "",false)->getContent();
+        $response = json_decode($response, true);
+        return new Response(json_encode($response));
+    }
+
+    public function createWiselibFolderAction()
+    {
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+
+        $fpath = $this->getRequest()->request->get('fpath');
+        $project_id = $this->getRequest()->request->get('id');
+        $filename = $this->getRequest()->request->get('filename');
+        $folder = json_decode($this->getRequest()->request->get('folder'), true);
+        // TODO: do parameter validation
+
+        // TODO: check if the user has permission to write to the project
+        //$data = json_decode($data, true);
+
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response;
+        if($folder)
+            $response = $projectmanager->createWiselibFileAction($project_id, $fpath, $filename, "", true)->getContent();
+        else
+            $response = $projectmanager->createWiselibFileAction($project_id, $fpath, $filename, "", false)->getContent();
         $response = json_decode($response, true);
         return new Response(json_encode($response));
     }

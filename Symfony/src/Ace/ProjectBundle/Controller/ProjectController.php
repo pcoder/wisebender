@@ -447,7 +447,7 @@ class ProjectController extends Controller
      *                  $rdir = 'wiselib.stable/algorithms/routing/dsdv'
      */
 
-    public function createWiselibFileAction($id, $rdir, $filename, $code)
+    public function createWiselibFileAction($id, $rdir, $filename, $code, $folder=false)
     {
         //$perm = json_decode($this->checkWriteProjectPermissions($id), true);
         //if(!$perm['success'])
@@ -460,7 +460,7 @@ class ProjectController extends Controller
         //return new Response(json_encode($canCreate));
         if($canCreate["success"])
         {
-            $create = $this->fc->createWiselibFileAction($project->getProjectfilesId(), $rdir, $filename, $code);
+            $create = $this->fc->createWiselibFileAction($project->getProjectfilesId(), $rdir, $filename, $code, $folder);
             $retval = $create;
         }
         else

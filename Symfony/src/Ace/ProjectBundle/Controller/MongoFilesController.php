@@ -56,7 +56,7 @@ class MongoFilesController extends FilesController
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
 	}
 
-    public function createWiselibFileAction($id, $rdir, $filename, $code){
+    public function createWiselibFileAction($id, $rdir, $filename, $code, $folder=false){
             //TODO: implementation
     }
 	

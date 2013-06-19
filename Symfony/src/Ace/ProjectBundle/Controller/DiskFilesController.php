@@ -89,7 +89,7 @@ class DiskFilesController extends FilesController
      *                  $rdir = 'wiselib.stable/algorithms/routing/dsdv'
      */
 
-    public function createWiselibFileAction($id, $rdir, $filename, $code)
+    public function createWiselibFileAction($id, $rdir, $filename, $code, $folder=false)
     {
         //$canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
         //if(!$canCreateFile["success"])
@@ -99,7 +99,13 @@ class DiskFilesController extends FilesController
         if (!file_exists($dir .$rdir)) {
             mkdir($dir.$rdir);
         }
-        file_put_contents($dir. $rdir . "/".$filename,$code);
+        // TODO check if the folder creation was successful and if the code was written successfully
+        if($folder)
+            mkdir($dir.$rdir . "/" .$filename);
+        else{
+            file_put_contents($dir. $rdir . "/".$filename,$code);
+        }
+
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG,array("writing_to" => $dir."/" . $rdir . "/".$filename));
     }
 

@@ -261,6 +261,23 @@ function createFile() {
         handleResponse(data);
     });
 }
+function createWiselibFolder(){
+    setOperationProgress(90);
+    //var val = { filename:$("#createWiselibFolderfield").val() };
+    //alert("Posting id=" + $('#WiselibFolderCreationModal').data('id') + ", " + $("#createWiselibFolderfield").val() + ", " + $('#WiselibFolderCreationModal').data('fpath'));
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFolderCreationModal').data('id'), filename:$("#createWiselibFolderfield").val(), 'fpath': $('#WiselibFolderCreationModal').data('fpath'), 'folder':true}, function (data) {
+       $("#WiselibFolderCreationModal").modal('hide');
+       handleResponse(data);
+    });
+}
+
+function createWiselibFile(){
+    setOperationProgress(90);
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename:$("#createWiselibFilefield").val(), 'fpath': $('#WiselibFileCreationModal').data('fpath')}, function (data) {
+        $("#WiselibFileCreationModal").modal('hide');
+        handleResponse(data);
+    });
+}
 
 function deleteFileModal(filename) {
 //    $("#oldFilename").val(filename);

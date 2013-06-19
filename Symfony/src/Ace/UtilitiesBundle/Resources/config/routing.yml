@@ -113,3 +113,9 @@ AceUtilitiesBundle_createWiselibFile:
   defaults: { _controller: AceUtilitiesBundle:Default:createWiselibFile }
   requirements:
      _method:  POST
+
+AceUtilitiesBundle_createWiselibFolder:
+  pattern:  /createWiselibFolder
+  defaults: { _controller: AceUtilitiesBundle:Default:createWiselibFolder }
+  requirements:
+     _method:  POST

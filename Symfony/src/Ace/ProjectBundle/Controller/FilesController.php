@@ -21,7 +21,7 @@ abstract class FilesController extends Controller
 
     public abstract function createFileAction($id, $filename, $code);
 
-    public abstract function createWiselibFileAction($id, $rdir, $filename, $code);
+    public abstract function createWiselibFileAction($id, $rdir, $filename, $code, $folder=false);
 
     public abstract function getFileAction($id, $filename);
 
