@@ -9,12 +9,13 @@
             callback: function(key, options) {
                 //alert(JSON.stringify(options, null, 4));
                 var m = "clicked: " + key;
-                alert($(this).attr("fpath") + " and pid = " + {{ project_id  }});
+                //alert($(this).attr("fpath") + " and pid = " + {{ project_id  }});
                 //window.console && console.log(m) || alert(m);
 
-                $.post("{{ path('AceUtilitiesBundle_createFile' }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test" }, function (data) {
+                $.post("{{ path('AceUtilitiesBundle_createWiselibFile') }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test.cpp" }, function (data) {
+
+                    //alert("Data received: " +JSON.stringify(data, null, 4));
                     handleResponse(data);
-                    //   alert("Data received: " +JSON.stringify(data, null, 4));
                 });
             },
             items: {

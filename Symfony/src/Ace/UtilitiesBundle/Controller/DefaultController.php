@@ -392,15 +392,21 @@ class DefaultController extends Controller
 		return new Response(json_encode($response));
 	}
 
-    public function createWiselibFileAction($id)
+    public function createWiselibFileAction()
     {
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-        $data = $this->getRequest()->request->get('data');
-        $data = json_decode($data, true);
+
+        $fpath = $this->getRequest()->request->get('fpath');
+        $project_id = $this->getRequest()->request->get('project_id');
+        $filename = $this->getRequest()->request->get('filename');
+        // TODO: do parameter validation
+
+        // TODO: check if the user has permission to write to the project
+        //$data = json_decode($data, true);
 
         $projectmanager = $this->get('ace_project.sketchmanager');
-        $response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
+        $response = $projectmanager->createWiselibFileAction($project_id, $fpath, $filename, "")->getContent();
         $response = json_decode($response, true);
         return new Response(json_encode($response));
     }

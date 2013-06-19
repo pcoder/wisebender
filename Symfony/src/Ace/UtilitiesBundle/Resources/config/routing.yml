@@ -108,8 +108,8 @@ AceUtilitiesBundle_editBoard:
   requirements:
     _method: POST
 
-AceUtilitiesBundle_createFile:
-  pattern:  /createFile
+AceUtilitiesBundle_createWiselibFile:
+  pattern:  /createWiselibFile
   defaults: { _controller: AceUtilitiesBundle:Default:createWiselibFile }
   requirements:
      _method:  POST

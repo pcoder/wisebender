@@ -449,14 +449,15 @@ class ProjectController extends Controller
 
     public function createWiselibFileAction($id, $rdir, $filename, $code)
     {
-        $perm = json_decode($this->checkWriteProjectPermissions($id), true);
-        if(!$perm['success'])
-        {
-            return new Response(json_encode($perm));
-        }
+        //$perm = json_decode($this->checkWriteProjectPermissions($id), true);
+        //if(!$perm['success'])
+        //{
+        //    return new Response(json_encode($perm));
+        //}
         $project = $this->getProjectById($id);
 
         $canCreate = json_decode($this->canCreateFile($project->getId(), $filename), true);
+        //return new Response(json_encode($canCreate));
         if($canCreate["success"])
         {
             $create = $this->fc->createWiselibFileAction($project->getProjectfilesId(), $rdir, $filename, $code);

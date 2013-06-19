@@ -91,18 +91,16 @@ class DiskFilesController extends FilesController
 
     public function createWiselibFileAction($id, $rdir, $filename, $code)
     {
-        $canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
-        if(!$canCreateFile["success"])
-            return json_encode($canCreateFile);
+        //$canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
+        //if(!$canCreateFile["success"])
+          //  return json_encode($canCreateFile);
         $dir = $this->getDir($id);
 
-        if (!file_exists($dir . "/" .$rdir)) {
-            mkdir($dir . "/" .$rdir);
+        if (!file_exists($dir .$rdir)) {
+            mkdir($dir.$rdir);
         }
-
-        file_put_contents($dir."/" . $rdir . "/".$filename,$code);
-
-        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
+        file_put_contents($dir. $rdir . "/".$filename,$code);
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG,array("writing_to" => $dir."/" . $rdir . "/".$filename));
     }
 
     public function getFileAction($id, $filename)
