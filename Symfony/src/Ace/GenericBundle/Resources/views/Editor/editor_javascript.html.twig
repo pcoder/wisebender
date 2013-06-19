@@ -1,2 +1,23 @@
 <script src="{{ asset("beautify.js") }}" type="text/javascript"></script>
 <script src="{{ asset("js/ace.js") }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset("js/jquery.ui.position.js") }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset("js/jquery.contextMenu.js") }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" class="">
+    $(function(){
+        $.contextMenu({
+            selector: '.context-menu-one',
+            callback: function(key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m);
+            },
+            items: {
+                "Add New File": {name: "Add New File", icon: "edit"},
+                "Add New Directory": {name: "Add New Directory", icon: "edit"}
+            }
+        });
+
+        $('.context-menu-one').on('click', function(e){
+            console.log('clicked', this);
+        })
+    });
+</script>
