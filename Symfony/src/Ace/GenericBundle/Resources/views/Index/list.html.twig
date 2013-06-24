@@ -103,8 +103,37 @@
 	{% if user["walkthrough_status"] < 5  %}
 		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
 	{% endif %}
-
-
+    <div class="row-fluid">
+    <div class="span60">
+    <h3>0. Create New Project</h3>
+    <form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}' style="max-width:80%;">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="input-prepend input-append" style="max-width:80%;">
+                    <span class="add-on">Name:</span>
+                    <input type="text" name='project_name' style="max-width:80%;">
+                    <button type="submit" class="btn">Create</button>
+                </div>
+            </div>
+        </div>
+        {% if avail_priv_proj["success"] %}
+            <div class="row-fluid" style="margin-top: 5px;">
+                <div class="span12">
+<span class="help-inline" style="margin-top: 5px; margin-right: 10px;">
+Project Type:
+</span>
+                    <label class="radio inline">
+                        <input type="radio" name="isPublic" value="true" checked="">Public
+                    </label>
+                    <label class="radio inline"><input type="radio" name="isPublic" value="false">
+                        Private
+                    </label>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+    </div>
+        </div>
 	<!-- clone Wiselib GitHub code -->
 	<div class="row-fluid">
 		<div class="span61">
