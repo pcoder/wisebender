@@ -27,7 +27,7 @@ function warnDeleteProject(deletion_path)
 <p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p>
 <h6>Files:</h6>
 <p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>"
-                   data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_edit', { 'project_id': file['id'], 'fpath': 'main.cpp' }) }}">
+                   data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_edit', { 'project_id': file['id'], 'fpath': file['name'] ~ '_app.cpp' }) }}">
                     {{ file['name'] }}
                 </a>
                 <button style=" float: right; margin-top: -25px; margin-right: 22px; padding: 0px;"

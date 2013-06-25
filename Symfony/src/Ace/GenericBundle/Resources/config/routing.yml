@@ -10,6 +10,12 @@ AceGenericBundle_project:
     pattern:  /sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project }
 
+AceGenericBundle_wiselib_project:
+    pattern:  /edit:{project_name}_app.cpp?project_id={id}
+    defaults: { _controller: AceGenericBundle:Default:edit }
+    requirements:
+       project_name: "[a-zA-Z0-9\-_\/.]+"
+
 AceGenericBundle_edit:
     pattern:  /edit:{fpath}
     defaults: { _controller: AceGenericBundle:Default:edit }

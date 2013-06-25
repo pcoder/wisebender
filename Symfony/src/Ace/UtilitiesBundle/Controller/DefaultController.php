@@ -44,7 +44,7 @@ class DefaultController extends Controller
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
-			return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+			return $this->redirect($this->generateUrl('AceGenericBundle_wiselib_project',array('id' => $response["id"], 'project_name' => $project_name)));
 		}
 
 		$this->get('session')->setFlash('error', "Error: ".$response["error"]);

@@ -72,7 +72,7 @@ class DefaultController extends Controller
 	public function projectAction($id, $embed = false)
 	{
 
-		/** @var SketchController $projectmanager */
+		/** @var lController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$projects = NULL;
 
