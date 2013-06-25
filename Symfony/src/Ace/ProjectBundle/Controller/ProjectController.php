@@ -49,6 +49,32 @@ class ProjectController extends Controller
 
 	}
 
+    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic)
+    {
+
+        if(!$isPublic)
+        {
+            $canCreate = json_decode($this->canCreatePrivateProject($user_id),true);
+        }
+        else
+        {
+            $canCreate = array("success" => true);
+        }
+
+        if($canCreate["success"])
+        {
+            $response = $this->createAction($user_id, $project_name, "", $isPublic)->getContent();
+            $response=json_decode($response, true);
+        }
+        else
+        {
+            $response = $canCreate;
+        }
+
+        return new Response(json_encode($response));
+
+    }
+
 	public function listAction($owner)
 	{
         $private_access = false;

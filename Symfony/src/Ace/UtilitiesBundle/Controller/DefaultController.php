@@ -25,7 +25,11 @@ class DefaultController extends Controller
 			$is_public = $this->getRequest()->request->get('isPublic') === 'true' ? true : false;
 		}
 
-		$text = "";
+        $text="
+        void main(){
+
+        }
+        ";
 		if($this->getRequest()->request->get('code'))
 		{
 			 $text = htmlspecialchars_decode($this->getRequest()->request->get('code'));
@@ -36,7 +40,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
+		$response = $this->get('ace_project.sketchmanager')->createWiselibProjectAction($user["id"], $project_name, $text, $is_public)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{

@@ -26,8 +26,9 @@ class MongoFilesController extends FilesController
 
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_PROJ_MSG, array("id" => $pf->getId()));
 	}
-	
-	public function deleteAction($id)
+
+
+    public function deleteAction($id)
 	{
 		$pf = $this->getProjectById($id);
 	    $dm = $this->dm;

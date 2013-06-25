@@ -41,6 +41,29 @@ class SketchController extends ProjectController
 		return new Response(json_encode($retval));
 	}
 
+    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic = true)
+    {
+        $retval;
+        $response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
+        $response=json_decode($response, true);
+
+        if($response["success"])
+        {
+            $response2 = $this->createFileAction($response["id"], $project_name."_app.cpp", $code)->getContent();
+            $response2=json_decode($response2, true);
+            if($response2["success"])
+            {
+                $retval = array("success" => true, "id" => $response["id"]);
+            }
+            else
+                $retval = $response2;
+        }
+        else
+            $retval = $response;
+
+        return new Response(json_encode($retval));
+    }
+
 
 	public function cloneAction($owner, $id)
 	{
