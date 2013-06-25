@@ -25,11 +25,6 @@ class DefaultController extends Controller
 			$is_public = $this->getRequest()->request->get('isPublic') === 'true' ? true : false;
 		}
 
-        $text="
-        void main(){
-
-        }
-        ";
 		if($this->getRequest()->request->get('code'))
 		{
 			 $text = htmlspecialchars_decode($this->getRequest()->request->get('code'));
