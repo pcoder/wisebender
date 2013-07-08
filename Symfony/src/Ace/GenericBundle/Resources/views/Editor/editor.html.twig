@@ -2,7 +2,7 @@
 {% if project_name is not defined %}
 {% set project_name = 'Wiselib' %}
 {% endif %}
-{% block title %} {{ project_name }} : wisebender{% endblock %}
+{% block title %} {{ project_name }} : {{ files[0]['filename'] }}{% endblock %}
 
 {% block stylesheets %}
 	<style type="text/css" media="screen">
