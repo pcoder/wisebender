@@ -101,4 +101,7 @@
 {% block fluidcontainer %}
 	{% render 'ace_user.usercontroller:inlineRegisterAction' %}
 	{% include 'AceGenericBundle:Index:supporters.html.twig' %}
+
+	{# Use default parser #}
+	{{ wiselib_wiki|markdown }}
 {% endblock %}

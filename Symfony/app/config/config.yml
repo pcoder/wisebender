@@ -19,7 +19,7 @@ framework:
         default_locale: en 
         auto_start:     true
         lifetime:       2592000
-        
+
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
@@ -31,6 +31,7 @@ twig:
         sender: %sender%
         library: %library%
         islocalhost: %islocalhost%
+        wiselib_wiki: %wiselib.wiki.dir%
 
 # Assetic Configuration
 assetic:

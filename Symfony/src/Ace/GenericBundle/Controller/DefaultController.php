@@ -38,7 +38,13 @@ class DefaultController extends Controller
 			}
 		}
 
-		return $this->render('AceGenericBundle:Index:index.html.twig');
+		// read the contents of the wiki and pass it to index.html.twig
+        $file = $this->container->getParameter('wiselib.wiki.dir') . DIRECTORY_SEPARATOR . "Home.rest";
+        if(file_exists($file))
+		    $wiki = file_get_contents($file, FILE_USE_INCLUDE_PATH);
+        else
+            $wiki = '';
+		return $this->render('AceGenericBundle:Index:index.html.twig', array('wiselib_wiki' => $wiki));
 	}
 
 	public function userAction($user)

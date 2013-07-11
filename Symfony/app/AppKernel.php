@@ -29,6 +29,7 @@ class AppKernel extends Kernel
             new Ace\GenericBundle\AceGenericBundle(),
             new Ace\OwnerBundle\AceOwnerBundle(),
             new Ace\BoardBundle\AceBoardBundle(),
+			new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
