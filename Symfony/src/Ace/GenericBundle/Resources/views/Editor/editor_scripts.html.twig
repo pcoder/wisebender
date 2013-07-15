@@ -69,7 +69,7 @@ function save() {
      //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
 }
-
+var test;
 function save_to_github(repo_name){
 // get OAuth key
 
@@ -80,6 +80,8 @@ function save_to_github(repo_name){
         // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
         var oauthProvider = 'github';
         var user_name = '';
+        var token = '';
+
 
         OAuth.popup(oauthProvider, function(error, success){
             if (success) {
@@ -96,6 +98,7 @@ function save_to_github(repo_name){
                     success: function (data) {
                         var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                         user_name = json.login;
+                        token = success.access_token;
                         alert ("The logged user is " + user_name);
                     },
                     error: function(request, status, error) {
@@ -107,6 +110,7 @@ function save_to_github(repo_name){
                 //GET /repos/:user/:repo/git/refs/heads/master
                 //Store the SHA for the latest commit (SHA-LATEST-COMMIT)
                 var sha_latest_commit='';
+                var old_commit_sha = '';
                 $.ajax
                 ({
                     type: "GET",
@@ -116,8 +120,15 @@ function save_to_github(repo_name){
                     data : '',
                     success: function (data) {
                         var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                        var old_commit_sha = '';
-                        if(json.message.toLowerCase().trim() == "not found"){
+                        old_commit_sha = json.object.sha;
+                        src_commit(user_name,repo_name, success.access_token, old_commit_sha);
+                    },
+                    error: function(request, status, error) {
+                        var json_r = $.parseJSON(request.responseText);
+                        if(json_r.message.toLowerCase() == "git repository is empty."){
+                            //src_commit(user_name, repo_name, success.access_token);
+                            // TODO find a solution for this case!
+                        }else if(json_r.message.toLowerCase().trim() == "not found"){
                             // the repo doesn't exist
                             $.ajax
                             ({
@@ -126,123 +137,128 @@ function save_to_github(repo_name){
                                 dataType: 'json',
                                 async: false,
                                 //json object to sent to the authentication url
-                                data : '{ "name": "' + repo_name + '", "description": "This ' + repo_name+ ' repo was created using Wisebender."}',
+                                data : '{ "name": "' + repo_name + '", "description": "This ' + repo_name+ ' repo was created using Wisebender.", "auto_init": true}',
                                 success: function () {
-                                    alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
+                                   // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
                                 },
                                 error: function(request, status, error) {
                                     alert("ERROR: "+ request.responseText);
                                 }
                             });
 
-                        }else if(json.message.toLowerCase() == "git repository is empty."){
-                            // repository exists but is empty
-
-                        }else{
-                            // commit changes
-                            old_commit_sha = json.object.sha;
-                        }
-
-                        // a) Create a blob
-                        var sha_blob = '';
-                        $.ajax
-                        ({
-                            type: "POST",
-                            url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/blobs?access_token=' + success.access_token,
-                            dataType: 'json',
-                            async: false,
-                            data : '{ "content": "This is a test content.", "encoding": "utf-8"}',
-                            success: function ( data_blob ) {
-                                var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-                                sha_blob = json_blob.sha;
-                                alert("Blob created! sha=" + sha_blob);
-                            },
-                            error: function(request, status, error) {
-                                alert("ERROR: "+ request.responseText);
-                                return;
-                            }
-                        });
-
-                        // b) Create a tree with the above blob
-                        var new_tree_sha='';
-                        $.ajax
-                        ({
-                            type: "POST",
-                            url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/trees?access_token=' + success.access_token,
-                            dataType: 'json',
-                            async: false,
-                            data : '{ "base_tree": "'+old_commit_sha+'", "tree": [{ "path": "' + repo_name+ '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
-                            success: function ( data_tree ) {
-                                var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
-                                new_tree_sha = json_tree.sha;
-                                alert("Tree created! sha=" + new_tree_sha);
-                            },
-                            error: function(request, status, error) {
-                                alert("ERROR: "+ request.responseText);
-                                return;
-                            }
-                        });
-
-                        // 3. POST a new commit with the `new_tree_sha` as the tree and `old_commit_sha` as the parent (returns `new_commit_sha`)
-                        var new_commit_sha = '';
-                        $.ajax
-                        ({
-                            type: "POST",
-                            url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/commits?access_token=' + success.access_token,
-                            dataType: 'json',
-                            async: false,
-                            data : '{"message": "Committed via GitHub API", "author": { "name": "' + user_name+ '"}, "parents": ["' +old_commit_sha+ '"], "tree": "' + new_tree_sha+ '"}',
-                            success: function ( data_commit ) {
-                                var json_commit = $.parseJSON(JSON.stringify(data_commit, undefined, 2));
-                                new_commit_sha = json_commit.sha;
-                                alert("Committed the changes! sha=" + new_commit_sha);
-                            },
-                            error: function(request, status, error) {
-                                alert("ERROR: "+ request.responseText);
-                                return;
-                            }
-                        });
-
-                        // 4. POST a new "refs/heads/master" (set it to `new_commit_sha`)
-                        $.ajax
-                        ({
-                            type: "PATCH",
-                            url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
-                            dataType: 'json',
-                            async: false,
-                            data : '{"sha": "' + new_commit_sha +'","force": true}',
-                            success: function ( data_tree ) {
-                                var json_patch = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
-
-                                if(typeof json_patch.object.sha === "undefined"){
-                                    alert("ERROR. Response from reference update was " + json_patch);
-                                }else{
-                                    alert("Reference updated! sha=" + new_tree_sha);
+                            $.ajax
+                            ({
+                                type: "GET",
+                                url: 'https://api.github.com/repos/' +user_name+ '/' + repo_name+ '/git/refs/heads/master?access_token=' + success.access_token,
+                                dataType: 'json',
+                                async: false,
+                                data : '',
+                                success: function (data) {
+                                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                    old_commit_sha = json.object.sha;
+                                    src_commit(user_name,repo_name, success.access_token, old_commit_sha);
+                                },
+                                error: function(request, status, error) {
+                                    alert("ERROR: "+ request.responseText);
                                 }
-                            },
-                            error: function(request, status, error) {
-                                alert("ERROR: "+ request.responseText);
-                                return;
-                            }
-                        });
-                    },
-                    error: function(request, status, error) {
-                        alert("ERROR: "+ request.responseText);
+                             });
+                            src_commit(user_name, repo_name, success.access_token, old_commit_sha);
+                        }else{
+                            alert("ERROR: "+ request.responseText);
+                        }
                     }
                 });
-
-                //GET /repos/:user/:repo/git/commits/SHA-LATEST-COMMIT
-                //Store the SHA for the tree (SHA-BASE-TREE)
             }
             else {
                 //$('#result').html("// Result error <br /><br />" + error);
                 alert("// Result error <br /><br />" + error);
             }
-            //$('#result').show();
         });
+}
 
-// check if the project already exists on GitHub. If yes => commit the changes in the code else create the repository with the application name and commit the code and files
+function src_commit(user_name, repo_name, token, old_commit_sha){
+    // a) Create a blob
+    var sha_blob = '';
+    $.ajax
+    ({
+        type: "POST",
+        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/blobs?access_token=' + token,
+        dataType: 'json',
+        async: false,
+        data : '{ "content": "This is a test content.", "encoding": "utf-8"}',
+        success: function ( data_blob ) {
+            var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+            sha_blob = json_blob.sha;
+            //alert("Blob created! sha=" + sha_blob);
+        },
+        error: function(request, status, error) {
+            alert("ERROR: "+ request.responseText);
+            return;
+        }
+    });
 
+    // b) Create a tree with the above blob
+    var new_tree_sha='';
+    $.ajax
+    ({
+        type: "POST",
+        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/trees?access_token=' + token,
+        dataType: 'json',
+        async: false,
+        data : '{ "base_tree": "'+old_commit_sha+'", "tree": [{ "path": "' + repo_name+ '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
+        success: function ( data_tree ) {
+            var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
+            new_tree_sha = json_tree.sha;
+            //alert("Tree created! sha=" + new_tree_sha);
+        },
+        error: function(request, status, error) {
+            alert("ERROR: "+ request.responseText);
+            return;
+        }
+    });
+
+    // 3. POST a new commit with the `new_tree_sha` as the tree and `old_commit_sha` as the parent (returns `new_commit_sha`)
+    var new_commit_sha = '';
+    $.ajax
+    ({
+        type: "POST",
+        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/commits?access_token=' + token,
+        dataType: 'json',
+        async: false,
+        data : '{"message": "Committed via GitHub API", "author": { "name": "' + user_name+ '"}, "parents": ["' +old_commit_sha+ '"], "tree": "' + new_tree_sha+ '"}',
+        success: function ( data_commit ) {
+            var json_commit = $.parseJSON(JSON.stringify(data_commit, undefined, 2));
+            new_commit_sha = json_commit.sha;
+            //alert("Committed the changes! sha=" + new_commit_sha);
+        },
+        error: function(request, status, error) {
+            alert("ERROR: "+ request.responseText);
+            return;
+        }
+    });
+
+    // 4. POST a new "refs/heads/master" (set it to `new_commit_sha`)
+    $.ajax
+    ({
+        type: "PATCH",
+        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/refs/heads/master?access_token=' + token,
+        dataType: 'json',
+        async: false,
+        data : '{"sha": "' + new_commit_sha +'","force": true}',
+        success: function ( data_tree ) {
+            var json_patch = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
+
+            if(typeof json_patch.object.sha === "undefined"){
+                alert("ERROR. Response from reference update was " + json_patch);
+            }else{
+                //alert("Reference updated! sha=" + new_tree_sha);
+            }
+        },
+        error: function(request, status, error) {
+            alert("ERROR: "+ request.responseText);
+            return;
+        }
+    });
 }
 
 function revert() {
