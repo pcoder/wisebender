@@ -2,6 +2,7 @@
 <script src="{{ asset("js/ace.js") }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset("js/jquery.ui.position.js") }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset("js/jquery.contextMenu.js") }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset("js/oauth.js") }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" class="">
     $(function(){
         $.contextMenu({
@@ -38,4 +39,6 @@
             console.log('clicked', this);
         })
     });
+
+    OAuth.initialize('pXB0AkTIviqG1Xer8_qPtgbs16E');
 </script>
