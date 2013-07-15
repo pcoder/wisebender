@@ -296,7 +296,7 @@
 
                     <div>
                         <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
-                            <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
+                            <!--<button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
                                 <i id="delete_icon" class="icon-trash  icon-white"></i>
                                 Delete
                             </button><br/>
@@ -308,10 +308,10 @@
                             <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
                                 <i id="revert_icon" class="icon-arrow-left"></i>
                                 Undo All
-                            </button><br/>
-                            <button id="save" class="btn" onclick="save();" title="Save changes">
+                            </button><br/>-->
+                            <button id="send_to_github" class="btn" onclick="save_to_github('{{ project_name }}');" title="Send to GitHub">
                                 <i id="save_icon" class="icon-download"></i>
-                                Save
+                                Send to GitHub
                             </button>
                             <!--<button id="save_to_github" class="btn" onclick="saveToGitHub();" title="Save to GitHub">
                                 <i id="save_icon" class="icon-download"></i>
@@ -320,6 +320,8 @@
                         </div>
 
                     </div>
+
+                    <hr/>
 
                     <h4>
                         {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}

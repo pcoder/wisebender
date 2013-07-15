@@ -69,13 +69,14 @@ function save() {
      //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
 }
-var test;
+
 function save_to_github(repo_name){
 // get OAuth key
 
         //var repo_name = $('#text_repo_name').val();
         // the possible values for oauthMethod are 'Popup' & 'Redirect'
-        var oauthMethod = 'Popup';
+        setOperationProgress(90);
+        var oauthMethod = 'Redirect';
 
         // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
         var oauthProvider = 'github';
@@ -99,7 +100,7 @@ function save_to_github(repo_name){
                         var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                         user_name = json.login;
                         token = success.access_token;
-                        alert ("The logged user is " + user_name);
+                        //alert ("The logged user is " + user_name);
                     },
                     error: function(request, status, error) {
                         alert("ERROR: "+ request.responseText);
@@ -162,7 +163,6 @@ function save_to_github(repo_name){
                                     alert("ERROR: "+ request.responseText);
                                 }
                              });
-                            src_commit(user_name, repo_name, success.access_token, old_commit_sha);
                         }else{
                             alert("ERROR: "+ request.responseText);
                         }
@@ -179,14 +179,20 @@ function save_to_github(repo_name){
 function src_commit(user_name, repo_name, token, old_commit_sha){
     // a) Create a blob
     var sha_blob = '';
+    var fcontent = editor.getSession().getValue();
+    var json_data = {
+        "content" : fcontent,
+        "encoding" : "utf-8"
+    };
     $.ajax
     ({
         type: "POST",
         url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/blobs?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{ "content": "This is a test content.", "encoding": "utf-8"}',
+        data : JSON.stringify(json_data),
         success: function ( data_blob ) {
+            //alert('JSON Data = ' + JSON.stringify(json_data));
             var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
             sha_blob = json_blob.sha;
             //alert("Blob created! sha=" + sha_blob);
@@ -205,7 +211,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha){
         url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/trees?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{ "base_tree": "'+old_commit_sha+'", "tree": [{ "path": "' + repo_name+ '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
+        data : '{ "base_tree": "'+old_commit_sha+'", "tree": [{ "path": "' + repo_name + '_app.cpp'+ '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
         success: function ( data_tree ) {
             var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
             new_tree_sha = json_tree.sha;
@@ -252,6 +258,8 @@ function src_commit(user_name, repo_name, token, old_commit_sha){
                 alert("ERROR. Response from reference update was " + json_patch);
             }else{
                 //alert("Reference updated! sha=" + new_tree_sha);
+                //alert("The project was successfully saved to GitHub.");
+                setOperationOutput("The project was successfully saved to GitHub.");
             }
         },
         error: function(request, status, error) {
