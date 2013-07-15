@@ -280,18 +280,45 @@
                             <i class="icon-download-alt icon-white"></i>
                             Download
                         </a>
-                        <!--<button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
+                        <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
                             <i id="revert_icon" class="icon-arrow-left"></i>
                             Undo All
-                        </button>-->
+                        </button>
                         <button id="save" class="btn" onclick="save();" title="Save changes">
                             <i id="save_icon" class="icon-download"></i>
                             Save
                         </button>
-                        <button id="save_to_github" class="btn" onclick="saveToGitHub();" title="Save to GitHub">
+                        <!--<button id="save_to_github" class="btn" onclick="saveToGitHub();" title="Save to GitHub">
                             <i id="save_icon" class="icon-download"></i>
                             GitHub
-                        </button>
+                        </button>-->
+                    </div>
+
+                    <div>
+                        <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
+                            <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
+                                <i id="delete_icon" class="icon-trash  icon-white"></i>
+                                Delete
+                            </button><br/>
+                            <a id="download" class="btn btn-primary" title="Download"
+                               href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}">
+                                <i class="icon-download-alt icon-white"></i>
+                                Download
+                            </a><br/>
+                            <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
+                                <i id="revert_icon" class="icon-arrow-left"></i>
+                                Undo All
+                            </button><br/>
+                            <button id="save" class="btn" onclick="save();" title="Save changes">
+                                <i id="save_icon" class="icon-download"></i>
+                                Save
+                            </button>
+                            <!--<button id="save_to_github" class="btn" onclick="saveToGitHub();" title="Save to GitHub">
+                                <i id="save_icon" class="icon-download"></i>
+                                GitHub
+                            </button>-->
+                        </div>
+
                     </div>
 
                     <h4>
