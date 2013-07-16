@@ -28,6 +28,12 @@ AceUtilitiesBundle_setprojectdescription:
    requirements:
       _method:  POST
 
+AceUtilitiesBundle_setprojectgiturl:
+   pattern:  /setprojectgiturl/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:setGitUrlAction }
+   requirements:
+      _method:  POST
+
 AceUtilitiesBundle_setprojectname:
   pattern:  /setprojectname/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:setName }

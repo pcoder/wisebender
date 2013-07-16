@@ -55,7 +55,11 @@ function setOperationOutput(output) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    //alert("Sending id=  {{ fpath }} and project_id =  {{ project_id }}");
+    //alert("Sending id=
+    {{ fpath }}
+    and
+    project_id =
+            {{ project_id }}");
     $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
@@ -77,6 +81,7 @@ function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
     $("#commitModal").modal('show');
 }
+
 
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
@@ -184,7 +189,6 @@ function revert() {
     }, 100);
 }
 
-
 function verification_onFail(message) {
     $("#compile_output").css('color', 'black');
     $("#editor").css("bottom", "180px");
@@ -195,6 +199,7 @@ function verification_onFail(message) {
     $("#compile_output").css("visibility", "visible");
     editor.resize();
 }
+
 
 function verification_onSuccess() {
     $("#compile_output").css('color', '');
@@ -207,17 +212,17 @@ function verification_onSuccess() {
     editor.resize();
 }
 
-
 old_usbflash = usbflash;
+
+
 usbflash = function () {
     $("#collapseSerial").height(0);
     $("#collapseSerial").removeClass("in");
     old_usbflash();
 
 }
-
-
 old_load_files = load_files;
+
 load_files = function () {
     var pos = editor.getCursorPosition();
     loadCode();
@@ -536,8 +541,15 @@ $(document).ready(function () {
                                 async: false,
                                 //json object to sent to the authentication url
                                 data: '{ "name": "' + repo_name + '", "description": "This ' + repo_name + ' repo was created using Wisebender.", "auto_init": true}',
-                                success: function () {
+                                success: function (data) {
                                     // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
+                                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                    // TODO continue from home 16July
+                                    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#description").val()}, function (data) {
+                                        $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
+                                        $("#description_change_link").removeClass("btn btn-primary");
+                                        $("#description_change_link").text("edit");
+                                    });
                                 },
                                 error: function (request, status, error) {
                                     alert("ERROR: " + request.responseText);
@@ -570,7 +582,10 @@ $(document).ready(function () {
                 //$('#result').html("// Result error <br /><br />" + error);
                 alert("// Result error <br /><br />" + error);
             }
-        });
-    });
-});
+        })
+        ;
+    })
+    ;
+})
+;
 </script>

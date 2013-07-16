@@ -103,25 +103,29 @@ class DefaultController extends Controller
 			return new Response("");
 	}
 
+    // TODO check if the user is logged in and authorized for the cases below??
 	public function setDescriptionAction($id)
 	{
-
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
 		$description = $this->getRequest()->request->get('data');
-
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
         return new Response(json_encode($response));
 	}
 
+    public function setGitUrlAction($id)
+    {
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        $git_url = $this->getRequest()->request->get('data');
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response = $projectmanager->setGiturlAction($id, $git_url)->getContent();
+        return new Response(json_encode($response));
+    }
+
 	public function setNameAction($id)
 	{
-
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
 		$new_name = $this->getRequest()->request->get('data');
-
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->renameAction($id, $new_name)->getContent();
 		return new Response($response);
@@ -129,12 +133,9 @@ class DefaultController extends Controller
 
 	public function renameFileAction($id)
 	{
-
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
 		$old_filename = $this->getRequest()->request->get('oldFilename');
 		$new_filename = $this->getRequest()->request->get('newFilename');
-
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();
 		return new Response($response);

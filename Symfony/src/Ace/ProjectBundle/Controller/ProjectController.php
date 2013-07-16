@@ -162,6 +162,7 @@ class ProjectController extends Controller
 		$project->setOwner($user);
 	    $project->setName($name);
 	    $project->setDescription($description);
+        $project->setGitUrl("");
 	    $project->setIsPublic($isPublic);
         $project->setType($this->sl);
         $response = json_decode($this->fc->createAction(), true);
@@ -425,6 +426,21 @@ class ProjectController extends Controller
 	    $em->flush();
 		return new Response(json_encode(array("success" => true)));
 	}
+
+    public function setGitUrlAction($id, $git_url)
+    {
+        $perm = json_decode($this->checkWriteProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $project->setGitUrl($git_url);
+        $em = $this->em;
+        $em->persist($project);
+        $em->flush();
+        return new Response(json_encode(array("success" => true)));
+    }
 
 	public function listFilesAction($id)
 	{

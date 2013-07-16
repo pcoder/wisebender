@@ -54,6 +54,12 @@ class Project
 	 **/
 	protected $parent;
 
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $git_url;
+
 	/**
      * Get id
      *
@@ -203,4 +209,25 @@ class Project
     {
         return $this->parent;
     }
+
+    /**
+     * Get git url for the project
+     *
+     * @return string
+     */
+    public function getGitUrl()
+    {
+        return $this->git_url;
+    }
+
+    /**
+     * Set git url for the project
+     *
+     * @param string
+     */
+    public function setGitUrl($url)
+    {
+        $this->git_url = $url;
+    }
+
 }
