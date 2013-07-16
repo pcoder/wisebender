@@ -223,6 +223,13 @@ function src_commit(user_name, repo_name, token, old_commit_sha){
         }
     });
 
+
+
+    var val = $("#commitModal").modal('show');
+
+    if(val == -1)
+        return;
+
     // 3. POST a new commit with the `new_tree_sha` as the tree and `old_commit_sha` as the parent (returns `new_commit_sha`)
     var new_commit_sha = '';
     $.ajax
@@ -231,7 +238,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha){
         url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/commits?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{"message": "Committed via GitHub API", "author": { "name": "' + user_name+ '"}, "parents": ["' +old_commit_sha+ '"], "tree": "' + new_tree_sha+ '"}',
+        data : '{"message": "' + val + '", "author": { "name": "' + user_name+ '"}, "parents": ["' +old_commit_sha+ '"], "tree": "' + new_tree_sha+ '"}',
         success: function ( data_commit ) {
             var json_commit = $.parseJSON(JSON.stringify(data_commit, undefined, 2));
             new_commit_sha = json_commit.sha;
@@ -560,5 +567,15 @@ function refreshFiles(){
 	var filesObj = jsObjClone(window.files);
 	return filesObj;
 }
+
+$("#commitModalClose").click(function(){
+  return -1;
+});
+
+$("#commitSubmit").click(function(){
+    var val = $('#commitMessage').val();
+    $('#commitModal').modal('hide');
+    return val;
+});
 
 </script>
