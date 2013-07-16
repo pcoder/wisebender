@@ -1,0 +1,19 @@
+<input type="hidden" id="repoName" name="repoName" value="">
+<div class="modal hide fade" id="commitModal" style="height:80%; overflow:hidden;">
+    <div class="modal-header">
+        <button id="commitModalClose" class="close" data-dismiss="modal">×</button>
+        <h3>Save to GitHub.</h3>
+    </div>
+    <div class="modal-body span5" style="max-height:80%;%">
+        <h5>Project Name:</h5>
+        <p id="name">{{ project_name }}</p>
+        <br/>
+        <h5>Files:</h5>
+        <p id="file">{{ project_name }}_app.cpp</p>
+        <br/>
+        <h5>Commit Message:</h5>
+        <textarea id="commitMessage"></textarea>
+        <br/><br/>
+        <button id="commitSubmit" class="btn" value="Commit">Commit</button>
+    </div>
+</div>

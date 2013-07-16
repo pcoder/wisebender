@@ -8,7 +8,7 @@ function renameFilenameModal(filename) {
 }
 
 function renameFilename() {
-    $.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename:$("#oldFilename").val(), newFilename:$("#newFilename").val()}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename: $("#oldFilename").val(), newFilename: $("#newFilename").val()}, function (data) {
         $("#filenameModal").modal('hide');
         handleResponse(data);
     });
@@ -18,10 +18,9 @@ function handleResponse(response) {
     var response = JSON.parse(response);
     if (response["success"])
         location.reload();
-    else
-    {
-	    setOperationOutput(response["error"]);
-	    $(".modal").modal('hide');
+    else {
+        setOperationOutput(response["error"]);
+        $(".modal").modal('hide');
     }
 }
 
@@ -56,8 +55,8 @@ function setOperationOutput(output) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    //alert("Sending id= {{ fpath }} and project_id = {{ project_id }}");
-    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data:JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+    //alert("Sending id=  {{ fpath }} and project_id =  {{ project_id }}");
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
         data = JSON.parse(data);
@@ -66,186 +65,82 @@ function save() {
             $("#save").removeClass("btn-success");
             $("#save_icon").removeClass("icon-white");
         }, 500);
-     //   alert("Data received: " +JSON.stringify(data, null, 4));
+        //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
 }
 
-function save_to_github(repo_name){
+function save_to_github(repo_name) {
 // get OAuth key
 
-        //var repo_name = $('#text_repo_name').val();
-        // the possible values for oauthMethod are 'Popup' & 'Redirect'
-        setOperationProgress(90);
-        var oauthMethod = 'Redirect';
-
-        // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
-        var oauthProvider = 'github';
-        var user_name = '';
-        var token = '';
-
-
-        OAuth.popup(oauthProvider, function(error, success){
-            if (success) {
-
-                // GET  /user
-                // Get the authenticated user
-                $.ajax
-                ({
-                    type: "GET",
-                    url: 'https://api.github.com/user?access_token=' + success.access_token,
-                    dataType: 'json',
-                    async: false,
-                    data : '',
-                    success: function (data) {
-                        var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                        user_name = json.login;
-                        token = success.access_token;
-                        //alert ("The logged user is " + user_name);
-                    },
-                    error: function(request, status, error) {
-                        alert("ERROR: "+ request.responseText);
-                        return;
-                    }
-                });
-
-                //GET /repos/:user/:repo/git/refs/heads/master
-                //Store the SHA for the latest commit (SHA-LATEST-COMMIT)
-                var sha_latest_commit='';
-                var old_commit_sha = '';
-                $.ajax
-                ({
-                    type: "GET",
-                    url: 'https://api.github.com/repos/' +user_name+ '/' + repo_name+ '/git/refs/heads/master?access_token=' + success.access_token,
-                    dataType: 'json',
-                    async: false,
-                    data : '',
-                    success: function (data) {
-                        var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                        old_commit_sha = json.object.sha;
-                        src_commit(user_name,repo_name, success.access_token, old_commit_sha);
-                    },
-                    error: function(request, status, error) {
-                        var json_r = $.parseJSON(request.responseText);
-                        if(json_r.message.toLowerCase() == "git repository is empty."){
-                            //src_commit(user_name, repo_name, success.access_token);
-                            // TODO find a solution for this case!
-                        }else if(json_r.message.toLowerCase().trim() == "not found"){
-                            // the repo doesn't exist
-                            $.ajax
-                            ({
-                                type: "POST",
-                                url: 'https://api.github.com/user/repos?access_token=' + success.access_token,
-                                dataType: 'json',
-                                async: false,
-                                //json object to sent to the authentication url
-                                data : '{ "name": "' + repo_name + '", "description": "This ' + repo_name+ ' repo was created using Wisebender.", "auto_init": true}',
-                                success: function () {
-                                   // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
-                                },
-                                error: function(request, status, error) {
-                                    alert("ERROR: "+ request.responseText);
-                                }
-                            });
-
-                            $.ajax
-                            ({
-                                type: "GET",
-                                url: 'https://api.github.com/repos/' +user_name+ '/' + repo_name+ '/git/refs/heads/master?access_token=' + success.access_token,
-                                dataType: 'json',
-                                async: false,
-                                data : '',
-                                success: function (data) {
-                                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                    old_commit_sha = json.object.sha;
-                                    src_commit(user_name,repo_name, success.access_token, old_commit_sha);
-                                },
-                                error: function(request, status, error) {
-                                    alert("ERROR: "+ request.responseText);
-                                }
-                             });
-                        }else{
-                            alert("ERROR: "+ request.responseText);
-                        }
-                    }
-                });
-            }
-            else {
-                //$('#result').html("// Result error <br /><br />" + error);
-                alert("// Result error <br /><br />" + error);
-            }
-        });
+    //var repo_name = $('#text_repo_name').val();
+    // the possible values for oauthMethod are 'Popup' & 'Redirect'
+    $("#repoName").val(repo_name);
+    $("#commitModal").modal('show');
 }
 
-function src_commit(user_name, repo_name, token, old_commit_sha){
+function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob = '';
     var fcontent = editor.getSession().getValue();
     var json_data = {
-        "content" : fcontent,
-        "encoding" : "utf-8"
+        "content": fcontent,
+        "encoding": "utf-8"
     };
     $.ajax
     ({
         type: "POST",
-        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/blobs?access_token=' + token,
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : JSON.stringify(json_data),
-        success: function ( data_blob ) {
+        data: JSON.stringify(json_data),
+        success: function (data_blob) {
             //alert('JSON Data = ' + JSON.stringify(json_data));
             var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
             sha_blob = json_blob.sha;
             //alert("Blob created! sha=" + sha_blob);
         },
-        error: function(request, status, error) {
-            alert("ERROR: "+ request.responseText);
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
             return;
         }
     });
 
     // b) Create a tree with the above blob
-    var new_tree_sha='';
+    var new_tree_sha = '';
     $.ajax
     ({
         type: "POST",
-        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/trees?access_token=' + token,
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/trees?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{ "base_tree": "'+old_commit_sha+'", "tree": [{ "path": "' + repo_name + '_app.cpp'+ '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
-        success: function ( data_tree ) {
+        data: '{ "base_tree": "' + old_commit_sha + '", "tree": [{ "path": "' + repo_name + '_app.cpp' + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
+        success: function (data_tree) {
             var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
             new_tree_sha = json_tree.sha;
             //alert("Tree created! sha=" + new_tree_sha);
         },
-        error: function(request, status, error) {
-            alert("ERROR: "+ request.responseText);
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
             return;
         }
     });
-
-
-
-    var val = $("#commitModal").modal('show');
-
-    if(val == -1)
-        return;
 
     // 3. POST a new commit with the `new_tree_sha` as the tree and `old_commit_sha` as the parent (returns `new_commit_sha`)
     var new_commit_sha = '';
     $.ajax
     ({
         type: "POST",
-        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/commits?access_token=' + token,
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/commits?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{"message": "' + val + '", "author": { "name": "' + user_name+ '"}, "parents": ["' +old_commit_sha+ '"], "tree": "' + new_tree_sha+ '"}',
-        success: function ( data_commit ) {
+        data: '{"message": "' + val + '", "author": { "name": "' + user_name + '"}, "parents": ["' + old_commit_sha + '"], "tree": "' + new_tree_sha + '"}',
+        success: function (data_commit) {
             var json_commit = $.parseJSON(JSON.stringify(data_commit, undefined, 2));
             new_commit_sha = json_commit.sha;
             //alert("Committed the changes! sha=" + new_commit_sha);
         },
-        error: function(request, status, error) {
-            alert("ERROR: "+ request.responseText);
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
             return;
         }
     });
@@ -254,44 +149,43 @@ function src_commit(user_name, repo_name, token, old_commit_sha){
     $.ajax
     ({
         type: "PATCH",
-        url: 'https://api.github.com/repos/' + user_name +'/'+repo_name + '/git/refs/heads/master?access_token=' + token,
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + token,
         dataType: 'json',
         async: false,
-        data : '{"sha": "' + new_commit_sha +'","force": true}',
-        success: function ( data_tree ) {
+        data: '{"sha": "' + new_commit_sha + '","force": true}',
+        success: function (data_tree) {
             var json_patch = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
 
-            if(typeof json_patch.object.sha === "undefined"){
+            if (typeof json_patch.object.sha === "undefined") {
                 alert("ERROR. Response from reference update was " + json_patch);
-            }else{
+            } else {
                 //alert("Reference updated! sha=" + new_tree_sha);
                 //alert("The project was successfully saved to GitHub.");
                 setOperationOutput("The project was successfully saved to GitHub.");
             }
         },
-        error: function(request, status, error) {
-            alert("ERROR: "+ request.responseText);
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
             return;
         }
     });
 }
 
 function revert() {
-	$("#revert").addClass("btn-success");
+    $("#revert").addClass("btn-success");
     $("#revert_icon").addClass("icon-white");
-	window.files = jsObjClone(window.savedfiles);
+    window.files = jsObjClone(window.savedfiles);
     editor.getSession().setValue($("<div/>").html(window.files[window.selectedFile]).text().replace(/&quot;/g, "\""));
-	window.currentfiles = refreshFiles();
-	setOperationOutput("Reverted to the last saved state.");
+    window.currentfiles = refreshFiles();
+    setOperationOutput("Reverted to the last saved state.");
     window.setTimeout(function () {
-		$("#revert").removeClass("btn-success");
+        $("#revert").removeClass("btn-success");
         $("#revert_icon").removeClass("icon-white");
     }, 100);
 }
 
 
-function verification_onFail(message)
-{
+function verification_onFail(message) {
     $("#compile_output").css('color', 'black');
     $("#editor").css("bottom", "180px");
     $("#compile_output").css("padding-top", "10px");
@@ -302,8 +196,7 @@ function verification_onFail(message)
     editor.resize();
 }
 
-function verification_onSuccess()
-{
+function verification_onSuccess() {
     $("#compile_output").css('color', '');
     $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
     $("#editor").css("bottom", "");
@@ -316,7 +209,7 @@ function verification_onSuccess()
 
 
 old_usbflash = usbflash;
-usbflash = function(){
+usbflash = function () {
     $("#collapseSerial").height(0);
     $("#collapseSerial").removeClass("in");
     old_usbflash();
@@ -325,7 +218,7 @@ usbflash = function(){
 
 
 old_load_files = load_files;
-load_files = function(){
+load_files = function () {
     var pos = editor.getCursorPosition();
     loadCode();
     editor.moveCursorTo(pos.row, pos.column, true);
@@ -339,50 +232,50 @@ load_files = function(){
 <script type="text/javascript" charset="utf-8">
     function addCommands() {
         editor.commands.addCommand({
-            name:'saveFile',
-            bindKey:{
-                win:'Ctrl-S',
-                mac:'Command-S',
-                sender:'editor|cli'
+            name: 'saveFile',
+            bindKey: {
+                win: 'Ctrl-S',
+                mac: 'Command-S',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 save();
                 window.savedfiles = refreshFiles();
             }
         });
 
         editor.commands.addCommand({
-            name:'verifyFile',
-            bindKey:{
-                win:'Ctrl-R',
-                mac:'Command-R',
-                sender:'editor|cli'
+            name: 'verifyFile',
+            bindKey: {
+                win: 'Ctrl-R',
+                mac: 'Command-R',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 verify();
             }
         });
 
         editor.commands.addCommand({
-            name:'uploadFile',
-            bindKey:{
-                win:'Ctrl-U',
-                mac:'Command-U',
-                sender:'editor|cli'
+            name: 'uploadFile',
+            bindKey: {
+                win: 'Ctrl-U',
+                mac: 'Command-U',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 usbflash();
             }
         });
 
         editor.commands.addCommand({
-            name:'CheckWord',
-            bindKey:{
-                win:'Ctrl-Space',
-                mac:'Ctrl-Space',
-                sender:'editor|cli'
+            name: 'CheckWord',
+            bindKey: {
+                win: 'Ctrl-Space',
+                mac: 'Ctrl-Space',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 var selection = editor.getSession().doc.getTextRange(editor.getSelectionRange());
                 if (selection == "") {
                     var row = editor.getSession().getSelection().getCursor().row;
@@ -399,37 +292,37 @@ load_files = function(){
         });
 
         editor.commands.addCommand({
-            name:'MyComments',
-            bindKey:{
-                win:'Ctrl-/',
-                mac:'Command-/',
-                sender:'editor|cli'
+            name: 'MyComments',
+            bindKey: {
+                win: 'Ctrl-/',
+                mac: 'Command-/',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 editor.toggleCommentLines();
             }
         });
 
         editor.commands.addCommand({
-            name:'serialMonitor',
-            bindKey:{
-                win:'Ctrl-Shift-M',
-                mac:'Command-Shift-M',
-                sender:'editor|cli'
+            name: 'serialMonitor',
+            bindKey: {
+                win: 'Ctrl-Shift-M',
+                mac: 'Command-Shift-M',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 connect();
             }
         });
 
         editor.commands.addCommand({
-            name:'autoFormat',
-            bindKey:{
-                win:'Ctrl-Alt-[',
-                mac:'Command-Alt-[',
-                sender:'editor|cli'
+            name: 'autoFormat',
+            bindKey: {
+                win: 'Ctrl-Alt-[',
+                mac: 'Command-Alt-[',
+                sender: 'editor|cli'
             },
-            exec:function (env, args, request) {
+            exec: function (env, args, request) {
                 autoFormat();
             }
         });
@@ -437,22 +330,21 @@ load_files = function(){
     }
 
     function autoFormat() {
-        editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size':1, 'indent_char':'\t', 'brace_style':'expand'}))
+        editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size': 1, 'indent_char': '\t', 'brace_style': 'expand'}))
     }
 
 </script>
 
 <script type="text/javascript">
 
-function selectFile(filename)
-{
+function selectFile(filename) {
 
     loadCode(filename);
     editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
-	$("a:contains("+filename+")")[0].setAttribute("style", "font-weight:bold;");
+    $("a:contains(" + filename + ")")[0].setAttribute("style", "font-weight:bold;");
 }
 
 function loadCode() {
@@ -461,25 +353,25 @@ function loadCode() {
 
 function createFile() {
     setOperationProgress(90);
-    var val = { filename:$("#createfield").val() };
-    $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+    var val = { filename: $("#createfield").val() };
+    $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function (data) {
         $("#creationModal").modal('hide');
         handleResponse(data);
     });
 }
-function createWiselibFolder(){
+function createWiselibFolder() {
     setOperationProgress(90);
     //var val = { filename:$("#createWiselibFolderfield").val() };
     //alert("Posting id=" + $('#WiselibFolderCreationModal').data('id') + ", " + $("#createWiselibFolderfield").val() + ", " + $('#WiselibFolderCreationModal').data('fpath'));
-    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFolderCreationModal').data('id'), filename:$("#createWiselibFolderfield").val(), 'fpath': $('#WiselibFolderCreationModal').data('fpath'), 'folder':true}, function (data) {
-       $("#WiselibFolderCreationModal").modal('hide');
-       handleResponse(data);
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFolderCreationModal').data('id'), filename: $("#createWiselibFolderfield").val(), 'fpath': $('#WiselibFolderCreationModal').data('fpath'), 'folder': true}, function (data) {
+        $("#WiselibFolderCreationModal").modal('hide');
+        handleResponse(data);
     });
 }
 
-function createWiselibFile(){
+function createWiselibFile() {
     setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename:$("#createWiselibFilefield").val(), 'fpath': $('#WiselibFileCreationModal').data('fpath')}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename: $("#createWiselibFilefield").val(), 'fpath': $('#WiselibFileCreationModal').data('fpath')}, function (data) {
         $("#WiselibFileCreationModal").modal('hide');
         handleResponse(data);
     });
@@ -488,36 +380,32 @@ function createWiselibFile(){
 function deleteFileModal(filename) {
 //    $("#oldFilename").val(filename);
 //    $("#newFilename").val(filename);
-    $("#filedeleteButton").attr("href","javascript:deleteFile('"+filename+"');");
+    $("#filedeleteButton").attr("href", "javascript:deleteFile('" + filename + "');");
     $("#filedeleteModal").modal('show');
 }
 
 function deleteFile(filename) {
     setOperationProgress(90);
-    var val = { "filename":filename };
-    $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+    var val = { "filename": filename };
+    $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function (data) {
         handleResponse(data);
     });
 }
 
-function changePrivacy()
-{
-	$.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null}, function (data)
-	{
-		handleResponse(data);
-	});
+function changePrivacy() {
+    $.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null}, function (data) {
+        handleResponse(data);
+    });
 }
 
-function editDescription()
-{
+function editDescription() {
     $("#description").replaceWith("<textarea id='description' style='resize: none; width:100%;' rows=4>" + $("#description").text() + "</textarea>");
     $("#description_change_link").text("save");
     $("#description_change_link").attr("onClick", "saveDescription()");
 }
 
 function saveDescription() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#description").val()}, function (data)
-    {
+    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#description").val()}, function (data) {
         $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
         $("#description_change_link").removeClass("btn btn-primary");
         $("#description_change_link").text("edit");
@@ -525,13 +413,13 @@ function saveDescription() {
 }
 
 function editName() {
-    $("#name").replaceWith("<input type='text' id='name' value='"+ $("#name").text() +"'/>");
+    $("#name").replaceWith("<input type='text' id='name' value='" + $("#name").text() + "'/>");
     $("#name_change_link").text("save");
     $("#name_change_link").attr("onClick", "saveName()");
 }
 
 function saveName() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#name").val()}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data: $("#name").val()}, function (data) {
         $("#name").replaceWith("<p id='name'>" + $("#name").val() + "</p>");
         $("#name_change_link").removeClass("btn btn-primary");
         $("#name_change_link").text("edit");
@@ -541,41 +429,148 @@ function saveName() {
 
 //Check if two js objects are equal
 function jsObjEquals(obj1, obj2) {
-	for (var i in obj1) {
-		if (!obj2.hasOwnProperty(i)) return false;
-		if (obj1[i] != obj2[i]) return false;
-	}
-	for (var i in obj2) {
-		if (!obj1.hasOwnProperty(i)) return false;
-		if (obj1[i] != obj2[i]) return false;
-	}
-	return true;
+    for (var i in obj1) {
+        if (!obj2.hasOwnProperty(i)) return false;
+        if (obj1[i] != obj2[i]) return false;
+    }
+    for (var i in obj2) {
+        if (!obj1.hasOwnProperty(i)) return false;
+        if (obj1[i] != obj2[i]) return false;
+    }
+    return true;
 }
-		
+
 //Manual shallow js object copy - faster than .extend()
 function jsObjClone(obj) {
-	var objcopy = {};
-	for (var i in obj) {
-		if (obj.hasOwnProperty(i))
-			objcopy[i] = obj[i];
-	}
-	return objcopy;
-}
-		
-function refreshFiles(){
-	loadCode();
-	var filesObj = jsObjClone(window.files);
-	return filesObj;
+    var objcopy = {};
+    for (var i in obj) {
+        if (obj.hasOwnProperty(i))
+            objcopy[i] = obj[i];
+    }
+    return objcopy;
 }
 
-$("#commitModalClose").click(function(){
-  return -1;
-});
+function refreshFiles() {
+    loadCode();
+    var filesObj = jsObjClone(window.files);
+    return filesObj;
+}
 
-$("#commitSubmit").click(function(){
-    var val = $('#commitMessage').val();
-    $('#commitModal').modal('hide');
-    return val;
-});
+$(document).ready(function () {
 
+    $("#commitModalClose").click(function () {
+        return;
+    });
+
+    $("#commitSubmit").click(function () {
+        var repo_name = $("#repoName").val().trim();
+        var val = $('#commitMessage').val().trim();
+        $('#commitModal').modal('hide');
+
+        if (val == "") {
+            $("#commitModal").modal('show');
+            return;
+        }
+
+        setOperationProgress(90);
+        var oauthMethod = 'Redirect';
+
+        // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
+        var oauthProvider = 'github';
+        var user_name = '';
+        var token = '';
+
+
+        OAuth.popup(oauthProvider, function (error, success) {
+            if (success) {
+
+                // GET  /user
+                // Get the authenticated user
+                $.ajax
+                ({
+                    type: "GET",
+                    url: 'https://api.github.com/user?access_token=' + success.access_token,
+                    dataType: 'json',
+                    async: false,
+                    data: '',
+                    success: function (data) {
+                        var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                        user_name = json.login;
+                        token = success.access_token;
+                        //alert ("The logged user is " + user_name);
+                    },
+                    error: function (request, status, error) {
+                        alert("ERROR: " + request.responseText);
+                        return;
+                    }
+                });
+
+                //GET /repos/:user/:repo/git/refs/heads/master
+                //Store the SHA for the latest commit (SHA-LATEST-COMMIT)
+                var sha_latest_commit = '';
+                var old_commit_sha = '';
+                $.ajax
+                ({
+                    type: "GET",
+                    url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
+                    dataType: 'json',
+                    async: false,
+                    data: '',
+                    success: function (data) {
+                        var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                        old_commit_sha = json.object.sha;
+                        src_commit(user_name, repo_name, success.access_token, old_commit_sha, val);
+                    },
+                    error: function (request, status, error) {
+                        var json_r = $.parseJSON(request.responseText);
+                        if (json_r.message.toLowerCase() == "git repository is empty.") {
+                            //src_commit(user_name, repo_name, success.access_token);
+                            // TODO find a solution for this case!
+                        } else if (json_r.message.toLowerCase().trim() == "not found") {
+                            // the repo doesn't exist
+                            $.ajax
+                            ({
+                                type: "POST",
+                                url: 'https://api.github.com/user/repos?access_token=' + success.access_token,
+                                dataType: 'json',
+                                async: false,
+                                //json object to sent to the authentication url
+                                data: '{ "name": "' + repo_name + '", "description": "This ' + repo_name + ' repo was created using Wisebender.", "auto_init": true}',
+                                success: function () {
+                                    // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
+                                },
+                                error: function (request, status, error) {
+                                    alert("ERROR: " + request.responseText);
+                                }
+                            });
+
+                            $.ajax
+                            ({
+                                type: "GET",
+                                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
+                                dataType: 'json',
+                                async: false,
+                                data: '',
+                                success: function (data) {
+                                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                    old_commit_sha = json.object.sha;
+                                    src_commit(user_name, repo_name, success.access_token, old_commit_sha, val);
+                                },
+                                error: function (request, status, error) {
+                                    alert("ERROR: " + request.responseText);
+                                }
+                            });
+                        } else {
+                            alert("ERROR: " + request.responseText);
+                        }
+                    }
+                });
+            }
+            else {
+                //$('#result').html("// Result error <br /><br />" + error);
+                alert("// Result error <br /><br />" + error);
+            }
+        });
+    });
+});
 </script>
