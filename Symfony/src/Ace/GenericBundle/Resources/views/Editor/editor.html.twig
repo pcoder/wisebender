@@ -300,9 +300,9 @@
                             </button>
                             <br/>
                             {%  if git_url is not defined or git_url == "" %}
-                                <div id="div_git_url" style="display: none"></div>
+                                <div id="div_git_url" style="display: none;"></div>
                             {%  else %}
-                                <div id="div_git_url" style="display: inline"><a href="{{ git_url }}"><pre>{{ git_url }}</pre></a></div>
+                                <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a href="{{ git_url }}"><pre>{{ git_url }}</pre></a></div>
                             {%  endif %}
 
                         </div>
