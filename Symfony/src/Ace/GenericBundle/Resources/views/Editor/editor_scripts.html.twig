@@ -541,7 +541,7 @@ $(document).ready(function () {
                                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                                     // TODO continue from home 16July
                                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: json.clone_url}, function (data) {
-                                        $("#div_git_url").html("\<input name=\"input_git_url\" value=\"" +  json.clone_url + "\" />");
+                                        $("#div_git_url").html("\<a href=\"" + json.clone_url + "\"\>\<pre\>" + json.clone_url + "\</pre\>\</a\>");
                                         $("#div_git_url").css('display','inline');
                                     });
                                 },
