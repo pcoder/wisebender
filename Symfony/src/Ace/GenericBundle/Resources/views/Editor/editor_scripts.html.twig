@@ -593,7 +593,7 @@ $(document).ready(function () {
                                     // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
                                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: json.clone_url}, function (data) {
-                                        $("#div_git_url").html("\<a href=\"" + json.clone_url + "\"\>\<pre\>" + json.clone_url + "\</pre\>\</a\>");
+                                        $("#div_git_url").html("\<a href=\"" + json.clone_url + "\"  target=\"_blank\"\>\<pre\>" + json.clone_url + "\</pre\>\</a\>");
                                         $("#div_git_url").css('display','block');
                                         $("#div_git_url").css('padding-top','15px');
                                         $("#div_git_url").css('padding-bottom','15px');
