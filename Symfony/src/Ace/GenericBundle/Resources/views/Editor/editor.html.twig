@@ -1,32 +1,32 @@
 {% extends '::template.html.twig' %}
 {% if project_name is not defined %}
-{% set project_name = 'Wiselib' %}
+    {% set project_name = 'Wiselib' %}
 {% endif %}
-{%  if files[0]['filename'] is not defined %}
+{% if files[0]['filename'] is not defined %}
     {% set title = project_name %}
-    {%  else %}
+{% else %}
     {% set title = project_name ~ ' : ' ~  files[0]['filename'] %}
-{%  endif %}
+{% endif %}
 
 {% block title %} {{ title }} {% endblock %}
 {% block stylesheets %}
-	<style type="text/css" media="screen">
+    <style type="text/css" media="screen">
 
-		html {
-			height: 100%;
-			width: 100%;
-			overflow: hidden;
-		}
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
 
-		body {
-			overflow: hidden;
-			margin: 0;
-			height: 100%;
-			width: 100%;
-			box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			-webkit-box-sizing: border-box;
-		}
+        body {
+            overflow: hidden;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
 
         #container_left {
             position: absolute;
@@ -53,46 +53,45 @@
         }
 
         #editor {
-			position: fixed;
-			top: 60px;
-			bottom: 40px;
-			background: white;
-			padding: 0px;
-            left:400px;
-            right:35px;
+            position: fixed;
+            top: 60px;
+            bottom: 40px;
+            background: white;
+            padding: 0px;
+            left: 400px;
+            right: 35px;
             margin-bottom: 20px;
-		}
+        }
 
         #selection {
-			width: 250px;
-			/*		height: 200px;*/
-		}
+            width: 250px;
+            /*		height: 200px;*/
+        }
 
-        #compile
-        {
+        #compile {
             margin-bottom: 10px;
         }
 
-		#compile_output {
-			position: absolute;
-			bottom: 0px;
-			height: 0px;
+        #compile_output {
+            position: absolute;
+            bottom: 0px;
+            height: 0px;
             width: 100%;
-			padding: 0px;
+            padding: 0px;
             margin-bottom: 10px;
-			overflow-y: auto;
-			visibility: hidden;
-			/*	background: white;*/
-			backround-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/wp-content/themes/tweaker6/images/bgnoise.gif);
-			/*	width: 280px;*/
-			white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-			white-space: -pre-wrap; /* Opera 4-6 */
-			white-space: -o-pre-wrap; /* Opera 7 */
-			white-space: pre-wrap; /* css-3 */
-			word-wrap: break-word; /* Internet Explorer 5.5+ */
-			/* text-shadow: #999999 1px 1px 1px; */
-			border-width: 0px;
-		}
+            overflow-y: auto;
+            visibility: hidden;
+            /*	background: white;*/
+            backround-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/wp-content/themes/tweaker6/images/bgnoise.gif);
+            /*	width: 280px;*/
+            white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            white-space: pre-wrap; /* css-3 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+            /* text-shadow: #999999 1px 1px 1px; */
+            border-width: 0px;
+        }
 
         #editor_header {
             position: absolute;
@@ -108,8 +107,7 @@
             text-align: center;
         }
 
-        #lines
-        {
+        #lines {
             position: absolute;
             bottom: 0px;
             right: 0px;
@@ -117,80 +115,68 @@
             background: #F7F7F7;
             z-index: 50;
             padding: 3px 15px 3px 15px;
-	        border-radius: 3px 0 3px 0;
+            border-radius: 3px 0 3px 0;
             border-width: 1px;
             border-color: rgba(0, 0, 0, 0.15);
             border-style: solid;
             text-align: center;
         }
 
-        #speed_label, #toggle_connect_serial
-        {
+        #speed_label, #toggle_connect_serial {
             margin-bottom: 10px;
         }
 
-        #toggle_connect_serial
-        {
+        #toggle_connect_serial {
             width: 171px;
         }
 
-        #serial_hud
-        {
+        #serial_hud {
             overflow: auto;
             width: 312px;
-            height:120px;
+            height: 120px;
         }
 
-        #text2send
-        {
+        #text2send {
             width: 280px;
         }
 
-        #boards
-        {
+        #boards {
             width: 230px;
         }
 
-        #ports
-        {
+        #ports {
             width: 242px;
         }
 
-        #baudrates
-        {
+        #baudrates {
             width: 123px;
         }
 
-        #files_list
-        {
+        #files_list {
             list-style-type: none;
             margin-left: 10px;
             max-height: 180px;
             overflow-y: auto;
         }
 
-        #webserial_hud
-        {
+        #webserial_hud {
             overflow: auto;
             width: 312px;
             height: 120px;
         }
 
-        #webtext2send
-        {
+        #webtext2send {
             width: 280px;
         }
 
-        #ip
-        {
-            width:162px;
+        #ip {
+            width: 162px;
         }
 
-        #toggle_connect_webserial
-        {
+        #toggle_connect_webserial {
             width: 100px;
         }
-	</style>
+    </style>
 {% endblock %}
 
 {% block javascripts %}
@@ -201,63 +187,63 @@
     {% include 'AceGenericBundle:Editor:editor_ariadne_scripts.html.twig' %}
 
     <script>
-		window.youShallNotPass = true;
-		var warnMessage = "You have UNSAVED CHANGES in your project. If you leave now, your changes WILL BE LOST.";
+        window.youShallNotPass = true;
+        var warnMessage = "You have UNSAVED CHANGES in your project. If you leave now, your changes WILL BE LOST.";
 
         //editor specific stuff
-		var editor;
-		$(document).ready(function () {
-			editor = ace.edit("editor");
-			editor.setTheme("ace/theme/textmate");
-			editor.getSession().setMode("ace/mode/c_cpp");
+        var editor;
+        $(document).ready(function () {
+            editor = ace.edit("editor");
+            editor.setTheme("ace/theme/textmate");
+            editor.getSession().setMode("ace/mode/c_cpp");
 
-			editor.getSession().setUseSoftTabs(false);
-			editor.getSession().on('change', function () {
-				$("#line_count").html(editor.getSession().getValue().split("\n").length);
-			});
+            editor.getSession().setUseSoftTabs(false);
+            editor.getSession().on('change', function () {
+                $("#line_count").html(editor.getSession().getValue().split("\n").length);
+            });
 
-			addCommands();
-        //editor specific stuff over
+            addCommands();
+            //editor specific stuff over
 
-			window.files = {
-				{% for file in files %}
-					"{{file['filename']}}":"{{file['code'] | e('js')}}",
-				{% endfor %}
-			};
-			
-			{% if files[0] is defined %}
-				window.selectedFile = "{{files[0]['filename']}}";
-				$(".filelist")[0].setAttribute("style", "font-weight:bold;");
-			{% endif %}
+            window.files = {
+                {% for file in files %}
+                "{{file['filename']}}": "{{file['code'] | e('js')}}",
+                {% endfor %}
+            };
 
-			window.binary = null;
-			$("#progress").hide();
-			$("#line_count").html(editor.getSession().getValue().split("\n").length);
+            {% if files[0] is defined %}
+            window.selectedFile = "{{files[0]['filename']}}";
+            $(".filelist")[0].setAttribute("style", "font-weight:bold;");
+            {% endif %}
 
-			//Check for dirty state(unsaved changes)
-			window.savedfiles = refreshFiles();
-			
-			window.onbeforeunload = function () {
-				if(window.youShallNotPass){
-					window.currentfiles = refreshFiles();
-					var saved=jsObjEquals( window.savedfiles, window.currentfiles );
-					if (!saved) return warnMessage;
-				}
-				else
-					window.youShallNotPass = true;
-			}
-			
-			$("#save").on('click', function(){
-				window.savedfiles = refreshFiles();
-			});
-			/*  Clicking Download triggers onbeforeunload
-			 *	flag set to false to prevent raising unsaved changes alert
-			 */
-			$("#download").on('click', function(){
-				window.youShallNotPass = false;
-			});
+            window.binary = null;
+            $("#progress").hide();
+            $("#line_count").html(editor.getSession().getValue().split("\n").length);
+
+            //Check for dirty state(unsaved changes)
+            window.savedfiles = refreshFiles();
+
+            window.onbeforeunload = function () {
+                if (window.youShallNotPass) {
+                    window.currentfiles = refreshFiles();
+                    var saved = jsObjEquals(window.savedfiles, window.currentfiles);
+                    if (!saved) return warnMessage;
+                }
+                else
+                    window.youShallNotPass = true;
+            }
+
+            $("#save").on('click', function () {
+                window.savedfiles = refreshFiles();
+            });
+            /*  Clicking Download triggers onbeforeunload
+             *	flag set to false to prevent raising unsaved changes alert
+             */
+            $("#download").on('click', function () {
+                window.youShallNotPass = false;
+            });
         });
-	</script>
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -270,93 +256,100 @@
     {% include 'AceGenericBundle:Editor:info_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
 
-				<div id="container_left">
-                    <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
-                        <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
-                            <i id="delete_icon" class="icon-trash  icon-white"></i>
-                            Delete
-                        </button>
-                        <a id="download" class="btn btn-primary" title="Download"
-                                href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}">
-                            <i class="icon-download-alt icon-white"></i>
-                            Download
-                        </a>
-                        <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
-                            <i id="revert_icon" class="icon-arrow-left"></i>
-                            Undo All
-                        </button>
-                        <button id="save" class="btn" onclick="save();" title="Save changes">
-                            <i id="save_icon" class="icon-download"></i>
-                            Save
+    <div id="container_left">
+        <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
+            <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
+                <i id="delete_icon" class="icon-trash  icon-white"></i>
+                Delete
+            </button>
+            <a id="download" class="btn btn-primary" title="Download"
+               href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}">
+                <i class="icon-download-alt icon-white"></i>
+                Download
+            </a>
+            <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
+                <i id="revert_icon" class="icon-arrow-left"></i>
+                Undo All
+            </button>
+            <button id="save" class="btn" onclick="save();" title="Save changes">
+                <i id="save_icon" class="icon-download"></i>
+                Save
+            </button>
+        </div>
+        <br/>
+        <hr/>
+        <div>
+            <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
+                <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
+                        title="Send to GitHub">
+                    <i id="save_icon" class="icon-download"></i>
+                    Send to GitHub
+                </button>
+                <br/>
+
+                {% if git_url is not defined or git_url == "" %}
+                    <div id="div_git_url" style="display: none;"></div>
+                {% else %}
+                    <div id="div_delete_from_github">
+                        <button id="delete_from_github" class="btn" onclick="delete_from_github('{{ project_name }}');"
+                                title="Send to GitHub">
+                            <i id="github_delete_icon" class="delete_icon"></i>
+                            Delete from GitHub
                         </button>
                     </div>
                     <br/>
-                    <hr/>
-                    <div>
-                        <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
-                            <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');" title="Send to GitHub">
-                                <i id="save_icon" class="icon-download"></i>
-                                Send to GitHub
-                            </button>
-                            <br/>
+                    <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a
+                                href="{{ git_url }}">
+                            <pre>{{ git_url }}</pre>
+                        </a></div>
+                {% endif %}
 
-                            {%  if git_url is not defined or git_url == "" %}
-                                <div id="div_git_url" style="display: none;"></div>
-                            {%  else %}
-                                <button id="delete_from_github" class="btn" onclick="delete_from_github('{{ project_name }}');" title="Send to GitHub">
-                                    <i id="github_delete_icon" class="delete_icon"></i>
-                                    Delete from GitHub
-                                </button>
-                                <br/>
-                                <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a href="{{ git_url }}"><pre>{{ git_url }}</pre></a></div>
-                            {%  endif %}
+            </div>
+        </div>
+        <hr/>
 
-                        </div>
-                    </div>
-                    <hr/>
+        <h4>
+            {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
+            {{ project_name }}
+        </h4>
+        <ul id="files_list">
+            {% for file in files %}
+                <li>
+                    <a class="filelist" href="javascript:void(0)" onclick="selectFile('{{ file['filename'] }}');">
+                        {{ file['filename'] }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
 
-                    <h4>
-                        {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
-                        {{  project_name }}
-                    </h4>
-                    <ul id="files_list">
-                        {% for file in files %}
-                            <li>
-                                <a class="filelist" href="javascript:void(0)" onclick="selectFile('{{ file['filename'] }}');">
-                                    {{ file['filename'] }}
-                                </a>
-                            </li>
-                        {% endfor %}
+        <ul class="nav nav-list" id="sidebar-list-footer">
+            {% if files_wiselib %}
+                <div class="css-treeview">
+                    <ul>
+                        {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id} only %}
                     </ul>
-
-                    <ul class="nav nav-list" id="sidebar-list-footer">
-                        {% if files_wiselib %}
-                            <div class="css-treeview">
-                                <ul>
-                                    {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id} only %}
-                                </ul>
-                            </div>
-
-                        {% endif %}
-                    </ul>
-                    <div id="cb_cf" data-sections=""></div>
-
-
-                    <div id="progress" class="progress progress-striped active">
-                        <div id="progress_val" class="bar" style="width: 40%;"></div>
-                    </div>
                 </div>
-				<div id="container_right">
-                    <pre id="editor">{% if files[0] is defined %}{{ files[0]['code']|raw }}{% endif %}</pre>
+
+            {% endif %}
+        </ul>
+        <div id="cb_cf" data-sections=""></div>
+
+
+        <div id="progress" class="progress progress-striped active">
+            <div id="progress_val" class="bar" style="width: 40%;"></div>
+        </div>
+    </div>
+    <div id="container_right">
+        <pre id="editor">{% if files[0] is defined %}{{ files[0]['code']|raw }}{% endif %}</pre>
                     <span id="editor_header">
 	                    <a data-toggle="modal" href="#infoModal" title="Project Info">
-		                    <i class="icon-info-sign"></i>
-	                    </a>
-	                    {#<i class="icon-resize-full"></i>#}
+                            <i class="icon-info-sign"></i>
+                        </a>
+                        {#<i class="icon-resize-full"></i>#}
                     </span>
-                    <span id="lines">Number of lines: <span id="line_count">0</span></span>
-                    <pre id="compile_output"></pre>
-				</div>
+        <span id="lines">Number of lines: <span id="line_count">0</span></span>
+        <pre id="compile_output"></pre>
+    </div>
 
     {% include 'AceGenericBundle:Editor:social_buttons.html.twig' %}
 {% endblock %}

@@ -69,10 +69,6 @@ function save() {
 }
 
 function save_to_github(repo_name) {
-// get OAuth key
-
-    //var repo_name = $('#text_repo_name').val();
-    // the possible values for oauthMethod are 'Popup' & 'Redirect'
     $("#repoName").val(repo_name);
     $("#commitModal").modal('show');
 }
@@ -88,14 +84,12 @@ function delete_from_github(repo_name){
             $.ajax
             ({
                 type: "GET",
-                //the url where you want to sent the userName and password to
                 url: 'https://api.github.com/user?access_token=' + suc.access_token,
                 dataType: 'json',
                 async: false,
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     user_name = json.login;
-                    //alert('Username is ' + user_name);
                 },
                 error: function(req, status, er) {
                     alert("ERROR: "+ req.responseText);
@@ -121,7 +115,9 @@ function delete_from_github(repo_name){
                     alert("Repository '"+ repo_name + "' deleted on GitHub.com!");
                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
                         $("#div_git_url").html("");
+                        $("#div_delete_from_github").html("");
                         $("#div_git_url").css('display','none');
+
                     });
                 },
                 error: function(request, status, error) {
@@ -602,6 +598,7 @@ $(document).ready(function () {
                                         $("#div_git_url").css('display','block');
                                         $("#div_git_url").css('padding-top','15px');
                                         $("#div_git_url").css('padding-bottom','15px');
+                                        $("#div_delete_from_github").html("\<button id=\"delete_from_github\" class=\"btn\" onclick=\"delete_from_github('{{ project_name }}');\" title=\"Send to GitHub\"\>\<i id=\"github_delete_icon\" class=\"delete_icon\"\>\</i\>Delete from GitHub\</button\>");
                                     });
                                 },
                                 error: function (request, status, error) {
