@@ -114,12 +114,15 @@ function delete_from_github(repo_name){
             $.ajax
             ({
                 type: "DELETE",
-                //the url where you want to sent the userName and password to
                 url: 'https://api.github.com/repos/' + user_name +'/' +repo_name+ '?access_token=' + success.access_token,
                 dataType: 'json',
                 async: false,
                 success: function () {
                     alert("Repository '"+ repo_name + "' deleted on GitHub.com!");
+                    $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
+                        $("#div_git_url").html("");
+                        $("#div_git_url").css('display','none');
+                    });
                 },
                 error: function(request, status, error) {
                     alert("ERROR: "+ request.responseText);
