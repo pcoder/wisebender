@@ -588,7 +588,6 @@ $(document).ready(function () {
                                 url: 'https://api.github.com/user/repos?access_token=' + success.access_token,
                                 dataType: 'json',
                                 async: false,
-                                //json object to sent to the authentication url
                                 data: '{ "name": "' + repo_name + '", "description": "This ' + repo_name + ' repo was created using Wisebender.", "auto_init": true}',
                                 success: function (data) {
                                     // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
