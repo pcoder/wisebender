@@ -55,11 +55,6 @@ function setOperationOutput(output) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    //alert("Sending id=
-    {{ fpath }}
-    and
-    project_id =
-            {{ project_id }}");
     $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
@@ -545,10 +540,9 @@ $(document).ready(function () {
                                     // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
                                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                                     // TODO continue from home 16July
-                                    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#description").val()}, function (data) {
-                                        $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
-                                        $("#description_change_link").removeClass("btn btn-primary");
-                                        $("#description_change_link").text("edit");
+                                    $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: json.clone_url}, function (data) {
+                                        $("#div_git_url").html("\<input name=\"input_git_url\" value=\"{{ json.clone_url }}\" />");
+                                        $("#div_git_url").css('display','inline');
                                     });
                                 },
                                 error: function (request, status, error) {

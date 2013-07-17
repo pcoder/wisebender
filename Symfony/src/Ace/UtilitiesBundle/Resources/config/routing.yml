@@ -30,7 +30,7 @@ AceUtilitiesBundle_setprojectdescription:
 
 AceUtilitiesBundle_setprojectgiturl:
    pattern:  /setprojectgiturl/{id}
-   defaults: { _controller: AceUtilitiesBundle:Default:setGitUrlAction }
+   defaults: { _controller: AceUtilitiesBundle:Default:setGitUrl }
    requirements:
       _method:  POST
 

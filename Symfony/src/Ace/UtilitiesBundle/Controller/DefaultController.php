@@ -118,7 +118,7 @@ class DefaultController extends Controller
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
         $git_url = $this->getRequest()->request->get('data');
         $projectmanager = $this->get('ace_project.sketchmanager');
-        $response = $projectmanager->setGiturlAction($id, $git_url)->getContent();
+        $response = $projectmanager->setGitUrlAction($id, $git_url)->getContent();
         return new Response(json_encode($response));
     }
 

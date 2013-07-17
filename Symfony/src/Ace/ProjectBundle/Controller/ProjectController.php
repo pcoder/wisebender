@@ -142,8 +142,9 @@ class ProjectController extends Controller
             foreach($projects as $project)
             {
                 if($project->getIsPublic() || $private_access)
-                    $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic());
+                    $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic(), "git_url" => $project->getGitUrl());
             }
+
         }
         $project = $this->getProjectById($id);
         $directory = $this->fc->getDir($project->getProjectfilesId());
@@ -350,6 +351,18 @@ class ProjectController extends Controller
 		$name = $project->getName();
 		return new Response(json_encode(array("success" => true, "response" => $name)));
 	}
+
+    public function getGitUrlAction($id)
+    {
+        $perm = json_decode($this->checkReadProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $name = $project->getGitUrl();
+        return new Response(json_encode(array("success" => true, "response" => $name)));
+    }
 
 	public function getParentAction($id)
 	{

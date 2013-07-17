@@ -294,10 +294,17 @@
                     <hr/>
                     <div>
                         <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
-                            <button id="send_to_github" class="btn" onclick="save_to_github('{{ project_name }}');" title="Send to GitHub">
+                            <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');" title="Send to GitHub">
                                 <i id="save_icon" class="icon-download"></i>
                                 Send to GitHub
                             </button>
+                            <br/>
+                            {%  if git_url is not defined or git_url == "" %}
+                                <div id="div_git_url" style="display: none"></div>
+                            {%  else %}
+                                <div id="div_git_url" style="display: inline"><input name="input_git_url" value="{{ git_url }}" /></div>
+                            {%  endif %}
+
                         </div>
                     </div>
                     <hr/>
