@@ -137,7 +137,6 @@ function delete_from_github(repo_name){
 function pull_from_github(repo_name, git_commit_sha) {
     var oauthProvider = 'github';
     var user_name = '';
-    var token = '';
 
     OAuth.popup(oauthProvider, function (error, success) {
         if (success) {
@@ -190,14 +189,13 @@ function pull_from_github(repo_name, git_commit_sha) {
                             success: function (data) {
                                 var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
                                 var file_contents = json_file.content;
-                                token = success.sha;
 
                                 // TODO convert this to utf-8 and store!!!
                                 // checkout https://github.com/mhf-ir/jquery-data
                                 file_contents = $.base64Decode(file_contents);
-                                alert("Contents = " + file_contents);
-                                // update the sha !!!
-                                //update_git_sha({{ project_id }}, );
+                                window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
+                                save();
+                                update_git_sha(old_commit_sha);
                             },
                             error: function (request, status, error) {
                                 alert("ERROR: " + request.responseText);
@@ -315,8 +313,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             } else {
                 //alert("Reference updated! sha=" + new_tree_sha);
                 //alert("The project was successfully saved to GitHub.");
-                $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: json_patch.object.sha}, function (data) {
-                });
+                update_git_sha(json_patch.object.sha);
                 //alert("how");
                 setOperationOutput("The project was successfully saved to GitHub.");
             }
@@ -325,6 +322,11 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             alert("ERROR: " + request.responseText);
             return;
         }
+    });
+}
+
+function update_git_sha(sha){
+    $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: sha}, function (data) {
     });
 }
 
