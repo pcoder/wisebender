@@ -135,11 +135,9 @@ function delete_from_github(repo_name){
 }
 
 function pull_from_github(repo_name, git_commit_sha) {
-    // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
     var oauthProvider = 'github';
     var user_name = '';
     var token = '';
-
 
     OAuth.popup(oauthProvider, function (error, success) {
         if (success) {
@@ -180,6 +178,28 @@ function pull_from_github(repo_name, git_commit_sha) {
                     if(old_commit_sha.trim().toLowerCase() == git_commit_sha ){
                         alert("Nothing to pull from the branch - master!")
                     }else{
+                        // GET /repos/:owner/:repo/contents/:path
+                        // get contents of the _app.cpp file from the master branch
+                        $.ajax
+                        ({
+                            type: "GET",
+                            url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token +'&ref=' + old_commit_sha,
+                            dataType: 'json',
+                            async: false,
+                            data: '',
+                            success: function (data) {
+                                var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                var file_contents = json_file.content;
+                                token = success.sha;
+                                // update the sha !!!
+                                //update_git_sha({{ project_id }}, );
+                            },
+                            error: function (request, status, error) {
+                                alert("ERROR: " + request.responseText);
+                                return;
+                            }
+                        });
+
 
                     }
                 },
