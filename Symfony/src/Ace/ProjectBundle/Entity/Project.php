@@ -60,6 +60,11 @@ class Project
      */
     protected $git_url;
 
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $git_commit_sha;
+
 	/**
      * Get id
      *
@@ -228,6 +233,26 @@ class Project
     public function setGitUrl($url)
     {
         $this->git_url = $url;
+    }
+
+    /**
+     * Get git url for the project
+     *
+     * @return string
+     */
+    public function getGitCommitSHA()
+    {
+        return $this->git_commit_sha;
+    }
+
+    /**
+     * Set git url for the project
+     *
+     * @param string
+     */
+    public function setGitCommitSHA($sha)
+    {
+        $this->git_commit_sha = $sha;
     }
 
 }

@@ -34,6 +34,12 @@ AceUtilitiesBundle_setprojectgiturl:
    requirements:
       _method:  POST
 
+AceUtilitiesBundle_setprojectgitcommitsha:
+   pattern:  /setprojectgitcommitsha/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:setGitCommitSHA }
+   requirements:
+      _method:  POST
+
 AceUtilitiesBundle_setprojectname:
   pattern:  /setprojectname/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:setName }

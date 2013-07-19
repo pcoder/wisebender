@@ -142,7 +142,7 @@ class ProjectController extends Controller
             foreach($projects as $project)
             {
                 if($project->getIsPublic() || $private_access)
-                    $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic(), "git_url" => $project->getGitUrl());
+                    $list[] = array("id"=> $project->getId(), "name"=>$project->getName(), "description"=>$project->getDescription(), "is_public"=>$project->getIsPublic(), "git_url" => $project->getGitUrl(), "git_commit_sha" => $project->getGitCommitSHA());
             }
 
         }
@@ -164,6 +164,7 @@ class ProjectController extends Controller
 	    $project->setName($name);
 	    $project->setDescription($description);
         $project->setGitUrl("");
+        $project->setGitCommitSHA("");
 	    $project->setIsPublic($isPublic);
         $project->setType($this->sl);
         $response = json_decode($this->fc->createAction(), true);
@@ -364,6 +365,18 @@ class ProjectController extends Controller
         return new Response(json_encode(array("success" => true, "response" => $name)));
     }
 
+    public function getGitCommitSHAAction($id)
+    {
+        $perm = json_decode($this->checkReadProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $name = $project->getGitCommitSHA();
+        return new Response(json_encode(array("success" => true, "response" => $name)));
+    }
+
 	public function getParentAction($id)
 	{
         $perm = json_decode($this->checkReadProjectPermissions($id), true);
@@ -449,6 +462,21 @@ class ProjectController extends Controller
         }
         $project = $this->getProjectById($id);
         $project->setGitUrl($git_url);
+        $em = $this->em;
+        $em->persist($project);
+        $em->flush();
+        return new Response(json_encode(array("success" => true)));
+    }
+
+    public function setGitCommitSHAAction($id, $git_commit_sha)
+    {
+        $perm = json_decode($this->checkWriteProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $project->setGitCommitSHA($git_commit_sha);
         $em = $this->em;
         $em->persist($project);
         $em->flush();

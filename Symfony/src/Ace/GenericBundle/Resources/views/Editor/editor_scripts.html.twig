@@ -119,6 +119,9 @@ function delete_from_github(repo_name){
                         $("#div_git_url").css('display','none');
 
                     });
+
+                    $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
+                    });
                 },
                 error: function(request, status, error) {
                     alert("ERROR: "+ request.responseText);
@@ -215,6 +218,9 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             } else {
                 //alert("Reference updated! sha=" + new_tree_sha);
                 //alert("The project was successfully saved to GitHub.");
+                $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: json_patch.object.sha}, function (data) {
+                });
+                alert("how");
                 setOperationOutput("The project was successfully saved to GitHub.");
             }
         },

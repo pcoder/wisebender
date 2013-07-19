@@ -131,6 +131,15 @@ class DefaultController extends Controller
 		return new Response($response);
 	}
 
+    public function setGitCommitSHAAction($id)
+    {
+        $git_commit_sha = $this->getRequest()->request->get('data');
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response = $projectmanager->setGitCommitSHAAction($id, $git_commit_sha)->getContent();
+        return new Response(json_encode($response));
+    }
+
+
 	public function renameFileAction($id)
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
