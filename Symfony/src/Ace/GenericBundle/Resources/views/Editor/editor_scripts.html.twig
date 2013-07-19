@@ -191,6 +191,10 @@ function pull_from_github(repo_name, git_commit_sha) {
                                 var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
                                 var file_contents = json_file.content;
                                 token = success.sha;
+
+                                // TODO convert this to utf-8 and store!!!
+                                // checkout https://github.com/mhf-ir/jquery-data
+
                                 // update the sha !!!
                                 //update_git_sha({{ project_id }}, );
                             },
