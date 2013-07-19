@@ -189,21 +189,17 @@ function pull_from_github(repo_name, git_commit_sha) {
                             success: function (data) {
                                 var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
                                 var file_contents = json_file.content;
-
-                                // TODO convert this to utf-8 and store!!!
-                                // checkout https://github.com/mhf-ir/jquery-data
                                 file_contents = $.base64Decode(file_contents);
                                 window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
                                 save();
                                 update_git_sha(old_commit_sha);
+                                editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
                             },
                             error: function (request, status, error) {
                                 alert("ERROR: " + request.responseText);
                                 return;
                             }
                         });
-
-
                     }
                 },
                 error: function (request, status, error) {
