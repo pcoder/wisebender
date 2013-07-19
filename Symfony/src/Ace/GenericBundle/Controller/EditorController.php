@@ -27,6 +27,10 @@ class EditorController extends Controller
         $git_url = json_decode($git_url, true);
         $git_url = $git_url["response"];
 
+        $git_commit_sha = $projectmanager->getGitCommitSHAAction($id)->getContent();
+        $git_commit_sha = json_decode($git_commit_sha, true);
+        $git_commit_sha = $git_commit_sha["response"];
+
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
 
@@ -54,6 +58,6 @@ class EditorController extends Controller
 
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha));
 	}
 }

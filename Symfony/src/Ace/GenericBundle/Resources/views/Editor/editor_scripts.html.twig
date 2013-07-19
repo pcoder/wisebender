@@ -134,6 +134,78 @@ function delete_from_github(repo_name){
     });
 }
 
+function pull_from_github(repo_name, git_commit_sha) {
+    // the possible values for oauthProvider are 'github', 'facebook', .... etc. All in lowercase!
+    var oauthProvider = 'github';
+    var user_name = '';
+    var token = '';
+
+
+    OAuth.popup(oauthProvider, function (error, success) {
+        if (success) {
+
+            // GET  /user
+            // Get the authenticated user
+            $.ajax
+            ({
+                type: "GET",
+                url: 'https://api.github.com/user?access_token=' + success.access_token,
+                dataType: 'json',
+                async: false,
+                data: '',
+                success: function (data) {
+                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                    user_name = json.login;
+                    token = success.access_token;
+                },
+                error: function (request, status, error) {
+                    alert("ERROR: " + request.responseText);
+                    return;
+                }
+            });
+
+            //GET /repos/:user/:repo/git/refs/heads/master
+            //Store the SHA for the latest commit (SHA-LATEST-COMMIT)
+            var old_commit_sha = '';
+            $.ajax
+            ({
+                type: "GET",
+                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
+                dataType: 'json',
+                async: false,
+                data: '',
+                success: function (data) {
+                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                    old_commit_sha = json.object.sha;
+                    if(old_commit_sha.trim().toLowerCase() == git_commit_sha ){
+                        alert("Nothing to pull from the branch - master!")
+                    }else{
+
+                    }
+                },
+                error: function (request, status, error) {
+                    var json_r = $.parseJSON(request.responseText);
+                    if (json_r.message.toLowerCase() == "git repository is empty.") {
+                        //src_commit(user_name, repo_name, success.access_token);
+                        // TODO find a solution for this case!
+                    } else if (json_r.message.toLowerCase().trim() == "not found") {
+                        // the repo doesn't exist
+                        alert("The repo " + repo_name + " does not exist");
+                    } else {
+                        alert("ERROR: " + request.responseText);
+                    }
+                }
+            });
+        }
+        else {
+            //$('#result').html("// Result error <br /><br />" + error);
+            alert("// Result error <br /><br />" + error);
+        }
+    })
+    ;
+
+}
+
 
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
@@ -220,7 +292,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
                 //alert("The project was successfully saved to GitHub.");
                 $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: json_patch.object.sha}, function (data) {
                 });
-                alert("how");
+                //alert("how");
                 setOperationOutput("The project was successfully saved to GitHub.");
             }
         },

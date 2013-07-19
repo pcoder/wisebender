@@ -236,7 +236,7 @@ class Project
     }
 
     /**
-     * Get git url for the project
+     * Get latest git commit SHA for the project
      *
      * @return string
      */
@@ -246,7 +246,7 @@ class Project
     }
 
     /**
-     * Set git url for the project
+     * Set latest git commit SHA for the project
      *
      * @param string
      */

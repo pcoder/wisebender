@@ -290,6 +290,17 @@
                 {% if git_url is not defined or git_url == "" %}
                     <div id="div_git_url" style="display: none;"></div>
                 {% else %}
+                    <br/>
+                {% if git_commit_sha is not defined or git_commit_sha == "" %}
+                {% else %}
+                    <div id="div_pull_from_github">
+                        <button id="pull_from_github" class="btn" onclick="pull_from_github('{{ project_name }}', '{{ git_commit_sha }}');"
+                                title="Pull Changes from GitHub">
+                            Pull Changes from GitHub
+                        </button>
+                    </div>
+                    <br/>
+                {% endif %}
                     <div id="div_delete_from_github">
                         <button id="delete_from_github" class="btn" onclick="delete_from_github('{{ project_name }}');"
                                 title="Send to GitHub">
@@ -303,7 +314,6 @@
                             <pre>{{ git_url }}</pre>
                         </a></div>
                 {% endif %}
-
             </div>
         </div>
         <hr/>
