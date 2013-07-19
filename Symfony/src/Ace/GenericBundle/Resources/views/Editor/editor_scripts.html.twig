@@ -194,7 +194,8 @@ function pull_from_github(repo_name, git_commit_sha) {
 
                                 // TODO convert this to utf-8 and store!!!
                                 // checkout https://github.com/mhf-ir/jquery-data
-
+                                file_contents = $.base64Decode(file_contents);
+                                alert("Contents = " + file_contents);
                                 // update the sha !!!
                                 //update_git_sha({{ project_id }}, );
                             },
