@@ -65,6 +65,12 @@ class Project
      */
     protected $git_commit_sha;
 
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $is_wiselib_clone;
+
 	/**
      * Get id
      *
@@ -248,11 +254,30 @@ class Project
     /**
      * Set latest git commit SHA for the project
      *
+     * @param boolean
+     */
+    public function setIsWiselibClone($val)
+    {
+        $this->is_wiselib_clone = $val;
+    }
+
+    /**
+     * Get latest git commit SHA for the project
+     *
+     * @return boolean
+     */
+    public function getIsWiselibClone()
+    {
+        return $this->is_wiselib_clone;
+    }
+
+    /**
+     * Set latest git commit SHA for the project
+     *
      * @param string
      */
     public function setGitCommitSHA($sha)
     {
         $this->git_commit_sha = $sha;
     }
-
 }

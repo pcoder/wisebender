@@ -167,6 +167,7 @@ class ProjectController extends Controller
         $project->setGitCommitSHA("");
 	    $project->setIsPublic($isPublic);
         $project->setType($this->sl);
+        $project->setIsWiselibClone(false);
         $response = json_decode($this->fc->createAction(), true);
 
 		if($response["success"])
@@ -261,6 +262,7 @@ class ProjectController extends Controller
         if($response["success"] == true){
             $new_project = $this->getProjectById($response["id"]);
             $new_project->setParent("");
+            $new_project->setIsWiselibClone(true);
             $em = $this->em;
             $em->persist($new_project);
             $em->flush();
@@ -416,6 +418,17 @@ class ProjectController extends Controller
 
     public function getUserAccessTokenAction(){
         return $this->sc->getToken()->getUser()->getAccessToken();
+    }
+
+    public function getIsWiselibClone($id){
+        $perm = json_decode($this->checkReadProjectPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $response = $project->getIsWiselibClone();
+        return new Response(json_encode(array("success" => true, "response" => $response)));
     }
 
 	public function getDescriptionAction($id)

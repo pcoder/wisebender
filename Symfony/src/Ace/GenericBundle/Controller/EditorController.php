@@ -31,6 +31,10 @@ class EditorController extends Controller
         $git_commit_sha = json_decode($git_commit_sha, true);
         $git_commit_sha = $git_commit_sha["response"];
 
+        $is_wiselib_clone = $projectmanager->getIsWiselibClone($id)->getContent();
+        $is_wiselib_clone = json_decode($is_wiselib_clone, true);
+        $is_wiselib_clone = $is_wiselib_clone["response"];
+
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
 
@@ -57,6 +61,6 @@ class EditorController extends Controller
 
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "github_access_token" => $projectmanager->getUserAccessTokenAction()));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "github_access_token" => $projectmanager->getUserAccessTokenAction(), "is_wiselib_clone" => $is_wiselib_clone));
 	}
 }
