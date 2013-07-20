@@ -40,7 +40,7 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else {
-        setOperationOutput(response["error"]);
+        setOperationOutput(response["error"], true);
         $(".modal").modal('hide');
     }
 }
@@ -69,6 +69,16 @@ function setOperationProgress(newprogress) {
 function setOperationOutput(output) {
     $("#progress").hide('fast');
     $("#progress_val").width('0%');
+    $("#operation_output").html(output).show('fast');
+    //clear the interval here
+}
+
+function setOperationOutput(output, error) {
+    $("#progress").hide('fast');
+    $("#progress_val").width('0%');
+    if(error){
+        output = "<span style='color: red'>" + output + "</span>";
+    }
     $("#operation_output").html(output).show('fast');
     //clear the interval here
 }
@@ -586,6 +596,7 @@ function saveDescription() {
         $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
         $("#description_change_link").removeClass("btn btn-primary");
         $("#description_change_link").text("edit");
+        $("#description_change_link").attr("onClick", "editDescription()");
     });
 }
 
