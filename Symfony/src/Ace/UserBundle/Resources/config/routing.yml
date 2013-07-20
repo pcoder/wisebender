@@ -30,6 +30,12 @@ AceUserBundle_isemailavailable:
     requirements:
         _method:   POST
 
+AceUserBundle_set_access_token:
+    pattern:  /set_access_token/{token}
+    defaults: { _controller: ace_user.usercontroller:setAccessTokenAction }
+    requirements:
+        _method:   POST
+
 AceUserBundle_search:
     pattern: /search/user/{token}
     defaults: { _controller: ace_user.usercontroller:searchAction }

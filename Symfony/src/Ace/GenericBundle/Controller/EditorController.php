@@ -52,12 +52,13 @@ class EditorController extends Controller
         $owner = $owner["response"];
         $owner_id = $owner['id'];
 
+        $current_user = $this->sc->getToken()->getUser();
 
         $files_wiselib = $projectmanager->listWiselibDirAction($owner_id, $id, $fpath)->getContent();
         $files_wiselib = json_decode($files_wiselib, true);
 
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "access_token" => $current_user->getAccessToken()));
 	}
 }

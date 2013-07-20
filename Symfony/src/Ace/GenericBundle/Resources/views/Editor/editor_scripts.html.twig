@@ -1,5 +1,27 @@
 <script type="text/javascript">
 
+var access_token = "";
+
+function init_access_token() {
+    if (access_token == "") {
+        var oauthProvider = 'github';
+        OAuth.popup(oauthProvider, function (err, suc) {
+            if (suc) {
+                access_token = suc.access_token;
+                //store this
+
+                var url = '{{ path("AceUserBundle_set_access_token", {'token': 'token'}) }}';
+                url = url.replace("token", access_token);
+                $.post(url,{}, function (data) {
+                    alert("saved return value = " + data);
+                });
+            }
+            else {
+                access_token = "";
+            }
+        });
+    }
+}
 
 function renameFilenameModal(filename) {
     $("#oldFilename").val(filename);
@@ -73,13 +95,14 @@ function save_to_github(repo_name) {
     $("#commitModal").modal('show');
 }
 
-function delete_from_github(repo_name){
+function delete_from_github(repo_name) {
 
     var oauthProvider = 'github';
     var user_name = '';
     var token = '';
     // get the user's username :user
-    OAuth.popup(oauthProvider, function(err, suc){
+    init_access_token();
+    OAuth.popup(oauthProvider, function (err, suc) {
         if (suc) {
             $.ajax
             ({
@@ -91,45 +114,45 @@ function delete_from_github(repo_name){
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     user_name = json.login;
                 },
-                error: function(req, status, er) {
-                    alert("ERROR: "+ req.responseText);
+                error: function (req, status, er) {
+                    alert("ERROR: " + req.responseText);
                 }
             });
             //$('#result').html("// Result success <br /><br />" + JSON.stringify(suc, undefined, 2));
         }
         else {
-           // $('#result').html("// Result error <br /><br />" + err);
+            // $('#result').html("// Result error <br /><br />" + err);
         }
     });
 
     // delete the user's repository
-    OAuth.popup(oauthProvider, function(error, success){
+    OAuth.popup(oauthProvider, function (error, success) {
         if (success) {
             $.ajax
             ({
                 type: "DELETE",
-                url: 'https://api.github.com/repos/' + user_name +'/' +repo_name+ '?access_token=' + success.access_token,
+                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + success.access_token,
                 dataType: 'json',
                 async: false,
                 success: function () {
-                    alert("Repository '"+ repo_name + "' deleted on GitHub.com!");
+                    alert("Repository '" + repo_name + "' deleted on GitHub.com!");
                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
                         $("#div_git_url").html("");
                         $("#div_delete_from_github").html("");
-                        $("#div_git_url").css('display','none');
+                        $("#div_git_url").css('display', 'none');
 
                     });
 
                     $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
                     });
                 },
-                error: function(request, status, error) {
-                    alert("ERROR: "+ request.responseText);
+                error: function (request, status, error) {
+                    alert("ERROR: " + request.responseText);
                 }
             });
         }
         else {
-           // $('#result').html("// Result error <br /><br />" + error);
+            // $('#result').html("// Result error <br /><br />" + error);
         }
     });
 }
@@ -137,7 +160,7 @@ function delete_from_github(repo_name){
 function pull_from_github(repo_name, git_commit_sha) {
     var oauthProvider = 'github';
     var user_name = '';
-
+    init_access_token();
     OAuth.popup(oauthProvider, function (error, success) {
         if (success) {
 
@@ -174,15 +197,15 @@ function pull_from_github(repo_name, git_commit_sha) {
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     old_commit_sha = json.object.sha;
-                    if(old_commit_sha.trim().toLowerCase() == git_commit_sha ){
+                    if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
                         alert("Nothing to pull from the branch - master!")
-                    }else{
+                    } else {
                         // GET /repos/:owner/:repo/contents/:path
                         // get contents of the _app.cpp file from the master branch
                         $.ajax
                         ({
                             type: "GET",
-                            url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token +'&ref=' + old_commit_sha,
+                            url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
                             dataType: 'json',
                             async: false,
                             data: '',
@@ -321,7 +344,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     });
 }
 
-function update_git_sha(sha){
+function update_git_sha(sha) {
     $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: sha}, function (data) {
     });
 }
@@ -634,7 +657,7 @@ $(document).ready(function () {
         var oauthProvider = 'github';
         var user_name = '';
         var token = '';
-
+        init_access_token();
 
         OAuth.popup(oauthProvider, function (error, success) {
             if (success) {
@@ -695,9 +718,9 @@ $(document).ready(function () {
                                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: json.clone_url}, function (data) {
                                         $("#div_git_url").html("\<a href=\"" + json.clone_url + "\"  target=\"_blank\"\>\<pre\>" + json.clone_url + "\</pre\>\</a\>");
-                                        $("#div_git_url").css('display','block');
-                                        $("#div_git_url").css('padding-top','15px');
-                                        $("#div_git_url").css('padding-bottom','15px');
+                                        $("#div_git_url").css('display', 'block');
+                                        $("#div_git_url").css('padding-top', '15px');
+                                        $("#div_git_url").css('padding-bottom', '15px');
                                         $("#div_delete_from_github").html("\<button id=\"delete_from_github\" class=\"btn\" onclick=\"delete_from_github('{{ project_name }}');\" title=\"Send to GitHub\"\>\<i id=\"github_delete_icon\" class=\"delete_icon\"\>\</i\>Delete from GitHub\</button\>");
                                     });
                                 },
@@ -736,6 +759,10 @@ $(document).ready(function () {
         ;
     })
     ;
+
+    {% if github_access_token is defined %}
+    access_token = '{{ github_access_token }}';
+    {% endif %}
 })
 ;
 </script>

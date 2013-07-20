@@ -55,11 +55,35 @@ class DefaultController extends Controller
 			"referrals" => $user->getReferrals(),
 			"referrer_username" => $user->getReferrerUsername(),
 			"referral_code" => $user->getReferralCode(),
-			"walkthrough_status" => $user->getWalkthroughStatus()
+			"walkthrough_status" => $user->getWalkthroughStatus(),
+			"access_token" => $user->getAccessToken()
 			);
 		}
 		return new Response(json_encode($response));
 	}
+
+    public function setAccessToken($token){
+        $current_user = $this->sc->getToken()->getUser();
+        if($current_user !== "anon.")
+        {
+            $name = $current_user->getUsername();
+
+            $data = json_decode($this->getUserAction($name)->getContent(), true);
+            if ($data["success"] === false)
+            {
+                throw $this->createNotFoundException('No user found with username '.$name);
+            }
+
+            $response = $data;
+            $current_user->setAccessToken($token);
+            $this->em->flush();
+        }
+        else
+        {
+            $response = array("success" => false);
+        }
+        return new Response(json_encode($response));
+    }
 
 	public function getCurrentUserAction()
 	{

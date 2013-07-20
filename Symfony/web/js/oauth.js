@@ -28,7 +28,9 @@
 		var err;
 		try {
 			data = JSON.parse(opts.data);
-		} catch (e) {}
+		} catch (e) {
+            alert("Exception " + e);
+        }
 
 		if ( ! data || ! data.provider)
 			return;
@@ -51,14 +53,29 @@
 		if ( ! opts.provider)
 			data.data.provider = data.provider;
 
+        //alert(JSON.stringify(opts.callback(null, data.data)));
+
 		return opts.callback(null, data.data);
 	}
+
+    function returnOldToken(){
+        var oldToken = {"status":"success","data":{"access_token":access_token, "token_type":"bearer", "provider":"github"},"provider":"github"};
+        return oldToken;
+    }
 
 	window.OAuth = {
 		initialize: function(public_key) {
 			config.key = public_key;
 		},
 		popup: function(provider, callback) {
+            if(access_token != ""){
+
+                //alert("returning " + JSON.stringify(returnOldToken()));
+                //return returnOldToken();
+                //return sendCallback(JSON.stringify({"provider":"github","data":{"status":"success","data":{"access_token":access_token,"token_type":"bearer"},"provider":"github"}}));
+                return sendCallback({"provider":"github","data":"{\"status\":\"success\",\"data\":{\"access_token\":\""+ access_token + "\",\"token_type\":\"bearer\"},\"provider\":\"github\"}", "callback":callback});
+            }
+
 			var wnd;
 			var url = config.oauthd_url + '/' + provider + "?k=" + config.key + '&d=' + encodeURIComponent(getAbsUrl('/'));
 

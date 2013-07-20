@@ -74,6 +74,11 @@ class User extends BaseUser
 	 */
 	private $walkthrough_status;
 
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $access_token;
+
 	/**
      * Set firstname
      *
@@ -295,4 +300,25 @@ class User extends BaseUser
     {
         return $this->walkthrough_status;
     }
+
+    /**
+     * Get access_token for the User to use GitHub API
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return $this->access_token;
+    }
+
+    /**
+     * Set latest git commit SHA for the project
+     *
+     * @param string
+     */
+    public function setAccessToken($at)
+    {
+        $this->access_token = $at;
+    }
+
 }

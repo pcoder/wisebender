@@ -1,6 +1,6 @@
 /* GLOBAL variables */
 var emailReg = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-var nameReg	 = /^[a-zA-Z_'-\s]*$/; //match letters/space and _ ' -  chars, empty is true
+var nameReg	 = /^[a-zA-Z_'\-\s]*$/; //match letters/space and _ ' -  chars, empty is true
 
 /* Check if password meets requirements */
 function passvalid(pass)
