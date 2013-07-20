@@ -120,8 +120,8 @@ class SketchController extends ProjectController
             $project = $this->getProjectById($id);
             $name = $project->getName();
 
-            $filename = $name.".ino";
-
+            //$filename = $name.".ino";
+/*
             $response1 = json_decode($this->renameFileAction($id, $filename, $new_name.".ino.bkp")->getContent(), true);
             if($response1["success"])
             {
@@ -143,8 +143,11 @@ class SketchController extends ProjectController
             {
                 $output = $response1;
                 $output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
-            }
-
+            }*/
+            $project->setName($new_name);
+            $em = $this->em;
+            $em->persist($project);
+            $em->flush();
             return new Response(json_encode($output));
         }
         else
