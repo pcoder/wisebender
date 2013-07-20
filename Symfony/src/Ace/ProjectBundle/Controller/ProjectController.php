@@ -414,6 +414,10 @@ class ProjectController extends Controller
 		return new Response(json_encode(array("success" => true, "response" => $response)));
 	}
 
+    public function getUserAccessTokenAction(){
+        return $this->sc->getToken()->getUser()->getAccessToken();
+    }
+
 	public function getDescriptionAction($id)
 	{
         $perm = json_decode($this->checkReadProjectPermissions($id), true);

@@ -10,9 +10,8 @@ function init_access_token() {
                 access_token = suc.access_token;
                 //store this
 
-                var url = '{{ path("AceUserBundle_set_access_token", {'token': 'token'}) }}';
-                url = url.replace("token", access_token);
-                $.post(url,{}, function (data) {
+                var url = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
+                $.get(url,{}, function (data) {
                     alert("saved return value = " + data);
                 });
             }

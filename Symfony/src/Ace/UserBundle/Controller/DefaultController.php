@@ -62,8 +62,12 @@ class DefaultController extends Controller
 		return new Response(json_encode($response));
 	}
 
-    public function setAccessToken($token){
+    public function setAccessTokenAction(){
         $current_user = $this->sc->getToken()->getUser();
+
+        $request = $this->getRequest();
+        $token = $request->query->get('access_token');
+
         if($current_user !== "anon.")
         {
             $name = $current_user->getUsername();
@@ -76,6 +80,7 @@ class DefaultController extends Controller
 
             $response = $data;
             $current_user->setAccessToken($token);
+            $this->em->persist($current_user);
             $this->em->flush();
         }
         else

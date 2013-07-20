@@ -64,6 +64,10 @@ class SketchController extends ProjectController
         return new Response(json_encode($retval));
     }
 
+    public function getUserAccessTokenAction(){
+        return parent::getUserAccessTokenAction();
+    }
+
 
 	public function cloneAction($owner, $id)
 	{

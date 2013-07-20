@@ -31,10 +31,10 @@ AceUserBundle_isemailavailable:
         _method:   POST
 
 AceUserBundle_set_access_token:
-    pattern:  /set_access_token/{token}
+    pattern:  /set_access_token
     defaults: { _controller: ace_user.usercontroller:setAccessTokenAction }
     requirements:
-        _method:   POST
+        _method:   GET
 
 AceUserBundle_search:
     pattern: /search/user/{token}
