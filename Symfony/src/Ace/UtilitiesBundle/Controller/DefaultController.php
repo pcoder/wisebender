@@ -166,7 +166,7 @@ class DefaultController extends Controller
         //echo("<hr/>");
         //var_dump($fw);
         //die();
-		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
+		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'access_token' => $user['access_token']));
 	}
 
 	public function downloadAction($id)
@@ -686,6 +686,13 @@ class DefaultController extends Controller
 			return new Response('200');
 		}
 	}
+
+    public function revokeGitHubAction(){
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response = $projectmanager->setGitUrlAction($id, $git_url)->getContent();
+        return new Response(json_encode($response));
+    }
 
 	public function logAction($message)
 	{

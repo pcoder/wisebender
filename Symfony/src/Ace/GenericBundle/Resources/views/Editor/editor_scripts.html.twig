@@ -12,7 +12,7 @@ function init_access_token() {
 
                 var url = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
                 $.get(url,{}, function (data) {
-                    alert("saved return value = " + data);
+                    //alert("saved return value = " + data);
                 });
             }
             else {

@@ -79,6 +79,9 @@ class DefaultController extends Controller
             }
 
             $response = $data;
+            if($token== '' || $token == null){
+                $token='';
+            }
             $current_user->setAccessToken($token);
             $this->em->persist($current_user);
             $this->em->flush();
