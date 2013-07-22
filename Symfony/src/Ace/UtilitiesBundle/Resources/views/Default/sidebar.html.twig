@@ -22,6 +22,7 @@ function warnDeleteProject(deletion_path)
 </script>
 <div class="well">
 <ul class="nav nav-list" id="sidebar-list-header">
+    <li class="nav-header" id="Links">Links</li>
     <li><a href="{{ path('AceGenericBundle_index') }}"><i class="icon-home"></i>Home</a></li>
     <li><a href="{{ path('AceUtilitiesBundle_wiselib_clone') }}"><i class="icon-hdd"></i>Create a Wiselib Clone</a></li>
 </ul>
@@ -57,12 +58,18 @@ function warnDeleteProject(deletion_path)
 </ul>
 
 <ul class="nav nav-list" id="sidebar-list-footer">
-
+    <li class="nav-header" id="documentation">Documentation</li>
 	<!-- <li class="active"><a href="#">Link</a></li> -->
-	<li class="nav-header" id="Links">Links</li>
 	<!--<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>Examples &amp; Libraries</a></li>-->
 	<!--<li><a href="{{ path('AceGenericBundle_boards') }}"><i class="icon-hdd"></i>Supported Boards</a></li>-->
-	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Getting Started</a></li>
+	<!--<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Getting Started</a></li>-->
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Home</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Supported Platforms</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Programming Hints</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Coding Guidelines</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Generic Wiselib App</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Background</a></li>
+	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Reserved Message IDs</a></li>
     <!--<li id="li_auth_revoke">
     {% if access_token is defined and access_token!= '' %}
         <a href="javascript:revokeGitHub();"><i class="icon-exclamation-sign"></i>Revoke GitHub Access</a>
