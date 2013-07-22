@@ -23,6 +23,7 @@ function warnDeleteProject(deletion_path)
 <div class="well">
 <ul class="nav nav-list" id="sidebar-list-header">
     <li><a href="{{ path('AceGenericBundle_index') }}"><i class="icon-home"></i>Home</a></li>
+    <li><a href="{{ path('AceUtilitiesBundle_wiselib_clone') }}"><i class="icon-hdd"></i>Create a Wiselib Clone</a></li>
 </ul>
 <ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
 	<li class="nav-header">Projects</li>
@@ -61,7 +62,6 @@ function warnDeleteProject(deletion_path)
 	<li class="nav-header" id="Links">Links</li>
 	<!--<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>Examples &amp; Libraries</a></li>-->
 	<!--<li><a href="{{ path('AceGenericBundle_boards') }}"><i class="icon-hdd"></i>Supported Boards</a></li>-->
-    <li><a href="{{ path('AceUtilitiesBundle_wiselib_clone') }}"><i class="icon-hdd"></i>Clone Wiselib Source</a></li>
 	<li><a href="{{ path("AceStaticBundle_walkthrough", {"page":1}) }}"><i class="icon-exclamation-sign"></i>Getting Started</a></li>
     <!--<li id="li_auth_revoke">
     {% if access_token is defined and access_token!= '' %}

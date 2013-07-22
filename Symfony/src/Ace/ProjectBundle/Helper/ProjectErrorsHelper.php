@@ -42,6 +42,8 @@ class ProjectErrorsHelper {
 	const SUCC_CUR_USER_PRIV_PROJ_RECORDS_MSG = "User records retreived successfuly.";
 	const FAIL_CUR_USER_PRIV_PROJ_RECORDS_MSG = "User not logged in";
 
+    const INITIAL_COMMIT_MESSAGE = "This is a [Wiselib](https://github.com/ibr-alg/wiselib/wiki)-based application created using [Wisebender](https://github.com/pcoder/wisebender).";
+
 
 	public static function success($msg, $info = array())
     {
