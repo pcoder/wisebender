@@ -106,11 +106,22 @@ class DefaultController extends Controller
 		if (file_exists(__DIR__."/../Resources/views/Walkthrough/page".intval($page).".html.twig"))
 		{
 			$this->get('ace_user.usercontroller')->setWalkthroughStatusAction(intval($page));
-			return $this->render('AceStaticBundle:Walkthrough:page'.intval($page).'.html.twig', array("page" => intval($page)));
+		    return $this->render('AceStaticBundle:Walkthrough:page'.intval($page).'.html.twig', array("page" => intval($page)));
+			//return $this->render('this is a test', array("page" => intval($page)));
 		}
 
 		return $this->redirect($this->generateUrl("AceGenericBundle_index"));
 	}
+
+    public function documentationAction($page){
+        $toshow = "";
+        $fpath = $this->container->getParameter('wiselib.wiki.dir') . DIRECTORY_SEPARATOR ;
+        if(trim(strtolower($page)) == "home"){
+            $toshow=file_get_contents($fpath . "Home.rest");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }
+        return $this->redirect($this->generateUrl("AceGenericBundle_index"));
+    }
 
 //	public function contactAction(Request $request)
 //	{

@@ -1,0 +1,15 @@
+{% block stylesheets %}
+    <style type="text/css">
+        .img-screenshot
+        {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    {% include 'AceStaticBundle:Walkthrough:huge_button_style.html.twig' %}
+{% endblock %}
+
+{% block page_content %}
+    {{ dot_md_file|markdown }}
+{% endblock %}
