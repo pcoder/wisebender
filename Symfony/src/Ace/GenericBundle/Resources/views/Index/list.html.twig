@@ -100,28 +100,28 @@
 {% endblock %}
 
 {% block mainspan %}
-    <div class="row-fluid">
+    <!-- <div class="row-fluid">
 	    <div class="span12">
 		    <h2>
 			    Hello {{ user["username"] }}!
-			    <!-- <a href="{{ path("AceStaticBundle_info_points") }}">
+			    <a href="{{ path("AceStaticBundle_info_points") }}">
 				    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
 			    </a>
 			    <a href="{{ path("AceStaticBundle_info_karma") }}">
 				    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
-			    </a> -->
+			    </a>
 		    </h2>
 
 	    </div>
-    </div>
+    </div> -->
 
 	{% if user["walkthrough_status"] < 5  %}
 		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
 	{% endif %}
     <div class="row-fluid">
     <div class="span60">
-    <h3>Create New Project</h3>
-    <form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}' style="max-width:80%;">
+    <h4>Create New Project</h4>
+    <form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}'>
         <div class="row-fluid">
             <div class="span12">
                 <div class="input-prepend input-append" style="max-width:80%;">
@@ -131,7 +131,7 @@
                 </div>
             </div>
         </div>
-        {% include 'AceGenericBundle:Index:supporters_bck.html.twig' %}
+        {% include 'AceGenericBundle:Index:partners.html.twig' %}
         {% if avail_priv_proj["success"] %}
             <div class="row-fluid" style="margin-top: 5px;">
                 <div class="span12">
