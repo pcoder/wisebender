@@ -255,6 +255,7 @@
     {% include 'AceGenericBundle:Editor:filedelete_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:info_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
+    {% include 'AceGenericBundle:Editor:git_project_delete_modal.html.twig' %}
 
     <div id="container_left">
         <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
@@ -305,7 +306,7 @@
                         <br/>
                     {% endif %}
                     <div id="div_delete_from_github">
-                        <button id="delete_from_github" class="btn" onclick="delete_from_github('{{ project_name }}');"
+                        <button id="confirm_delete_from_github" class="btn" onclick="confirm_delete_from_github('{{ project_name }}');"
                                 title="Send to GitHub">
                             <i id="github_delete_icon" class="delete_icon"></i>
                             Delete from GitHub

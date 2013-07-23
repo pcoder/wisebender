@@ -104,7 +104,13 @@ function save_to_github(repo_name) {
     $("#commitModal").modal('show');
 }
 
+function confirm_delete_from_github(repo_name){
+    $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" +repo_name+ "')");
+    $("#deleteProjectGitModal").modal("show");
+}
+
 function delete_from_github(repo_name) {
+
 
     var oauthProvider = 'github';
     var user_name = '';
@@ -145,11 +151,12 @@ function delete_from_github(repo_name) {
                 async: false,
                 success: function () {
                     alert("Repository '" + repo_name + "' deleted on GitHub.com!");
+                    $("#deleteProjectGitModal").modal("hide");
                     $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
                         $("#div_git_url").html("");
                         $("#div_delete_from_github").html("");
+                        $("#div_pull_from_github").html("");
                         $("#div_git_url").css('display', 'none');
-
                     });
 
                     $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
@@ -731,7 +738,7 @@ $(document).ready(function () {
                                         $("#div_git_url").css('display', 'block');
                                         $("#div_git_url").css('padding-top', '15px');
                                         $("#div_git_url").css('padding-bottom', '15px');
-                                        $("#div_delete_from_github").html("\<button id=\"delete_from_github\" class=\"btn\" onclick=\"delete_from_github('{{ project_name }}');\" title=\"Delete from GitHub\"\>\<i id=\"github_delete_icon\" class=\"delete_icon\"\>\</i\>Delete from GitHub\</button\>");
+                                        $("#div_delete_from_github").html("\<button id=\"delete_from_github\" class=\"btn\" onclick=\"confirm_delete_from_github('{{ project_name }}');\" title=\"Delete from GitHub\"\>\<i id=\"github_delete_icon\" class=\"delete_icon\"\>\</i\>Delete from GitHub\</button\>");
                                         $("#div_delete_from_github").css('display', 'block');
                                     });
                                 },
