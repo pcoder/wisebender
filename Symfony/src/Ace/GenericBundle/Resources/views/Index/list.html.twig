@@ -7,11 +7,26 @@
 			display: none;
 		}
 	</style>
+    <!-- bxSlider CSS file -->
+    <link href=" {{ asset("jquery.bxslider/jquery.bxslider.css") }}" rel="stylesheet" />
 {% endblock %}
 
 {% block javascripts %}
 
+    <!-- bxSlider Javascript file -->
+    <script src="{{ asset("jquery.bxslider/jquery.bxslider.min.js") }}"></script>
 	<script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $('.bxslider').bxSlider({
+                auto: true,
+                autoControls: true,
+                speed: 1000,
+                pause:15000,
+                controls: false
+            });
+        });
+
 		function toggleUpload()
 		{
 			$("#uploadDiv").toggle(1000);
@@ -116,6 +131,7 @@
                 </div>
             </div>
         </div>
+        {% include 'AceGenericBundle:Index:supporters_bck.html.twig' %}
         {% if avail_priv_proj["success"] %}
             <div class="row-fluid" style="margin-top: 5px;">
                 <div class="span12">

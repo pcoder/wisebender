@@ -781,6 +781,14 @@ $(document).ready(function () {
     {% if github_access_token is defined %}
     access_token = '{{ github_access_token }}';
     {% endif %}
+
+    $('.bxslider').bxSlider({
+        auto: true,
+        autoControls: true,
+        speed: 1000,
+        pause:15000,
+        controls: false
+    });
 })
 ;
 </script>

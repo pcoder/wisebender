@@ -185,7 +185,6 @@
     <script type="text/javascript" src="{{ path("AceGenericBundle_embedded_compilerflasher_js") }}"></script>
     {% include 'AceGenericBundle:Editor:editor_scripts.html.twig' %}
     {% include 'AceGenericBundle:Editor:editor_ariadne_scripts.html.twig' %}
-
     <script>
         window.youShallNotPass = true;
         var warnMessage = "You have UNSAVED CHANGES in your project. If you leave now, your changes WILL BE LOST.";
@@ -371,6 +370,5 @@
 {% block javascripts_upload_head %}
     <link rel="stylesheet" href='{{ asset("js/jquery.contextMenu.css") }}'>
     <link rel="stylesheet" href='{{ asset("css.treeview/treeview.css") }}'>
-
 {% endblock %}
 
