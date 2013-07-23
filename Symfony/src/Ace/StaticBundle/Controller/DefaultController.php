@@ -120,8 +120,8 @@ class DefaultController extends Controller
         $fpath = $this->container->getParameter('wiselib.wiki.dir') . DIRECTORY_SEPARATOR;
 
         if ($page == "home") {
-            if (file_exists($fpath . "Home.rest")) {
-                $toshow = file_get_contents($fpath . "Home.rest");
+            if (file_exists($fpath . "Home.md")) {
+                $toshow = file_get_contents($fpath . "Home.md");
             } else {
                 $toshow = "<h2>Sorry</h2><p>The resource you are looking for is currently not available. Please contact the administrator for resolving this issue.</p>";
             }
