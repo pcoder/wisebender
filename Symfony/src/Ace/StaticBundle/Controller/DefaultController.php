@@ -114,10 +114,30 @@ class DefaultController extends Controller
 	}
 
     public function documentationAction($page){
+        $page = trim(strtolower($page)) ;
         $toshow = "";
         $fpath = $this->container->getParameter('wiselib.wiki.dir') . DIRECTORY_SEPARATOR ;
-        if(trim(strtolower($page)) == "home"){
+
+        if($page == "home"){
             $toshow=file_get_contents($fpath . "Home.rest");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "supported-platforms"){
+            $toshow=file_get_contents($fpath . "Supported-platforms.md");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "programming-hints"){
+            $toshow=file_get_contents($fpath . "Programming-hints.md");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "coding-guidelines"){
+            $toshow=file_get_contents($fpath . "Coding-guidelines.md");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "generic-apps"){
+            $toshow=file_get_contents($fpath . "Generic-wiselib-application.md");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "background"){
+            $toshow=file_get_contents($fpath . "Background-general-cpp.md");
+            return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
+        }else if( $page == "reserved-msg-ids"){
+            $toshow=file_get_contents($fpath . "Reserved-message-ids.md");
             return $this->render('AceStaticBundle:Documentation:page.html.twig', array("dot_md_file" => $toshow));
         }
         return $this->redirect($this->generateUrl("AceGenericBundle_index"));

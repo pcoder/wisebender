@@ -1,3 +1,4 @@
+{% extends '::container.html.twig' %}
 {% block stylesheets %}
     <style type="text/css">
         .img-screenshot
@@ -6,10 +7,10 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
+        .test{}
     </style>
-    {% include 'AceStaticBundle:Walkthrough:huge_button_style.html.twig' %}
 {% endblock %}
 
-{% block page_content %}
+{% block mainspan %}
     {{ dot_md_file|markdown }}
 {% endblock %}
