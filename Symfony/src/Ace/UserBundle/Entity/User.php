@@ -77,7 +77,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length="255")
      */
-    protected $access_token;
+    protected $access_token = "";
 
 	/**
      * Set firstname
