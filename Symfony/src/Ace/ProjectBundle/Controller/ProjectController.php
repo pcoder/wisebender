@@ -103,7 +103,7 @@ class ProjectController extends Controller
         //var_dump($checked_folders);
         foreach ($cdir as $key => $value)
         {
-            if (!in_array($value,array(".","..", "doc", "apps", "util")))
+            if (!in_array($value,array(".","..", "doc", "apps", "util", ".git")))
             {
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
                 {
