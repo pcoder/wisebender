@@ -658,6 +658,7 @@ $(document).ready(function () {
     });
 
     $("#commitSubmit").click(function () {
+		save();
         var repo_name = $("#repoName").val().trim();
         var val = $('#commitMessage').val().trim();
         $('#commitModal').modal('hide');
