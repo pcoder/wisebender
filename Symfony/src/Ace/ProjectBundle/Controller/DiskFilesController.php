@@ -214,7 +214,7 @@ class DiskFilesController extends FilesController
                 $file = str_replace('\\', '/', $file);
 
                 // Ignore "." and ".." folders
-                if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..', '.git')) )
+                if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..', '.git', '.gitignore')) )
                     continue;
 
                 $file = realpath($file);
