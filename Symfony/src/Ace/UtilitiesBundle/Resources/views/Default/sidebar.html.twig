@@ -6,7 +6,7 @@ $(document).ready(function()
 
 function revokeGitHub(){
     $.get("{{ path("AceUserBundle_set_access_token") }}", {}, function (data) {
-        $("#li_auth_revoke").html("\<a href=\"authorizeGitHub();\"><i class=\"icon-exclamation-sign\"></i>Authorize GitHub Access</a>");
+        $("#li_auth_revoke").html("\<a href=\"authorizeGitHub();\"><i class=\"icon-exclamation-sign\"></i>Link a GitHub Account</a>");
     });
 }
 
@@ -25,6 +25,13 @@ function warnDeleteProject(deletion_path)
     <li class="nav-header" id="Links">Links</li>
     <li><a href="{{ path('AceGenericBundle_index') }}"><i class="icon-home"></i>Home</a></li>
     <li><a href="{{ path('AceUtilitiesBundle_wiselib_clone') }}"><i class="icon-hdd"></i>Create a Wiselib Clone</a></li>
+    <!--<li id="li_auth_revoke">
+        {% if access_token is defined and access_token!= '' %}
+            <a href="javascript:revokeGitHub();"><i class="icon-exclamation-sign"></i>Unlink GitHub Account</a>
+        {% else %}
+            <a href="javascript:authorizeGitHub();"><i class="icon-exclamation-sign"></i>Link a GitHub Account</a>
+        {% endif %}
+    </li>-->
 </ul>
 <ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
 	<li class="nav-header">Projects</li>
@@ -70,13 +77,6 @@ function warnDeleteProject(deletion_path)
 	<li><a href="{{ path("AceStaticBundle_documentation", {"page":"generic-apps"}) }}"><i class="icon-exclamation-sign"></i>Generic Wiselib App</a></li>
 	<li><a href="{{ path("AceStaticBundle_documentation", {"page":"background"}) }}"><i class="icon-exclamation-sign"></i>Background</a></li>
 	<li><a href="{{ path("AceStaticBundle_documentation", {"page":"reserved-msg-ids"}) }}"><i class="icon-exclamation-sign"></i>Reserved Message IDs</a></li>
-    <!--<li id="li_auth_revoke">
-    {% if access_token is defined and access_token!= '' %}
-        <a href="javascript:revokeGitHub();"><i class="icon-exclamation-sign"></i>Revoke GitHub Access</a>
-    {% else %}
-        <a href="javascript:authorizeGitHub();"><i class="icon-exclamation-sign"></i>Authorize GitHub Access</a>
-    {% endif %}
-    </li>-->
 	<!--<li><a href="{{ path('AceStaticBundle_upload_bootloader') }}"><i class="icon-upload"></i>Upload Bootloader</a></li>-->
 	<!--<li><a href="{{ path('AceStaticBundle_tutorials') }}"><i class="icon-facetime-video"></i>Tutorials</a></li>-->
 
