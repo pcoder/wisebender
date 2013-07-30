@@ -186,43 +186,58 @@ class DefaultController extends Controller
 		$files = json_decode($files, true);
 		$files = $files["list"];
 
-		if(isset($files[0]))
-		{
-			// Create a temporary file in the temporary
-			// files directory using sys_get_temp_dir()
-			$filename = tempnam(sys_get_temp_dir(), 'cb_');
+        $is_wiselib_clone = $projectmanager->getIsWiselibClone($id)->getContent();
+        $is_wiselib_clone = json_decode($is_wiselib_clone, true);
+        $is_wiselib_clone = $is_wiselib_clone["response"];
 
-			$zip = new ZipArchive();
+        if($is_wiselib_clone){
+            $result = $projectmanager->listWiselibFilesAction($id)->getContent();
+            $result = json_decode($result, true);
+            if($result["success"]){
+                if(file_exists($result["file"])){
+                    $value= file_get_contents($result["file"]);
+                    unlink($result["file"]);
+                }
+            }
+        }else{
+            if(isset($files[0]))
+            {
+                // Create a temporary file in the temporary
+                // files directory using sys_get_temp_dir()
+                $filename = tempnam(sys_get_temp_dir(), 'cb_');
 
-			if ($zip->open($filename, ZIPARCHIVE::CREATE)!==true)
-			{
-				$value = "";
-				$htmlcode = 404;
-			}
-			else
-			{
-				if($zip->addEmptyDir($name)!==true)
-				{
-					$value = "";
-					$htmlcode = 404;
-				}
-				else
-				{
-					foreach($files as $file)
-					{
-						$zip->addFromString($name."/".$file["filename"], $file["code"]);
-					}
-					$zip->close();
-					$value = file_get_contents($filename);
-				}
-				unlink($filename);
-			}
-		}
-		else
-		{
-			$value = "";
-			$htmlcode = 404;
-		}
+                $zip = new ZipArchive();
+
+                if ($zip->open($filename, ZIPARCHIVE::CREATE)!==true)
+                {
+                    $value = "";
+                    $htmlcode = 404;
+                }
+                else
+                {
+                    if($zip->addEmptyDir($name)!==true)
+                    {
+                        $value = "";
+                        $htmlcode = 404;
+                    }
+                    else
+                    {
+                        foreach($files as $file)
+                        {
+                            $zip->addFromString($name."/".$file["filename"], $file["code"]);
+                        }
+                        $zip->close();
+                        $value = file_get_contents($filename);
+                    }
+                    unlink($filename);
+                }
+            }
+            else
+            {
+                $value = "";
+                $htmlcode = 404;
+            }
+        }
 
 		$headers = array('Content-Type'		=> 'application/octet-stream',
 			'Content-Disposition' => 'attachment;filename="'.$name.'.zip"');
