@@ -83,7 +83,7 @@ class SketchController extends ProjectController
                 }
                 else
                 {
-                $this->createFileAction($response["id"],$file["filename"],$file["code"]);
+                    $this->createFileAction($response["id"],$file["filename"],$file["code"]);
                 }
             }
 		    return new Response(json_encode(array("success" => true, "id" => $response["id"])));

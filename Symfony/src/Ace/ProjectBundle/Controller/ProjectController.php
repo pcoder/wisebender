@@ -195,7 +195,7 @@ class ProjectController extends Controller
         $new_name = $project->getName();
         $nameExists = json_decode($this->nameExists($owner, $new_name), true);
         while ($nameExists["success"]) {
-            $new_name = $new_name . " copy";
+            $new_name = $new_name . "-copy";
             $nameExists = json_decode($this->nameExists($owner, $new_name), true);
         }
         $response = json_decode($this->createAction($owner, $new_name, $project->getDescription(), true)->getContent(), true);
