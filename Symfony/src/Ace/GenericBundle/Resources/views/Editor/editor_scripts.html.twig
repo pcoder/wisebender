@@ -313,6 +313,9 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     });
 
     // 3. POST a new commit with the `new_tree_sha` as the tree and `old_commit_sha` as the parent (returns `new_commit_sha`)
+    val = val.replace(/\\/g, "\\\\");
+    val = val.replace(/\"/g, "\\\"");
+
     var new_commit_sha = '';
     $.ajax
     ({
