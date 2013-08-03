@@ -421,25 +421,23 @@ function compile(project){
         "wiselibUUID": $("#pf_id").val(),
         "files": allfiles
     };
-    alert(JSON.stringify(json_data));
-  /*  $.ajax
+
+    var site_url = location.origin;
+    $.ajax
     ({
         type: "POST",
-        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
+        url: site_url + '/compiler.php',
         dataType: 'json',
         async: false,
         data: JSON.stringify(json_data),
-        success: function (data_blob) {
-            //alert('JSON Data = ' + JSON.stringify(json_data));
-            var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-            sha_blob = json_blob.sha;
-            //alert("Blob created! sha=" + sha_blob);
+        success: function (result) {
+            alert('JSON Data = ' + JSON.stringify(result));
         },
         error: function (request, status, error) {
             alert("ERROR: " + request.responseText);
             return;
         }
-    });*/
+    });
 }
 
 old_usbflash = usbflash;
