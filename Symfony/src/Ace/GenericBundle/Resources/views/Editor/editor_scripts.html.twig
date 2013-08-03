@@ -405,17 +405,41 @@ function verification_onSuccess() {
 }
 
 function compile(project){
-    var allfiles = {
-        [{"filename": "test_app.cpp",
-          "content" : fcontent}]
-    };
+    var fname="";
+    var fcontent="";
+    for(file in window.files){
+        fname = file;
+        fcontent = window.files[file];
+    }
+    var allfiles =
+        [{"filename": fname,
+          "content" : fcontent}];
     var json_data = {
         "format" : "binary",
         "build" : "isense",
-        "username" : "pcoder",
+        "username" : $("#user").val(),
         "wiselibUUID": $("#pf_id").val(),
         "files": allfiles
     };
+    alert(JSON.stringify(json_data));
+  /*  $.ajax
+    ({
+        type: "POST",
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
+        dataType: 'json',
+        async: false,
+        data: JSON.stringify(json_data),
+        success: function (data_blob) {
+            //alert('JSON Data = ' + JSON.stringify(json_data));
+            var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+            sha_blob = json_blob.sha;
+            //alert("Blob created! sha=" + sha_blob);
+        },
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
+            return;
+        }
+    });*/
 }
 
 old_usbflash = usbflash;
