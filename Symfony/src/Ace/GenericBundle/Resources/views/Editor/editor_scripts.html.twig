@@ -404,6 +404,20 @@ function verification_onSuccess() {
     editor.resize();
 }
 
+function compile(project){
+    var allfiles = {
+        [{"filename": "test_app.cpp",
+          "content" : fcontent}]
+    };
+    var json_data = {
+        "format" : "binary",
+        "build" : "isense",
+        "username" : "pcoder",
+        "wiselibUUID": $("#pf_id").val(),
+        "files": allfiles
+    };
+}
+
 old_usbflash = usbflash;
 
 

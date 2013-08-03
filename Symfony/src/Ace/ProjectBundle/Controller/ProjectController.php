@@ -323,6 +323,16 @@ class ProjectController extends Controller
         return new Response(json_encode(array("success" => true, "response" => $name)));
     }
 
+    public function getProjectFilesIdAction($id){
+        $perm = json_decode($this->checkReadProjectPermissions($id), true);
+        if (!$perm['success']) {
+            return new Response(json_encode($perm));
+        }
+        $project = $this->getProjectById($id);
+        $name = $project->getProjectfilesId();
+        return new Response(json_encode(array("success" => true, "response" => $name)));
+    }
+
     public function getGitCommitSHAAction($id)
     {
         $perm = json_decode($this->checkReadProjectPermissions($id), true);

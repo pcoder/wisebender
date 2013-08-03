@@ -286,7 +286,7 @@
                     <i id="save_icon" class="icon-download"></i>
                     Send to GitHub
                 </button>
-                <br/>
+                <br/>editor.html.twig
 
                 {% if git_url is not defined or git_url == "" %}
                     <div id="div_git_url" style="display: none;"></div>
@@ -370,7 +370,16 @@
         <span id="lines">Number of lines: <span id="line_count">0</span></span>
         <pre id="compile_output"></pre>
     </div>
-
+{% if pf_id is defined %}
+    <input type="hidden" name="pf_id" id="pf_id" value="{{ pf_id }}"/>
+    {% else %}
+    <input type="hidden" name="pf_id" id="pf_id" value=""/>
+{% endif %}
+    {% if user is defined %}
+        <input type="hidden" name="user" id="user" value="{{ user  }}"/>
+    {% else %}
+        <input type="hidden" name="user" id="user" value=""/>
+    {% endif %}
     {% include 'AceGenericBundle:Editor:social_buttons.html.twig' %}
 {% endblock %}
 {% block javascripts_upload_head %}

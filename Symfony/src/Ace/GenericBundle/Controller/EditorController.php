@@ -35,6 +35,15 @@ class EditorController extends Controller
         $is_wiselib_clone = json_decode($is_wiselib_clone, true);
         $is_wiselib_clone = $is_wiselib_clone["response"];
 
+        $projectfiles_id = $projectmanager->getProjectFilesIdAction($id)->getContent();
+        $projectfiles_id = json_decode($projectfiles_id, true);
+        $projectfiles_id = $projectfiles_id["response"];
+
+        if(strstr($projectfiles_id, "/")){
+            $projectfiles_id = explode("/", $projectfiles_id);
+        }
+        $projectfiles_id = trim($projectfiles_id[1]);
+
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
 
@@ -59,8 +68,10 @@ class EditorController extends Controller
         $files_wiselib = $projectmanager->listWiselibDirAction($owner_id, $id, $fpath)->getContent();
         $files_wiselib = json_decode($files_wiselib, true);
 
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "github_access_token" => $projectmanager->getUserAccessTokenAction(), "is_wiselib_clone" => $is_wiselib_clone));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "github_access_token" => $projectmanager->getUserAccessTokenAction(), "is_wiselib_clone" => $is_wiselib_clone, 'pf_id' => $projectfiles_id, 'user' => $user["username"]));
 	}
 }
