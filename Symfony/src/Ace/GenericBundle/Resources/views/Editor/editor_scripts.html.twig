@@ -453,14 +453,15 @@ function compile(project){
             {
                 if (typeof verification_onSuccess == 'function')
                     verification_onSuccess();
-                test = $.base64Decode(result.output);
+                //test = $.base64Decode(result.output);
+                var blob = new Blob([$.base64Decode(result.output)], {type: "application/octet-stream;charset=utf-8"});
+                saveAs(blob, project + "_app.bin");
             }
             else
             {
                 if (typeof verification_onFail == 'function')
                     verification_onFail(result.message);
             }
-
         },
         error: function (request, status, error) {
             alert(error);
