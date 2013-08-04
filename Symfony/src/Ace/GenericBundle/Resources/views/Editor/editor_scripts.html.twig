@@ -478,24 +478,12 @@ function downloadBinary(file, project){
         "pname" : project
     };
     var site_url = location.origin;
-    $.ajax
-    ({
-        type: "POST",
-        url: site_url + '/download.php',
-        dataType: 'json',
-        async: true,
-        data: json_data,
-        success: function (result) {
-            if(result.success){
-                setOperationOutput("");
-            }else{
-                alert(result.message);
-                setOperationOutput(result.message);
-            }
-        },
-        error: function (request, status, error) {
-            alert(error);
-            return;
+    $.get(site_url + '/download.php', {data: json_data}, function (result) {
+        if(result.success){
+            setOperationOutput("");
+        }else{
+            alert(result.message);
+            setOperationOutput(result.message);
         }
     });
 }
