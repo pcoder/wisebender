@@ -455,7 +455,7 @@ function compile(project){
                     verification_onSuccess();
                 //test = $.base64Decode(result.output);
                 test = result.output;
-                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary( " +result.output + "," +  project+ ");'>Download binary.</a></p>");
+                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" +result.output + "\",\"" +  project+ "\");'>Download binary.</a></p>");
                 //var blob = new Blob([$.base64Decode(result.output)], {type: "application/octet-stream"});
                 //saveAs(blob, project + "_app.bin");
             }
