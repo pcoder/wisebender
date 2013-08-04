@@ -455,13 +455,42 @@ function compile(project){
                     verification_onSuccess();
                 //test = $.base64Decode(result.output);
                 test = result.output;
-                var blob = new Blob([$.base64Decode(result.output)], {type: "application/octet-stream;charset=utf-8"});
-                saveAs(blob, project + "_app.bin");
+                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary( " +result.output + "," +  project+ ");'>Download binary.</a></p>");
+                //var blob = new Blob([$.base64Decode(result.output)], {type: "application/octet-stream"});
+                //saveAs(blob, project + "_app.bin");
             }
             else
             {
                 if (typeof verification_onFail == 'function')
                     verification_onFail(result.message);
+            }
+        },
+        error: function (request, status, error) {
+            alert(error);
+            return;
+        }
+    });
+}
+
+function downloadBinary(file, project){
+    var json_data = {
+        "fname" : file,
+        "pname" : project
+    };
+    var site_url = location.origin;
+    $.ajax
+    ({
+        type: "POST",
+        url: site_url + '/download.php',
+        dataType: 'json',
+        async: true,
+        data: json_data,
+        success: function (result) {
+            if(result.success){
+                setOperationOutput("");
+            }else{
+                alert(result.message);
+                setOperationOutput(result.message);
             }
         },
         error: function (request, status, error) {
