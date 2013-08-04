@@ -404,6 +404,7 @@ function verification_onSuccess() {
     editor.resize();
 }
 
+var test='';
 function compile(project){
 
     setOperationProgress(90);
@@ -430,27 +431,25 @@ function compile(project){
         type: "POST",
         url: site_url + '/compiler.php',
         dataType: 'json',
-        async: false,
+        async: true,
         data: JSON.stringify(json_data),
         success: function (result) {
-            //alert('JSON Data = ' + JSON.stringify(result));
-            $("#compile").addClass("btn-success");
-            $("#compile_icon").addClass("icon-ok");
-            setOperationOutput("<p>Verification Successful!</p>");
-        },
-        error: function (request, status, error) {
-            $("#compile").addClass("btn-warning");
-            $("#compile_icon").addClass("icon-remove");
-            setOperationOutput("Compilation failed.");
-            return;
-        },
-        complete: function (xhr, status){
+            if(result.success){
+                $("#compile").addClass("btn-success");
+                $("#compile_icon").addClass("icon-ok");
+                setOperationOutput("<p>Compilation ok!</p>");
+            }else{
+                $("#compile").addClass("btn-warning");
+                $("#compile_icon").addClass("icon-remove");
+                setOperationOutput("Compilation failed.");
+            }
             $("#compile_icon").removeClass("icon-check").addClass("icon-white");
             window.setTimeout(function () {
                 $("#compile").removeClass("btn-success").removeClass("btn-warning");
                 $("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
             }, 500);
-            if (status == "success")
+
+            if (result.success)
             {
                 if (typeof verification_onSuccess == 'function')
                     verification_onSuccess();
@@ -458,8 +457,12 @@ function compile(project){
             else
             {
                 if (typeof verification_onFail == 'function')
-                    verification_onFail(xhr.responseText);
+                    verification_onFail(result.message);
             }
+        },
+        error: function (request, status, error) {
+            alert(error);
+            return;
         }
     });
 }
