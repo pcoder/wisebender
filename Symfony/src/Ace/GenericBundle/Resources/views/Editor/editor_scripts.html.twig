@@ -405,6 +405,8 @@ function verification_onSuccess() {
 }
 
 function compile(project){
+
+    setOperationProgress(90);
     var fname="";
     var fcontent="";
     for(file in window.files){
@@ -431,17 +433,38 @@ function compile(project){
         async: false,
         data: JSON.stringify(json_data),
         success: function (result) {
-            alert('JSON Data = ' + JSON.stringify(result));
+            //alert('JSON Data = ' + JSON.stringify(result));
+            $("#compile").addClass("btn-success");
+            $("#compile_icon").addClass("icon-ok");
+            setOperationOutput("<p>Verification Successful!</p>");
         },
         error: function (request, status, error) {
-            alert("ERROR: " + request.responseText);
+            $("#compile").addClass("btn-warning");
+            $("#compile_icon").addClass("icon-remove");
+            setOperationOutput("Compilation failed.");
             return;
+        },
+        complete: function (xhr, status){
+            $("#compile_icon").removeClass("icon-check").addClass("icon-white");
+            window.setTimeout(function () {
+                $("#compile").removeClass("btn-success").removeClass("btn-warning");
+                $("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
+            }, 500);
+            if (status == "success")
+            {
+                if (typeof verification_onSuccess == 'function')
+                    verification_onSuccess();
+            }
+            else
+            {
+                if (typeof verification_onFail == 'function')
+                    verification_onFail(xhr.responseText);
+            }
         }
     });
 }
 
 old_usbflash = usbflash;
-
 
 usbflash = function () {
     $("#collapseSerial").height(0);
