@@ -473,21 +473,9 @@ function compile(project){
 }
 
 function downloadBinary(file, project){
-    var json_data = {
-        "fname" : file,
-        "pname" : project
-    };
     var site_url = location.origin;
-    window.location = site_url + "/download.php?fname=" + file + "&pname=" + pname;
+    window.location = site_url + "/download.php?fname=" + file + "&pname=" + project;
     setOperationOutput("");
-    /*$.get(site_url + '/download.php', {data: json_data}, function (result) {
-        if(result.success){
-            setOperationOutput("");
-        }else{
-            alert(result.message);
-            setOperationOutput(result.message);
-        }
-    });*/
 }
 
 old_usbflash = usbflash;
