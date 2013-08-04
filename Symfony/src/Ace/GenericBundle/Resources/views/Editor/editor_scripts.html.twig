@@ -478,14 +478,16 @@ function downloadBinary(file, project){
         "pname" : project
     };
     var site_url = location.origin;
-    $.get(site_url + '/download.php', {data: json_data}, function (result) {
+    window.location = site_url + "/download.php?fname=" + file + "&pname=" + pname;
+    setOperationOutput("");
+    /*$.get(site_url + '/download.php', {data: json_data}, function (result) {
         if(result.success){
             setOperationOutput("");
         }else{
             alert(result.message);
             setOperationOutput(result.message);
         }
-    });
+    });*/
 }
 
 old_usbflash = usbflash;
