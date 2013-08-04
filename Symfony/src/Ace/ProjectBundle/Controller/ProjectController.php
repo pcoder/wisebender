@@ -676,7 +676,14 @@ class ProjectController extends Controller
             if ($permission["success"]) {
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
                 $owner = $owner["response"];
-                $proj = array("name" => $project->getName(), "pf_id" => $project->getProjectfilesId(), "description" => $project->getDescription(), "owner" => $owner);
+
+                $projectfiles_id = $project->getProjectfilesId();
+                if(strstr($projectfiles_id, "/")){
+                    $projectfiles_id = explode("/", $projectfiles_id);
+                }
+                $projectfiles_id = trim($projectfiles_id[1]);
+
+                $proj = array("name" => $project->getName(), "pf_id" => $projectfiles_id, "description" => $project->getDescription(), "owner" => $owner);
                 $result[$project->getId()] = $proj;
             }
         }
