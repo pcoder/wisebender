@@ -286,7 +286,7 @@
                     <i id="save_icon" class="icon-download"></i>
                     Send to GitHub
                 </button>
-                <br/>editor.html.twig
+                <br/>
 
                 {% if git_url is not defined or git_url == "" %}
                     <div id="div_git_url" style="display: none;"></div>
@@ -345,14 +345,28 @@
             {% endif %}
         </ul>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
-            <div id="div_compile">
+            <div id="cb_cf" data-sections="">
+                <select class="selectpicker">
+                    <optgroup label="My Wiselib Clones">
+                        {% if clones is defined %}
+                            {% for item in clones %}
+                                <option value="{{ item.pf_id }}">{{ item.name }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </optgroup>
+                    <optgroup label="Default">
+                        <option>Wiselib</option>
+                    </optgroup>
+                </select>
                 <button id="button_compile" class="btn" onclick="compile('{{ project_name }}');"
-                        title="Send to GitHub">
+                        title="Compile">
                     Compile
                 </button>
             </div>
+            <div id="div_compile">
+
+            </div>
         {% endif %}
-        <div id="cb_cf" data-sections=""></div>
 
 
         <div id="progress" class="progress progress-striped active">

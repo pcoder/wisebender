@@ -323,6 +323,10 @@ class ProjectController extends Controller
         return new Response(json_encode(array("success" => true, "response" => $name)));
     }
 
+    /*
+     *  This function returns the projectFilesId of the first WiselibClone of the user
+     */
+
     public function getProjectFilesIdAction($id){
         $perm = json_decode($this->checkReadProjectPermissions($id), true);
         if (!$perm['success']) {
@@ -653,6 +657,17 @@ class ProjectController extends Controller
         // return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
 
         return $project;
+    }
+
+    public function getWiselibCloneProjecs()
+    {
+        $em = $this->em;
+        $projects = $this->em->getRepository('AceProjectBundle:Project')->findBy(array('type'=> 'C12'));
+        if (!$projects)
+            throw $this->createNotFoundException('No project found');
+        // return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
+
+        return $projects;
     }
 
     public function checkWriteProjectPermissionsAction($id)
