@@ -339,7 +339,7 @@
 
         <ul class="nav nav-list" id="sidebar-list-footer" style="padding-bottom: 25px;">
             {% if files_wiselib %}
-                <div class="css-treeview">
+                <div {% if is_wiselib_clone is defined and is_wiselib_clone %} class="css-treeview" {% endif %}>
                     <ul>
                         {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id} only %}
                     </ul>
