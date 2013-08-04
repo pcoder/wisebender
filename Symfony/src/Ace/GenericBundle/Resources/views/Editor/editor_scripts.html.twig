@@ -98,6 +98,21 @@ function save() {
         //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
 }
+function save() {
+    loadCode();
+    setOperationProgress(90);
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+        $("#save").addClass("btn-success");
+        $("#save_icon").addClass("icon-white");
+        data = JSON.parse(data);
+        setOperationOutput(data['message']);
+        window.setTimeout(function () {
+            $("#save").removeClass("btn-success");
+            $("#save_icon").removeClass("icon-white");
+        }, 500);
+        //   alert("Data received: " +JSON.stringify(data, null, 4));
+    });
+}
 
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
@@ -406,7 +421,7 @@ function verification_onSuccess() {
 
 var test='';
 function compile(project){
-    save();
+    loadCode();
     setOperationProgress(90);
     var fname="";
     var fcontent="";
