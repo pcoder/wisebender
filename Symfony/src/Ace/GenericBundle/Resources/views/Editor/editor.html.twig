@@ -279,47 +279,49 @@
         <br/>
         <hr/>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
-        <div>
-            <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
-                <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
-                        title="Send to GitHub">
-                    <i id="save_icon" class="icon-download"></i>
-                    Send to GitHub
-                </button>
-                <br/>
-
-                {% if git_url is not defined or git_url == "" %}
-                    <div id="div_git_url" style="display: none;"></div>
-                    <div id="div_pull_from_github" style="display: none;"></div>
-                    <div id="div_delete_from_github" style="display: none;"></div>
-                {% else %}
+            <div>
+                <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
+                    <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
+                            title="Send to GitHub">
+                        <i id="save_icon" class="icon-download"></i>
+                        Send to GitHub
+                    </button>
                     <br/>
-                    {% if git_commit_sha is not defined or git_commit_sha == "" %}
+
+                    {% if git_url is not defined or git_url == "" %}
+                        <div id="div_git_url" style="display: none;"></div>
+                        <div id="div_pull_from_github" style="display: none;"></div>
+                        <div id="div_delete_from_github" style="display: none;"></div>
                     {% else %}
-                        <div id="div_pull_from_github">
-                            <button id="pull_from_github" class="btn" onclick="pull_from_github('{{ project_name }}', '{{ git_commit_sha }}');"
-                                    title="Pull Changes from GitHub">
-                                Pull Changes from GitHub
+                        <br/>
+                        {% if git_commit_sha is not defined or git_commit_sha == "" %}
+                        {% else %}
+                            <div id="div_pull_from_github">
+                                <button id="pull_from_github" class="btn"
+                                        onclick="pull_from_github('{{ project_name }}', '{{ git_commit_sha }}');"
+                                        title="Pull Changes from GitHub">
+                                    Pull Changes from GitHub
+                                </button>
+                            </div>
+                            <br/>
+                        {% endif %}
+                        <div id="div_delete_from_github">
+                            <button id="confirm_delete_from_github" class="btn"
+                                    onclick="confirm_delete_from_github('{{ project_name }}');"
+                                    title="Send to GitHub">
+                                <i id="github_delete_icon" class="delete_icon"></i>
+                                Delete from GitHub
                             </button>
                         </div>
                         <br/>
+                        <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a
+                                    href="{{ git_url }}" target="_blank">
+                                <pre>{{ git_url }}</pre>
+                            </a></div>
                     {% endif %}
-                    <div id="div_delete_from_github">
-                        <button id="confirm_delete_from_github" class="btn" onclick="confirm_delete_from_github('{{ project_name }}');"
-                                title="Send to GitHub">
-                            <i id="github_delete_icon" class="delete_icon"></i>
-                            Delete from GitHub
-                        </button>
-                    </div>
-                    <br/>
-                    <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a
-                                href="{{ git_url }}" target="_blank">
-                            <pre>{{ git_url }}</pre>
-                        </a></div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-        <hr/>
+            <hr/>
         {% endif %}
 
         <h4>
@@ -346,7 +348,7 @@
         </ul>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
             <div id="cb_cf" data-sections="">
-                <select class="selectpicker">
+                <select id="cb_cf_select" class="selectpicker">
                     <optgroup label="My Wiselib Clones">
                         {% if clones is defined %}
                             {% for item in clones %}
@@ -384,13 +386,13 @@
         <span id="lines">Number of lines: <span id="line_count">0</span></span>
         <pre id="compile_output"></pre>
     </div>
-{% if pf_id is defined %}
-    <input type="hidden" name="pf_id" id="pf_id" value="{{ pf_id }}"/>
+    {% if pf_id is defined %}
+        <input type="hidden" name="pf_id" id="pf_id" value="{{ pf_id }}"/>
     {% else %}
-    <input type="hidden" name="pf_id" id="pf_id" value=""/>
-{% endif %}
+        <input type="hidden" name="pf_id" id="pf_id" value=""/>
+    {% endif %}
     {% if user is defined %}
-        <input type="hidden" name="user" id="user" value="{{ user  }}"/>
+        <input type="hidden" name="user" id="user" value="{{ user }}"/>
     {% else %}
         <input type="hidden" name="user" id="user" value=""/>
     {% endif %}

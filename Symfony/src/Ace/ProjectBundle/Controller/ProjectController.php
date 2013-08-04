@@ -327,7 +327,8 @@ class ProjectController extends Controller
      *  This function returns the projectFilesId of the first WiselibClone of the user
      */
 
-    public function getProjectFilesIdAction($id){
+    public function getProjectFilesIdAction($id)
+    {
         $perm = json_decode($this->checkReadProjectPermissions($id), true);
         if (!$perm['success']) {
             return new Response(json_encode($perm));
@@ -477,7 +478,7 @@ class ProjectController extends Controller
         $permissions = json_decode($this->checkReadProjectPermissions($id), true);
         if ($permissions["success"]) {
             $list = $this->fc->listWiselibFiles($project->getProjectfilesId());
-            $arr =array();
+            $arr = array();
             if ($list) {
                 $arr = array("success" => true, "file" => $list);
             } else {
@@ -659,15 +660,27 @@ class ProjectController extends Controller
         return $project;
     }
 
-    public function getWiselibCloneProjecs()
+
+    public function getWiselibCloneProjects($user_id)
     {
         $em = $this->em;
-        $projects = $this->em->getRepository('AceProjectBundle:Project')->findBy(array('type'=> 'C12'));
-        if (!$projects)
+        $projects = $this->em->getRepository('AceProjectBundle:Project')->findBy(array("owner" => $user_id, 'is_wiselib_clone' => '1'));
+        if (!$projects) {
             throw $this->createNotFoundException('No project found');
-        // return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
+            //return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
+        }
 
-        return $projects;
+        $result = array();
+        foreach ($projects as $project) {
+            $permission = json_decode($this->checkReadProjectPermissions($project->getId()), true);
+            if ($permission["success"]) {
+                $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
+                $owner = $owner["response"];
+                $proj = array("name" => $project->getName(), "pf_id" => $project->getProjectfilesId(), "description" => $project->getDescription(), "owner" => $owner);
+                $result[$project->getId()] = $proj;
+            }
+        }
+        return new Response(json_encode($result));
     }
 
     public function checkWriteProjectPermissionsAction($id)
