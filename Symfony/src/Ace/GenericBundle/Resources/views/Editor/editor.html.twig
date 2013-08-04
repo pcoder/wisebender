@@ -280,7 +280,7 @@
         <hr/>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
             <div>
-                <div class="btn-group" style="margin-bottom:10px; margin-left:0px; vertical-align: middle;">
+                <div class="btn-group" style="margin-left:0px; vertical-align: middle;">
                     <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
                             title="Send to GitHub">
                         <i id="save_icon" class="icon-download"></i>
@@ -314,7 +314,7 @@
                             </button>
                         </div>
                         <br/>
-                        <div id="div_git_url" style="display: block;  padding-top: 15px; padding-bottom: 15px;"><a
+                        <div id="div_git_url" style="display: block;"><a
                                     href="{{ git_url }}" target="_blank">
                                 <pre>{{ git_url }}</pre>
                             </a></div>
