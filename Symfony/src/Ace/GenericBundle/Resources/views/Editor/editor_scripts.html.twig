@@ -434,7 +434,7 @@ function compile(project){
           "content" : fcontent}];
     var json_data = {
         "format" : "binary",
-        "build" : "isense",
+        "build" : $("#cb_cp_select").val(),
         "username" : $("#user").val(),
         "wiselibUUID": $("#cb_cf_select").val(),
         "files": allfiles

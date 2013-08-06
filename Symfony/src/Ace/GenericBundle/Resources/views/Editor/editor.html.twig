@@ -347,7 +347,15 @@
             {% endif %}
         </ul>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
+            <div id="cb_cp" data-sections=""  class="form-horizontal" style="padding-bottom: 15px;">
+                <label>Compile for Platform</label>
+                <select id="cb_cp_select" class="selectpicker">
+                    <option value="isense">iSense</option>
+                </select>
+            </div>
+
             <div id="cb_cf" data-sections=""  class="form-horizontal">
+                <label>Wiselib Source</label>
                 <select id="cb_cf_select" class="selectpicker">
                     <optgroup label="My Wiselib Clones">
                         {% if clones is defined %}
