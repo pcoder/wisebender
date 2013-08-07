@@ -665,12 +665,13 @@ class ProjectController extends Controller
     {
         $em = $this->em;
         $projects = $this->em->getRepository('AceProjectBundle:Project')->findBy(array("owner" => $user_id, 'is_wiselib_clone' => '1'));
+        $result = array();
         if (!$projects) {
-            throw $this->createNotFoundException('No project found');
-            //return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
+            //return $result;
+            //throw $this->createNotFoundException('No project found');
+            return new Response(json_encode(array("success" => false, "message" => "No Wiselib clones found for user : ".$user_id)));
         }
 
-        $result = array();
         foreach ($projects as $project) {
             $permission = json_decode($this->checkReadProjectPermissions($project->getId()), true);
             if ($permission["success"]) {

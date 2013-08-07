@@ -47,10 +47,6 @@ class EditorController extends Controller
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
 
-//		$files = $projectmanager->listFilesAction($id)->getContent();
-//		$files = json_decode($files, true);
-//		$files = $files["list"];
-
         $project = $projectmanager->getProjectById($id);
         $files = $projectmanager->getFileCode($fpath, $project->getProjectfilesId())->getContent();
         $files = json_decode($files, true);
@@ -73,11 +69,13 @@ class EditorController extends Controller
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-
         $wiselib_clones = json_decode($projectmanager->getWiselibCloneProjects($user['id'])->getContent(), true);
-        //$wiselib_clones = $wiselib_clones["response"];
-        //$wiselib_clones = $owner['id'];
-        //$wiselib_clones = array(array("pf_id" => '15332434', "name" => 'Wiselib'), array("pf_id" => '132342345', "name" => 'Wiselib-copy'));
+
+
+        if(isset($wiselib_clones["success"]) && !$wiselib_clones["success"]){
+            $wiselib_clones = array();
+        }
+
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "files_wiselib" => $files_wiselib, "fpath" => $fpath, "git_url" => $git_url, "git_commit_sha" => $git_commit_sha, "github_access_token" => $projectmanager->getUserAccessTokenAction(), "is_wiselib_clone" => $is_wiselib_clone, 'pf_id' => $projectfiles_id, 'user' => $user["username"], 'clones' => $wiselib_clones));
 	}
 }
