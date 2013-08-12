@@ -446,7 +446,7 @@ function compile(project){
         type: "POST",
         url: site_url + '/compiler.php',
         dataType: 'json',
-        async: false,
+        async: true,
         data: JSON.stringify(json_data),
         success: function (result) {
             if(result.success){
