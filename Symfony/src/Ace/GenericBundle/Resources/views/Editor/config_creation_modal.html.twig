@@ -1,0 +1,17 @@
+<div class="modal hide fade" id="configCreationModal" style="height:80%; overflow:hidden;">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3>Configuration File Info.</h3>
+    </div>
+    <div class="modal-body span5" style="max-height:80%;%">
+        <h5>Name:</h5>
+        <a id="name_change_link" href="javascript:void(0)" onclick="editConfigName();"
+           style="float:right; margin-top:-30px;">edit</a>
+        <p id="name">{{ config_name }}</p>
+
+        <h5>File contents:</h5>
+        <a id="config_description_change_link" href="javascript:void(0)" onclick="editConfigDescription();"
+           style="float:right; margin-top:-30px;">edit</a>
+        <p id="config_description">{% render "AceUtilitiesBundle:Default:getConfigDescription" with {'id': config_id} %}</p>
+    </div>
+</div>
