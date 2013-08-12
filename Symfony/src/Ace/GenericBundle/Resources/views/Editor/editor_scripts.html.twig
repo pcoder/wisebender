@@ -470,7 +470,7 @@ function compile(project){
                     verification_onSuccess();
                 //test = $.base64Decode(result.output);
                 test = result.output;
-                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" +result.output + "\",\"" +  project+ "\");'>Download binary.</a></p>");
+                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" +result.output + "\",\"" +  project+ "\", \"" +$("#cb_cp_select").val() + "\");'>Download binary.</a></p>");
             }
             else
             {
@@ -485,9 +485,10 @@ function compile(project){
     });
 }
 
-function downloadBinary(file, project){
+function downloadBinary(file, project, platform){
     var site_url = location.origin;
-    window.location = site_url + "/download.php?fname=" + file + "&pname=" + project;
+    site_url += "/download.php?fname=" + file + "&pname=" + project + "&platform=" + platform;
+    window.location = site_url;
     setOperationOutput("");
 }
 
