@@ -7,27 +7,6 @@ $(document).ready(function()
 
 var access_token = "";
 
-function init_access_token() {
-    if (access_token == "") {
-        var oauthProvider = 'github';
-        OAuth.popup(oauthProvider, function (err, suc) {
-            if (suc) {
-                access_token = suc.access_token;
-                //store this
-
-                var url = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
-                $.get(url,{}, function (data) {
-                    //alert("saved return value = " + data);
-                });
-            }
-            else {
-                alert("Failed to initialize access token.");
-                access_token = "";
-            }
-        });
-    }
-}
-
 function revokeGitHub(){
     $.get("{{ path("AceUserBundle_set_access_token") }}", {}, function (data) {
         $("#li_auth_revoke").html("\<a href=\"authorizeGitHub();\"><i class=\"icon-exclamation-sign\"></i>Link a GitHub Account</a>");
@@ -46,72 +25,95 @@ function warnDeleteProject(deletion_path)
 
 function forkProject(){
     var url = $("#forkProjectUrl").val().trim().toLowerCase();
-    if(url.equals("") || url.length <= 12 || !url.contains("/")){
+    if(url == "" || url.length <= 12 || !url.contains("/")){
         alert("Not a good url. Please retry.");
         return;
     }
 
     //fork
-    init_access_token();
-    if(access_token){
-        var user_name;var repo;
+    var oauthProvider = 'github';
+    OAuth.popup(oauthProvider, function (err, suc) {
+        if (suc) {
+            access_token = suc.access_token;
+            //store this
 
-        // GET  /user
-        // Get the authenticated user
-        $.ajax
-        ({
-            type: "GET",
-            url: 'https://api.github.com/user?access_token=' + access_token,
-            dataType: 'json',
-            async: true,
-            data: '',
-            success: function (data) {
-                var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                user_name = json.login;
-            },
-            error: function (request, status, error) {
-                alert("ERROR: " + request.responseText);
-                return;
+            var urlg = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
+            $.ajax({type: "GET", url: urlg, data: {}, async:  true, success: function (data) {
+                //alert("saved return value = " + data);
+            }});
+
+            var user_name;var repo; var owner;
+
+            // GET  /user
+            // Get the authenticated user
+            $.ajax
+            ({
+                type: "GET",
+                url: 'https://api.github.com/user?access_token=' + access_token,
+                dataType: 'json',
+                async: false,
+                data: '',
+                success: function (data) {
+                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                    user_name = json.login;
+                },
+                error: function (request, status, error) {
+                    alert("ERROR: " + request.responseText);
+                    return;
+                }
+            });
+            if(!url.contains(user_name)){
+                // This means the repository does not belong to the user
+                // fork
+                repo = url.substring(url.lastIndexOf("/")+1);
+                owner = url.substring(0, url.lastIndexOf('/'));
+                owner = owner.substring(owner.lastIndexOf("/")+1);
+                if(owner == ""  || repo == "") {
+                    alert("Please recheck the url and try again.");
+                    return;
+                }
+                $.ajax
+                ({
+                    type: "POST",
+                    url: 'https://api.github.com/repos/' +owner+ '/' + repo + '/forks?access_token=' + access_token,
+                    dataType: 'json',
+                    async: true,
+                    data: '',
+                    success: function (data) {
+                        alert("Repository " + repo + " forked!");
+                    },
+                    error: function (request, status, error) {
+                        alert("ERROR: " + request.responseText);
+                    }
+                });
             }
-        });
-        if(!url.contains(user_name)){
-            // This means the repository does not belong to the user
-            // fork
-            repo = url.substring(url.lastIndexOf("/")+1);
-            if(repo.contains(".git")){
-                repo = repo.replaceAll(".git", "");
-            }
+
+            // create project
             $.ajax
             ({
                 type: "POST",
-                url: 'https://api.github.com/repos/' +user_name+ '/' + repo + '/forks?access_token=' + access_token,
+                url: '{{ path('AceUtilitiesBundle_forkproject') }}',
                 dataType: 'json',
                 async: true,
-                data: '',
+                data: '{"project_url" : "' +url+ '"}',
                 success: function (data) {
-                    alert("Repository " + repo + " forked!");
+                    alert("Repository " + data);
                 },
                 error: function (request, status, error) {
                     alert("ERROR: " + request.responseText);
                 }
             });
-        }
 
-        // create project
-        $.ajax
-        ({
-            type: "POST",
-            url: '{{ path('AceUtilitiesBundle_forkproject') }}',
-            dataType: 'json',
-            async: true,
-            data: '{"project_url" : "' +url+ '"}',
-            success: function (data) {
-                alert("Repository " + data);
-            },
-            error: function (request, status, error) {
-                alert("ERROR: " + request.responseText);
-            }
-        });
+
+
+        }
+        else {
+            alert("Failed to initialize access token.");
+            access_token = "";
+        }
+    });
+
+    if(access_token){
 
     }
 }

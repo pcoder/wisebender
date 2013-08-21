@@ -55,7 +55,7 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
-    public function forkprojectAction($url)
+    public function forkprojectAction()
     {
         $project_url = $this->getRequest()->request->get('project_url');
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
