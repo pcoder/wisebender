@@ -69,11 +69,15 @@ class DefaultController extends Controller
             $project_name = substr($project_name, 0, strpos($project_name, "."));
 
         $is_public = true;
-        $text = file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/" .$project_name . "_app.cpp");
-        if(!$text) $text = "";
+        $text = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/" .$project_name . "_app.cpp");
+        if($text === false) $text = "";
 
-        $readme = file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/README.md");
-        if(!$readme) $readme = "";
+        $readme = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/README.md");
+        if($readme === false) $readme = "";
+
+        if($text == ""){
+            return new Response(json_encode(array("success" => false, "message" => "Could not find '" . $project_name . "_app.cpp' file! Please ensure that the GitHub repository has #{projectname}_app.cpp file.")));
+        }
 
         $purl = "https://github.com/" .$uname . "/" . $project_name . ".git";
 
@@ -196,7 +200,7 @@ class DefaultController extends Controller
         //echo("<hr/>");
         //var_dump($fw);
         //die();
-        return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'access_token' => $user['access_token']));
+        return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'github_access_token' => $user['access_token']));
     }
 
     public function downloadAction($id)

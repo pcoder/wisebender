@@ -3,6 +3,10 @@ $(document).ready(function()
 {
 	$('.project_link').popover();
     OAuth.initialize('pXB0AkTIviqG1Xer8_qPtgbs16E');
+
+    {% if github_access_token is defined %}
+    access_token = '{{ github_access_token }}';
+    {% endif %}
 });
 
 var access_token = "";
@@ -24,9 +28,15 @@ function warnDeleteProject(deletion_path)
 }
 
 function forkProject(){
+    $("#forkProjectButton").addClass("disabled");
+    $("#forkProjectButtonC").addClass("disabled");
+    $("#forkProjectButton").html("<i class='icon-spinner icon-spin icon-large'></i> Forking...");
     var url = $("#forkProjectUrl").val().trim().toLowerCase();
     if(url == "" || url.length <= 12 || !url.contains("/")){
         alert("Not a good url. Please retry.");
+        $("#forkProjectButton").addClass("enabled");
+        $("#forkProjectButtonC").addClass("enabled");
+        $("#forkProjectButton").html("<i class='icon-random icon-white'> Fork!");
         return;
     }
 
@@ -83,7 +93,6 @@ function forkProject(){
                     async: true,
                     data: '',
                     success: function (data) {
-                        alert("Repository " + repo + " forked!");
                         // create project
                         $.ajax
                         ({
@@ -94,19 +103,39 @@ function forkProject(){
                             data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}' ,
                             success: function (data) {
                                 var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                $("#forkCreationModal").modal("hide");
                                 if(json.success){
+                                    alert("Repository " + repo + " forked!");
                                     location.reload();
                                 }else{
-                                    alert("There was an error. Message: " + json.message);
+                                    //rollback fork
+                                    $.ajax
+                                    ({
+                                        type: "DELETE",
+                                        url: 'https://api.github.com/repos/' + user_name + '/' + repo + '?access_token=' + access_token,
+                                        dataType: 'json',
+                                        success: function () {
+                                        },
+                                        error: function (request, status, error) {
+                                        }
+                                    });
+                                    alert(json.message);
+                                    $("#forkProjectButton").removeClass("disabled");
+                                    $("#forkProjectButtonC").removeClass("disabled");
+                                    $("#forkProjectButton").html("<i class='icon-random icon-white'> Fork!");
                                 }
                             },
                             error: function (request, status, error) {
+                                $("#forkProjectButton").removeClass("disabled");
+                                $("#forkProjectButtonC").removeClass("disabled");
+                                $("#forkProjectButton").html("<i class='icon-random icon-white'> Fork!");
                                 alert("ERROR: " + request.responseText);
                             }
                         });
                     },
                     error: function (request, status, error) {
+                        $("#forkProjectButton").removeClass("disabled");
+                        $("#forkProjectButtonC").removeClass("disabled");
+                        $("#forkProjectButton").html("<i class='icon-random icon-white'> Fork!");
                         alert("ERROR: " + request.responseText);
                         return;
                     }
@@ -205,8 +234,8 @@ function forkProject(){
         <input type="text" id="forkProjectUrl" style="width: 450px" />
     </div>
     <div class="modal-footer">
-        <a data-dismiss="modal" class="btn">Cancel</a>
-        <a id="forkProjectButton" onClick="forkProject()" class="btn btn-submit" ><i class="icon-random icon-white"></i> Fork!</a>
+        <button id="forkProjectButtonC" data-dismiss="modal" class="btn">Cancel</button>
+        <button id="forkProjectButton" onClick="forkProject()" data-loading-text="<i class='icon-spinner icon-spin'></i> Forking" class="btn btn-submit" ></i><i class="icon-random icon-white"></i> Fork!</button>
     </div>
 </div>
 <!--<div class="modal hide fade" id="configCreationModal">
