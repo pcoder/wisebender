@@ -80,11 +80,13 @@ class DefaultController extends Controller
         $response = $this->get('ace_project.sketchmanager')->createWiselibProjectAction($user["id"], $project_name, $text, $is_public, $readme, $purl)->getContent();
         $response = json_decode($response, true);
         if ($response["success"]) {
-            return $this->redirect($this->generateUrl('AceGenericBundle_wiselib_project', array('id' => $response["id"], 'project_name' => $project_name)));
+            return new Response(json_encode(array("success" => true, "id" => $response["id"],'project_name' => $project_name)));
+            //return $this->redirect($this->generateUrl('AceGenericBundle_wiselib_project', array('id' => $response["id"], 'project_name' => $project_name)));
         }
 
         $this->get('session')->setFlash('error', "Error: " . $response["error"]);
-        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+        return new Response(json_encode(array("success" => false, "message" => $response["error"])));
+        //return $this->redirect($this->generateUrl('AceGenericBundle_index'));
     }
 
     public function listFilenamesAction($id, $show_ino)

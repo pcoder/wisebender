@@ -91,26 +91,27 @@ function forkProject(){
                             url: '{{ path('AceUtilitiesBundle_forkproject') }}',
                             dataType: 'json',
                             async: true,
-                            data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}' /*,
+                            data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}' ,
                             success: function (data) {
+                                var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                                 $("#forkCreationModal").modal("hide");
+                                if(json.success){
+                                    location.reload();
+                                }else{
+                                    alert("There was an error. Message: " + json.message);
+                                }
                             },
                             error: function (request, status, error) {
-                                alert("ERRORee: " + request.responseText);
-                            }*/
+                                alert("ERROR: " + request.responseText);
+                            }
                         });
                     },
                     error: function (request, status, error) {
-                        alert("ERRORsdfsdfsdf: " + request.responseText);
+                        alert("ERROR: " + request.responseText);
                         return;
                     }
                 });
             }
-
-
-
-
-
         }
         else {
             alert("Failed to initialize access token.");

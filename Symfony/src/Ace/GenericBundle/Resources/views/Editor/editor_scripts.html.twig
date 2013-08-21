@@ -142,6 +142,29 @@ function delete_from_github(repo_name) {
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     user_name = json.login;
+                    $.ajax
+                    ({
+                        type: "DELETE",
+                        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + suc.access_token,
+                        dataType: 'json',
+                        success: function () {
+                            alert("Repository '" + repo_name + "' deleted on GitHub.com!");
+                            $("#deleteProjectGitModal").modal("hide");
+                            $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
+                                $("#div_git_url").html("");
+                                $("#div_delete_from_github").html("");
+                                $("#div_pull_from_github").html("");
+                                $("#div_git_url").css('display', 'none');
+                            });
+
+                            $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert("ERROR: " + request.responseText);
+                        }
+                    });
+
                 },
                 error: function (req, status, er) {
                     alert("ERROR: " + req.responseText);
@@ -151,37 +174,6 @@ function delete_from_github(repo_name) {
         }
         else {
             // $('#result').html("// Result error <br /><br />" + err);
-        }
-    });
-
-    // delete the user's repository
-    OAuth.popup(oauthProvider, function (error, success) {
-        if (success) {
-            $.ajax
-            ({
-                type: "DELETE",
-                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + success.access_token,
-                dataType: 'json',
-                success: function () {
-                    alert("Repository '" + repo_name + "' deleted on GitHub.com!");
-                    $("#deleteProjectGitModal").modal("hide");
-                    $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
-                        $("#div_git_url").html("");
-                        $("#div_delete_from_github").html("");
-                        $("#div_pull_from_github").html("");
-                        $("#div_git_url").css('display', 'none');
-                    });
-
-                    $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
-                    });
-                },
-                error: function (request, status, error) {
-                    alert("ERROR: " + request.responseText);
-                }
-            });
-        }
-        else {
-            // $('#result').html("// Result error <br /><br />" + error);
         }
     });
 }
