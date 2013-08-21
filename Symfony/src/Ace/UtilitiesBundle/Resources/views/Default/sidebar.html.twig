@@ -91,17 +91,17 @@ function forkProject(){
                             url: '{{ path('AceUtilitiesBundle_forkproject') }}',
                             dataType: 'json',
                             async: true,
-                            data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}',
+                            data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}' /*,
                             success: function (data) {
                                 $("#forkCreationModal").modal("hide");
                             },
                             error: function (request, status, error) {
-                                alert("ERROR: " + request.responseText);
-                            }
+                                alert("ERRORee: " + request.responseText);
+                            }*/
                         });
                     },
                     error: function (request, status, error) {
-                        alert("ERROR: " + request.responseText);
+                        alert("ERRORsdfsdfsdf: " + request.responseText);
                         return;
                     }
                 });

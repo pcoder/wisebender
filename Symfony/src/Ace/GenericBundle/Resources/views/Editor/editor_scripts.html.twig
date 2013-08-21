@@ -139,7 +139,6 @@ function delete_from_github(repo_name) {
                 type: "GET",
                 url: 'https://api.github.com/user?access_token=' + suc.access_token,
                 dataType: 'json',
-                async: false,
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     user_name = json.login;
@@ -163,7 +162,6 @@ function delete_from_github(repo_name) {
                 type: "DELETE",
                 url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + success.access_token,
                 dataType: 'json',
-                async: false,
                 success: function () {
                     alert("Repository '" + repo_name + "' deleted on GitHub.com!");
                     $("#deleteProjectGitModal").modal("hide");
@@ -223,7 +221,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                 type: "GET",
                 url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
                 dataType: 'json',
-                async: false,
                 data: '',
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
@@ -238,7 +235,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                             type: "GET",
                             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
                             dataType: 'json',
-                            async: false,
                             data: '',
                             success: function (data) {
                                 var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));

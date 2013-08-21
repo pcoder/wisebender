@@ -146,7 +146,7 @@ class ProjectController extends Controller
         $project->setName($name);
         $project->setDescription($description);
         $project->setGitUrl($purl);
-        $project->setGitCommitSHA("");
+        $project->setGitCommitSHA($purl);
         $project->setIsPublic($isPublic);
         $project->setType($this->sl);
         $project->setIsWiselibClone(false);
