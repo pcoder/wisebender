@@ -34,7 +34,8 @@ function warnDeleteProject(deletion_path)
     </li>-->
 </ul>
 <ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
-	<li class="nav-header">Projects</li>
+	<li class="nav-header">Projects <a title="Add New Configuration File" data-toggle="modal" style="float:right; margin-right: 10px" href="#forkCreationModal">
+            <i class="icon-random"></i></a></li>
     {% if files%}
         {% for file in files %}
             <li>
@@ -64,12 +65,12 @@ function warnDeleteProject(deletion_path)
     {% endif %}
 </ul>
 
-<ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
+<!--<ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
     <li class="nav-header">Configuration Files <a title="Add New Configuration File" data-toggle="modal" style="float:right; margin-right: 10px" href="#configCreationModal">
             <i class="icon-plus"></i>
         </a></li>
 
-</ul>
+</ul>-->
 
 <ul class="nav nav-list" id="sidebar-list-footer">
     <li class="nav-header" id="documentation">Documentation</li>
@@ -89,7 +90,21 @@ function warnDeleteProject(deletion_path)
 
 </ul>
 </div>
-<div class="modal hide fade" id="configCreationModal">
+<div class="modal hide fade" id="forkCreationModal">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">&#215;</button>
+        <h3>Fork a project from GitHub</h3>
+    </div>
+    <div class="modal-body">
+        <p>Please input the Git url that you would like to fork.</p>
+        <input type="text" id="forkProjectUrl" style="width: 450px" />
+    </div>
+    <div class="modal-footer">
+        <a data-dismiss="modal" class="btn">Cancel</a>
+        <a id="forkProjectButton" href="" class="btn btn-submit"><i class="icon-trash icon-white"></i> Fork!</a>
+    </div>
+</div>
+<!--<div class="modal hide fade" id="configCreationModal">
     <div class="modal-header">
         <button class="close" data-dismiss="modal">&#215;</button>
         <h3>Config File Parameters</h3>
@@ -101,7 +116,7 @@ function warnDeleteProject(deletion_path)
         <a data-dismiss="modal" class="btn">Cancel</a>
         <a id="deleteProjectButton" href="" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
     </div>
-</div>
+</div>-->
 
 <div class="modal hide fade" id="deleteProjectModal">
   <div class="modal-header">
