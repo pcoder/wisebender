@@ -8,6 +8,12 @@ AceUtilitiesBundle_deleteproject:
    pattern:  /deleteproject/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
 
+AceUtilitiesBundle_forkproject:
+   pattern:  /forkproject
+   defaults: { _controller: AceUtilitiesBundle:Default:forkproject }
+   requirements:
+      _method:  POST
+
 AceUtilitiesBundle_listfilenames:
    pattern:  /listfilenames/{id}/{show_ino}
    defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
@@ -86,7 +92,6 @@ AceUtilitiesBundle_deletefile:
   defaults: { _controller: AceUtilitiesBundle:Default:deleteFile }
   requirements:
     _method:  POST
-
  
 AceUtilitiesBundle_upload:
     pattern: /upload/

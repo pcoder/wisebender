@@ -95,9 +95,9 @@ function save() {
             $("#save").removeClass("btn-success");
             $("#save_icon").removeClass("icon-white");
         }, 500);
-        //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
 }
+/*
 function save() {
     loadCode();
     setOperationProgress(90);
@@ -112,7 +112,7 @@ function save() {
         }, 500);
         //   alert("Data received: " +JSON.stringify(data, null, 4));
     });
-}
+}:*/
 
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
@@ -139,10 +139,32 @@ function delete_from_github(repo_name) {
                 type: "GET",
                 url: 'https://api.github.com/user?access_token=' + suc.access_token,
                 dataType: 'json',
-                async: false,
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     user_name = json.login;
+                    $.ajax
+                    ({
+                        type: "DELETE",
+                        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + suc.access_token,
+                        dataType: 'json',
+                        success: function () {
+                            alert("Repository '" + repo_name + "' deleted on GitHub.com!");
+                            $("#deleteProjectGitModal").modal("hide");
+                            $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
+                                $("#div_git_url").html("");
+                                $("#div_delete_from_github").html("");
+                                $("#div_pull_from_github").html("");
+                                $("#div_git_url").css('display', 'none');
+                            });
+
+                            $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert("ERROR: " + request.responseText);
+                        }
+                    });
+
                 },
                 error: function (req, status, er) {
                     alert("ERROR: " + req.responseText);
@@ -152,38 +174,6 @@ function delete_from_github(repo_name) {
         }
         else {
             // $('#result').html("// Result error <br /><br />" + err);
-        }
-    });
-
-    // delete the user's repository
-    OAuth.popup(oauthProvider, function (error, success) {
-        if (success) {
-            $.ajax
-            ({
-                type: "DELETE",
-                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '?access_token=' + success.access_token,
-                dataType: 'json',
-                async: false,
-                success: function () {
-                    alert("Repository '" + repo_name + "' deleted on GitHub.com!");
-                    $("#deleteProjectGitModal").modal("hide");
-                    $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
-                        $("#div_git_url").html("");
-                        $("#div_delete_from_github").html("");
-                        $("#div_pull_from_github").html("");
-                        $("#div_git_url").css('display', 'none');
-                    });
-
-                    $.post("{{ path('AceUtilitiesBundle_setprojectgitcommitsha', {'id':project_id} ) }}", {data: ""}, function (data) {
-                    });
-                },
-                error: function (request, status, error) {
-                    alert("ERROR: " + request.responseText);
-                }
-            });
-        }
-        else {
-            // $('#result').html("// Result error <br /><br />" + error);
         }
     });
 }
@@ -223,7 +213,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                 type: "GET",
                 url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
                 dataType: 'json',
-                async: false,
                 data: '',
                 success: function (data) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
@@ -238,7 +227,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                             type: "GET",
                             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
                             dataType: 'json',
-                            async: false,
                             data: '',
                             success: function (data) {
                                 var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));

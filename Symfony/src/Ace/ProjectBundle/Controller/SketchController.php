@@ -41,10 +41,10 @@ class SketchController extends ProjectController
 		return new Response(json_encode($retval));
 	}
 
-    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic = true)
+    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic = true, $desc="", $purl ="")
     {
         $retval;
-        $response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
+        $response = parent::createWiselibProjectAction($user_id, $project_name, $code, $isPublic, $desc, $purl)->getContent();
         $response=json_decode($response, true);
 
         if($response["success"])
