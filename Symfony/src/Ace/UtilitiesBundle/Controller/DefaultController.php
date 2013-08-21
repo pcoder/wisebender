@@ -60,6 +60,8 @@ class DefaultController extends Controller
     public function forkprojectAction($url)
     {
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        // for testing
+        $url ="https://github.com/pcoder/testing.git";
         //$projectmanager = $this->get('ace_project.sketchmanager');
         //$response = $projectmanager->deleteAction($id)->getContent();
         //$response=json_decode($response, true);
