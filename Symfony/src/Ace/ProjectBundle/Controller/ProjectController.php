@@ -22,7 +22,7 @@ class ProjectController extends Controller
     protected $wiselib_src_dir = "";
 
 
-    public function createprojectAction($user_id, $project_name, $code, $isPublic)
+    public function createprojectAction($user_id, $project_name, $code, $isPublic, $description="")
     {
 
         if (!$isPublic) {
@@ -32,7 +32,7 @@ class ProjectController extends Controller
         }
 
         if ($canCreate["success"]) {
-            $response = $this->createAction($user_id, $project_name, "", $isPublic)->getContent();
+            $response = $this->createAction($user_id, $project_name, $description, $isPublic)->getContent();
             $response = json_decode($response, true);
         } else {
             $response = $canCreate;
