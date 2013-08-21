@@ -86,7 +86,7 @@ function forkProject(){
                 type: "POST",
                 url: 'https://api.github.com/repos/' +user_name+ '/' + repo + '/forks?access_token=' + access_token,
                 dataType: 'json',
-                async: false,
+                async: true,
                 data: '',
                 success: function (data) {
                     alert("Repository " + repo + " forked!");
@@ -95,8 +95,24 @@ function forkProject(){
                     alert("ERROR: " + request.responseText);
                 }
             });
-
         }
+
+        // create project
+        $.ajax
+        ({
+            type: "POST",
+            url: '{{ path('AceUtilitiesBundle_forkproject') }}',
+            dataType: 'json',
+            async: true,
+            data: '{"project_url" : "' +url+ '"}',
+            success: function (data) {
+                alert("Repository " + data);
+            },
+            error: function (request, status, error) {
+                alert("ERROR: " + request.responseText);
+            }
+        });
+
     }
 }
 

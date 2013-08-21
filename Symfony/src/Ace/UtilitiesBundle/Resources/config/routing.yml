@@ -9,11 +9,10 @@ AceUtilitiesBundle_deleteproject:
    defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
 
 AceUtilitiesBundle_forkproject:
-   pattern:  /forkproject/{url}
+   pattern:  /forkproject
    defaults: { _controller: AceUtilitiesBundle:Default:forkproject }
    requirements:
       _method:  POST
-      url: "[a-zA-Z0-9\-_\/.]+"
 
 AceUtilitiesBundle_listfilenames:
    pattern:  /listfilenames/{id}/{show_ino}

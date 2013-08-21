@@ -14,9 +14,7 @@ class DefaultController extends Controller
 	public function newprojectAction()
 	{
 		syslog(LOG_INFO, "new project");
-
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
 		$project_name = $this->getRequest()->request->get('project_name');
         $is_public = true;
 
@@ -59,13 +57,15 @@ class DefaultController extends Controller
 
     public function forkprojectAction($url)
     {
+        $project_url = $this->getRequest()->request->get('project_url');
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
         // for testing
         $url ="https://github.com/pcoder/testing.git";
+        return "I received " . $project_url;
         //$projectmanager = $this->get('ace_project.sketchmanager');
         //$response = $projectmanager->deleteAction($id)->getContent();
         //$response=json_decode($response, true);
-        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+        //return $this->redirect($this->generateUrl('AceGenericBundle_index'));
     }
 
 	public function listFilenamesAction($id, $show_ino)
