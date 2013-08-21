@@ -57,6 +57,15 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
+    public function forkprojectAction($url)
+    {
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        //$projectmanager = $this->get('ace_project.sketchmanager');
+        //$response = $projectmanager->deleteAction($id)->getContent();
+        //$response=json_decode($response, true);
+        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+    }
+
 	public function listFilenamesAction($id, $show_ino)
 	{
 		$projectmanager = $this->get('ace_project.sketchmanager');
