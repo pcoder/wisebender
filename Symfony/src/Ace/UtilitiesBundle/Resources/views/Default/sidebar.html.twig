@@ -19,6 +19,15 @@ function warnDeleteProject(deletion_path)
 	$("#deleteProjectButton").attr("href", deletion_path);
 	$("#deleteProjectModal").modal("show");
 }
+
+function forkProject(){
+    var url = $("#forkProjectUrl").val().trim().toLowerCase();
+    if(url.equals("") || url.length <= 12){
+        alert("Not a good url. Please retry.");
+        return;
+    }
+    //fork
+}
 </script>
 <div class="well">
 <ul class="nav nav-list" id="sidebar-list-header">
@@ -101,7 +110,7 @@ function warnDeleteProject(deletion_path)
     </div>
     <div class="modal-footer">
         <a data-dismiss="modal" class="btn">Cancel</a>
-        <a id="forkProjectButton" href="" class="btn btn-submit"><i class="icon-random icon-white"></i> Fork!</a>
+        <a id="forkProjectButton" onClick="forkProject()" class="btn btn-submit" ><i class="icon-random icon-white"></i> Fork!</a>
     </div>
 </div>
 <!--<div class="modal hide fade" id="configCreationModal">
