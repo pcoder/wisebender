@@ -66,6 +66,9 @@ function forkProject(){
                 // This means the repository does not belong to the user
                 // fork
                 repo = url.substring(url.lastIndexOf("/")+1);
+                if(repo.contains(".git")){
+                    repo = repo.replace(".git", "");
+                }
                 owner = url.substring(0, url.lastIndexOf('/'));
                 owner = owner.substring(owner.lastIndexOf("/")+1);
                 if(owner == ""  || repo == "") {
@@ -81,28 +84,30 @@ function forkProject(){
                     data: '',
                     success: function (data) {
                         alert("Repository " + repo + " forked!");
+                        // create project
+                        $.ajax
+                        ({
+                            type: "POST",
+                            url: '{{ path('AceUtilitiesBundle_forkproject') }}',
+                            dataType: 'json',
+                            async: true,
+                            data: '{"project_url" : "' +url+ '"}',
+                            success: function (data) {
+                                alert("Repository " + data);
+                            },
+                            error: function (request, status, error) {
+                                alert("ERROR: " + request.responseText);
+                            }
+                        });
                     },
                     error: function (request, status, error) {
                         alert("ERROR: " + request.responseText);
+                        return;
                     }
                 });
             }
 
-            // create project
-            $.ajax
-            ({
-                type: "POST",
-                url: '{{ path('AceUtilitiesBundle_forkproject') }}',
-                dataType: 'json',
-                async: true,
-                data: '{"project_url" : "' +url+ '"}',
-                success: function (data) {
-                    alert("Repository " + data);
-                },
-                error: function (request, status, error) {
-                    alert("ERROR: " + request.responseText);
-                }
-            });
+
 
 
 

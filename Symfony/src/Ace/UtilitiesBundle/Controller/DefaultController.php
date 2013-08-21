@@ -57,11 +57,18 @@ class DefaultController extends Controller
 
     public function forkprojectAction()
     {
-        $project_url = $this->getRequest()->request->get('project_url');
+        $params = array();
+        $content = $this->get("request")->getContent();
+        if (!empty($content))
+        {
+            $params = json_decode($content, true); // 2nd param to get as array
+        }
+        $project_url = $params["project_url"];
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
         // for testing
         $url ="https://github.com/pcoder/testing.git";
         return "I received " . $project_url;
+        return $this->redirect($this->generateUrl('AceGenericBundle_index'));
         //$projectmanager = $this->get('ace_project.sketchmanager');
         //$response = $projectmanager->deleteAction($id)->getContent();
         //$response=json_decode($response, true);
