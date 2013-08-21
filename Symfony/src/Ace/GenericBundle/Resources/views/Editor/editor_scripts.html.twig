@@ -471,6 +471,9 @@ function compile(project){
                 //test = $.base64Decode(result.output);
                 test = result.output;
                 setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" +result.output + "\",\"" +  project+ "\", \"" +$("#cb_cp_select").val() + "\");'>Download binary.</a></p>");
+                if($("#cb_cp_select").val() == "shawn"){
+                    //show Run configuration div
+                }
             }
             else
             {
