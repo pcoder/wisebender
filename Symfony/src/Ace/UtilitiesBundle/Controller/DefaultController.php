@@ -75,7 +75,9 @@ class DefaultController extends Controller
         $readme = file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/README.md");
         if(!$readme) $readme = "";
 
-        $response = $this->get('ace_project.sketchmanager')->createWiselibProjectAction($user["id"], $project_name, $text, $is_public, $readme)->getContent();
+        $purl = "https://github.com/" .$uname . "/" . $project_name . ".git";
+
+        $response = $this->get('ace_project.sketchmanager')->createWiselibProjectAction($user["id"], $project_name, $text, $is_public, $readme, $purl)->getContent();
         $response = json_decode($response, true);
         if ($response["success"]) {
             return $this->redirect($this->generateUrl('AceGenericBundle_wiselib_project', array('id' => $response["id"], 'project_name' => $project_name)));

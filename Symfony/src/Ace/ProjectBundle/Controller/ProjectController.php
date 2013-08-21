@@ -22,27 +22,7 @@ class ProjectController extends Controller
     protected $wiselib_src_dir = "";
 
 
-    public function createprojectAction($user_id, $project_name, $code, $isPublic, $description="")
-    {
-
-        if (!$isPublic) {
-            $canCreate = json_decode($this->canCreatePrivateProject($user_id), true);
-        } else {
-            $canCreate = array("success" => true);
-        }
-
-        if ($canCreate["success"]) {
-            $response = $this->createAction($user_id, $project_name, $description, $isPublic)->getContent();
-            $response = json_decode($response, true);
-        } else {
-            $response = $canCreate;
-        }
-
-        return new Response(json_encode($response));
-
-    }
-
-    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic)
+    public function createprojectAction($user_id, $project_name, $code, $isPublic)
     {
 
         if (!$isPublic) {
@@ -53,6 +33,26 @@ class ProjectController extends Controller
 
         if ($canCreate["success"]) {
             $response = $this->createAction($user_id, $project_name, "", $isPublic)->getContent();
+            $response = json_decode($response, true);
+        } else {
+            $response = $canCreate;
+        }
+
+        return new Response(json_encode($response));
+
+    }
+
+    public function createWiselibProjectAction($user_id, $project_name, $code, $isPublic, $description="", $purl="")
+    {
+
+        if (!$isPublic) {
+            $canCreate = json_decode($this->canCreatePrivateProject($user_id), true);
+        } else {
+            $canCreate = array("success" => true);
+        }
+
+        if ($canCreate["success"]) {
+            $response = $this->createAction($user_id, $project_name,  $description, $isPublic, $purl)->getContent();
             $response = json_decode($response, true);
         } else {
             $response = $canCreate;
@@ -134,7 +134,7 @@ class ProjectController extends Controller
         return new Response(json_encode($array_items));
     }
 
-    public function createAction($owner, $name, $description, $isPublic)
+    public function createAction($owner, $name, $description, $isPublic, $purl="")
     {
         $validName = json_decode($this->nameIsValid($name), true);
         if (!$validName["success"])
@@ -145,7 +145,7 @@ class ProjectController extends Controller
         $project->setOwner($user);
         $project->setName($name);
         $project->setDescription($description);
-        $project->setGitUrl("");
+        $project->setGitUrl($purl);
         $project->setGitCommitSHA("");
         $project->setIsPublic($isPublic);
         $project->setType($this->sl);

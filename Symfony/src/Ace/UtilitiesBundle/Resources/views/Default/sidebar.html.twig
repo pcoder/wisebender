@@ -93,7 +93,7 @@ function forkProject(){
                             async: true,
                             data: '{"project_url" : "' +url+ '", "user" : "' + user_name +  '"}',
                             success: function (data) {
-                                alert("Repository " + data);
+                                $("#forkCreationModal").modal("hide");
                             },
                             error: function (request, status, error) {
                                 alert("ERROR: " + request.responseText);
@@ -138,7 +138,7 @@ function forkProject(){
     </li>-->
 </ul>
 <ul class="nav nav-list" id="sidebar-list-main" style="max-height:600px; overflow:auto;">
-	<li class="nav-header">Projects <a title="Add New Configuration File" data-toggle="modal" style="float:right; margin-right: 10px" href="#forkCreationModal">
+	<li class="nav-header">Projects <a title="Fork a GitHub project" data-toggle="modal" style="float:right; margin-right: 10px" href="#forkCreationModal">
             <i class="icon-random"></i></a></li>
     {% if files%}
         {% for file in files %}
