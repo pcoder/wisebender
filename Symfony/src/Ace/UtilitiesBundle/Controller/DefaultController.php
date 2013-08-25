@@ -411,10 +411,8 @@ class DefaultController extends Controller
     public function createFileAction($id)
     {
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
         $data = $this->getRequest()->request->get('data');
         $data = json_decode($data, true);
-
         $projectmanager = $this->get('ace_project.sketchmanager');
         $response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
         $response = json_decode($response, true);

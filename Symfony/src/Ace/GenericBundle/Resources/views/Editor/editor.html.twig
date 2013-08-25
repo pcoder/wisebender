@@ -248,7 +248,6 @@
 {% block content %}
     {% include 'AceGenericBundle:Editor:creation_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:wiselib_folder_creation_modal.html.twig' %}
-    {% include 'AceGenericBundle:Editor:wiselib_file_creation_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:deletion_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:filename_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:filedelete_modal.html.twig' %}
@@ -327,8 +326,11 @@
 
         <h4>
             {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
-            {{ project_name }} <a title="Create a new file" data-toggle="modal" style="float:right; margin-right: 10px" href="#fileCreationModal">
+            {{ project_name }}
+            {% if is_wiselib_clone is defined and not is_wiselib_clone %}
+            <a title="Create a new file" data-toggle="modal" style="float:right; margin-right: 10px" href="#fileCreationModal">
                 <i class="icon-plus"></i></a>
+            {% endif %}
         </h4>
         <ul id="files_list">
             {% for file in files %}
