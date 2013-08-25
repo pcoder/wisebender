@@ -663,8 +663,6 @@ function createWiselibFile() {
 }
 
 function deleteFileModal(filename) {
-//    $("#oldFilename").val(filename);
-//    $("#newFilename").val(filename);
     $("#filedeleteButton").attr("href", "javascript:deleteFile('" + filename + "');");
     $("#filedeleteModal").modal('show');
 }

@@ -2,10 +2,10 @@
 {% if project_name is not defined %}
     {% set project_name = 'Wiselib' %}
 {% endif %}
-{% if files[0]['filename'] is not defined %}
+{% if fpath is not defined %}
     {% set title = project_name %}
 {% else %}
-    {% set title = project_name ~ ' : ' ~  files[0]['filename'] %}
+    {% set title = project_name ~ ' : ' ~  fpath %}
 {% endif %}
 
 {% block title %} {{ title }} {% endblock %}
@@ -192,6 +192,7 @@
         //editor specific stuff
         var editor;
         $(document).ready(function () {
+            $("#progress").hide();
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/textmate");
             editor.getSession().setMode("ace/mode/c_cpp");
@@ -241,6 +242,7 @@
             $("#download").on('click', function () {
                 window.youShallNotPass = false;
             });
+            selectFile('{{ fpath }}');
         });
     </script>
 {% endblock %}
@@ -332,15 +334,18 @@
                 <i class="icon-plus"></i></a>
             {% endif %}
         </h4>
+        {% if is_wiselib_clone is defined and not is_wiselib_clone %}
         <ul id="files_list">
-            {% for file in files %}
-                <li onclick="selectFile('{{ file['filename'] }}');">
-                    <a class="filelist" href="javascript:void(0)" onclick="selectFile('{{ file['filename'] }}');">
-                    </a>
+            {% for file in files_wiselib %}
+                <li onclick="selectFile('{{ file }}');">
+                    <a class="filelist" href="javascript:void(0)" onclick="selectFile('{{ file }}');">{{ file }}</a>
+                    <a title="Delete file" data-toggle="modal"  style="float:right; margin-right: 10px" href="javascript:void(0);" onclick="deleteFileModal('{{ file }}')">
+                        <i class="icon-trash"></i></a>
                 </li>
             {% endfor %}
         </ul>
-
+        {% endif %}
+        {% if is_wiselib_clone is defined and is_wiselib_clone %}
         <ul class="nav nav-list" id="sidebar-list-footer" style="padding-bottom: 25px;">
             {% if files_wiselib %}
                 <div {% if is_wiselib_clone is defined and is_wiselib_clone %} class="css-treeview" {% endif %}>
@@ -350,6 +355,7 @@
                 </div>
             {% endif %}
         </ul>
+        {% endif %}
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
             <div id="cb_cp" data-sections=""  class="form-horizontal" style="padding-bottom: 15px;">
                 <label>Compile for Platform</label>
