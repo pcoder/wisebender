@@ -461,8 +461,7 @@ function compile(project) {
         async: true,
         data: JSON.stringify(json_data),
         success: function (result) {
-            alert(result);
-            /*
+            //alert(result);
             if (result.success) {
                 $("#compile").addClass("btn-success");
                 $("#compile_icon").addClass("icon-ok");
@@ -492,7 +491,6 @@ function compile(project) {
                 if (typeof verification_onFail == 'function')
                     verification_onFail(result.message);
             }
-            */
         },
         error: function (request, status, error) {
             alert(error);
