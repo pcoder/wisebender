@@ -243,7 +243,9 @@
             $("#download").on('click', function () {
                 window.youShallNotPass = false;
             });
-            //selectFile('{{ fpath }}');
+            {% if is_wiselib_clone is defined and not is_wiselib_clone %}
+            selectFile('{{ fpath }}');
+            {% endif %}
         });
     </script>
 {% endblock %}
