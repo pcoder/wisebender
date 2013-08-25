@@ -435,7 +435,7 @@ function compile(project) {
     loadCode();
     var fname = "";
     var fcontent = "";
-    var allfiles;
+    var allfiles = new Array();
     for (file in window.files) {
         fname = file;
         fcontent = window.files[file];
