@@ -252,6 +252,7 @@
     {% include 'AceGenericBundle:Editor:deletion_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:filename_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:filedelete_modal.html.twig' %}
+    {% include 'AceGenericBundle:Editor:filecreate_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:info_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_project_delete_modal.html.twig' %}
@@ -326,7 +327,8 @@
 
         <h4>
             {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
-            {{ project_name }}
+            {{ project_name }} <a title="Create a new file" data-toggle="modal" style="float:right; margin-right: 10px" href="#fileCreationModal">
+                <i class="icon-plus"></i></a>
         </h4>
         <ul id="files_list">
             {% for file in files %}

@@ -1,0 +1,14 @@
+<div class="modal hide fade" id="fileCreationModal">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">&#215;</button>
+        <h3>Create a new file</h3>
+    </div>
+    <div class="modal-body">
+        <p>Please input the name of the file that you want to create.
+        <input type="text" id="fileName" style="width: 450px" />
+    </div>
+    <div class="modal-footer">
+        <button id="createNewFileButtonC" data-dismiss="modal" class="btn">Cancel</button>
+        <button id="createNewFileButton" onClick="createNewFile()" data-loading-text="<i class='icon-spinner icon-spin'></i> Creating" class="btn btn-submit" ></i><i class="icon-plus-sign icon-white"></i> Create!</button>
+    </div>
+</div>
