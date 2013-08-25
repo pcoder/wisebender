@@ -435,15 +435,14 @@ function compile(project) {
     loadCode();
     var fname = "";
     var fcontent = "";
+    var allfiles;
     for (file in window.files) {
         fname = file;
         fcontent = window.files[file];
+        allfiles.push({"filename": fname,
+            "content": fcontent});
     }
-    var allfiles =
-            [
-                {"filename": fname,
-                    "content": fcontent}
-            ];
+    
     var json_data = {
         "format": "binary",
         "build": $("#cb_cp_select").val(),
