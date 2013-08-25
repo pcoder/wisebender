@@ -48,7 +48,7 @@ class EditorController extends Controller
 		$is_public = $is_public["response"];
 
         $project = $projectmanager->getProjectById($id);
-        $files = $projectmanager->getFilesCode($fpath, $project->getProjectfilesId())->getContent();
+        $files = $projectmanager->getFileCode($fpath, $project->getProjectfilesId())->getContent();
         $files = json_decode($files, true);
         $files = $files["list"];
 
