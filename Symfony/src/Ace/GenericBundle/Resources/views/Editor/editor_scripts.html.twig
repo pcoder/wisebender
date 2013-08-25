@@ -651,7 +651,12 @@ function createWiselibFolder() {
 
 function createWiselibFile() {
     setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename: $("#createWiselibFilefield").val(), 'fpath': $('#WiselibFileCreationModal').data('fpath')}, function (data) {
+    var fp = $('#WiselibFileCreationModal').data('fpath');
+    if(fp==""){
+        fp="root";
+    }
+
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename: $("#createWiselibFilefield").val(), 'fpath': fp}, function (data) {
         $("#WiselibFileCreationModal").modal('hide');
         handleResponse(data);
     });

@@ -328,7 +328,7 @@
             {% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
             {{ project_name }}
             {% if is_wiselib_clone is defined and not is_wiselib_clone %}
-            <a title="Create a new file" data-toggle="modal" style="float:right; margin-right: 10px" href="#fileCreationModal">
+            <a title="Create a new file" data-toggle="modal" style="float:right; margin-right: 10px" href="#WiselibFileCreationModal" onclick="$('#WiselibFileCreationModal').data('id', {{ project_id }});">
                 <i class="icon-plus"></i></a>
             {% endif %}
         </h4>

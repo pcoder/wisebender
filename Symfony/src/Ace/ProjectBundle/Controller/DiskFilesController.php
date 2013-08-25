@@ -99,6 +99,11 @@ class DiskFilesController extends FilesController
           //  return json_encode($canCreateFile);
         $dir = $this->getDir($id);
 
+        if($rdir== "root")
+        {
+            $rdir = "";
+        }
+
         if (!file_exists($dir .$rdir)) {
             mkdir($dir.$rdir);
         }
