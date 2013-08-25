@@ -213,7 +213,7 @@
 
             {% if files[0] is defined %}
             window.selectedFile = "{{files[0]['filename']}}";
-            if(!$(".filelist")[0])
+            if($(".filelist")[0])
                 $(".filelist")[0].setAttribute("style", "font-weight:bold;");
             {% endif %}
 
