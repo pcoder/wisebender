@@ -91,7 +91,10 @@ function setOperationOutput(output, error) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+    var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
+    nurl = nurl.replace('replaceme', window.selectedFile);
+    //$.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+    $.post(nurl, {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
         data = JSON.parse(data);
@@ -618,7 +621,6 @@ load_files = function () {
 <script type="text/javascript">
 
 function selectFile(filename) {
-
     loadCode(filename);
     editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
     window.selectedFile = filename;
