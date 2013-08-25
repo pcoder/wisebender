@@ -25,20 +25,16 @@ class DiskFilesController extends FilesController
         $projects = scandir($this->dir);
         $current_user = $this->sc->getToken()->getUser();
         $name = $current_user->getUsername();
-        do
-        {
-            $id = $name."/".uniqid($more_entropy=true);
-        } while(in_array($id, $projects));
-        if(!is_dir($this->dir.$this->type))
-        {
-            mkdir($this->dir.$this->type);
+        do {
+            $id = $name . "/" . uniqid($more_entropy = true);
+        } while (in_array($id, $projects));
+        if (!is_dir($this->dir . $this->type)) {
+            mkdir($this->dir . $this->type);
         }
-        if(!is_dir($this->dir.$this->type."/".$name))
-        {
-            mkdir($this->dir.$this->type."/".$name);
+        if (!is_dir($this->dir . $this->type . "/" . $name)) {
+            mkdir($this->dir . $this->type . "/" . $name);
         }
-        if(!is_dir($this->getDir($id)))
-        {
+        if (!is_dir($this->getDir($id))) {
             mkdir($this->getDir($id));
         }
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_PROJ_MSG, array("id" => $id));
@@ -47,10 +43,10 @@ class DiskFilesController extends FilesController
     public function deleteAction($id)
     {
         $dir = $this->getDir($id);
-        if($this->deleteDirectory($dir))
+        if ($this->deleteDirectory($dir))
             return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_PROJ_MSG);
         else
-            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_PROJ_MSG, array("error" => "No projectfiles found with id: ".$id));
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_PROJ_MSG, array("error" => "No projectfiles found with id: " . $id));
     }
 
     public function listFilesAction($id)
@@ -63,14 +59,43 @@ class DiskFilesController extends FilesController
     {
         $filename = $this->getDir($project_filesId) . $f;
         $list = array();
-        if (file_exists($filename)){
+        if (file_exists($filename)) {
             $file["filename"] = basename($f);
             $file["code"] = file_get_contents($filename);
             $list[] = $file;
-        }else{
+        } else {
             // TODO: What if the main.cpp file does not exist.
             //var_dump("file " . $f . " does not exist!");
         }
+        return json_encode(array("success" => true, "list" => $list));
+    }
+
+    /*
+     * For multiple file projects, retrieve the source code as key value pairs
+     * file_name => source_code
+     *
+     */
+
+    public function getFilesCode($project_filesId)
+    {
+        $dir = $this->getDir($project_filesId);
+        $list = array();
+        $files = glob($dir .'*.cpp');
+
+        foreach($files as $f){
+            $file["filename"] = basename($f);
+            $file["code"] = file_get_contents($f);
+            $list[] = $file;
+        }
+
+        $files = glob($dir .'*.h');
+
+        foreach($files as $f){
+            $file["filename"] = basename($f);
+            $file["code"] = file_get_contents($f);
+            $list[] = $file;
+        }
+
         return json_encode(array("success" => true, "list" => $list));
     }
 
@@ -78,10 +103,10 @@ class DiskFilesController extends FilesController
     public function createFileAction($id, $filename, $code)
     {
         $canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
-        if(!$canCreateFile["success"])
+        if (!$canCreateFile["success"])
             return json_encode($canCreateFile);
         $dir = $this->getDir($id);
-        file_put_contents($dir."/".$filename,$code);
+        file_put_contents($dir . "/" . $filename, $code);
 
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
     }
@@ -92,39 +117,37 @@ class DiskFilesController extends FilesController
      *                  $rdir = 'wiselib.stable/algorithms/routing/dsdv'
      */
 
-    public function createWiselibFileAction($id, $rdir, $filename, $code, $folder=false)
+    public function createWiselibFileAction($id, $rdir, $filename, $code, $folder = false)
     {
         //$canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
         //if(!$canCreateFile["success"])
-          //  return json_encode($canCreateFile);
+        //  return json_encode($canCreateFile);
         $dir = $this->getDir($id);
 
-        if($rdir== "root")
-        {
+        if ($rdir == "root") {
             $rdir = "";
         }
 
-        if (!file_exists($dir .$rdir)) {
-            mkdir($dir.$rdir);
+        if (!file_exists($dir . $rdir)) {
+            mkdir($dir . $rdir);
         }
         // TODO check if the folder creation was successful and if the code was written successfully
-        if($folder)
-            mkdir($dir.$rdir . "/" .$filename);
-        else{
-            file_put_contents($dir. $rdir . "/".$filename,$code);
+        if ($folder)
+            mkdir($dir . $rdir . "/" . $filename);
+        else {
+            file_put_contents($dir . $rdir . "/" . $filename, $code);
         }
 
-        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG,array("writing_to" => $dir."/" . $rdir . "/".$filename));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG, array("writing_to" => $dir . "/" . $rdir . "/" . $filename));
     }
 
     public function getFileAction($id, $filename)
     {
         $response = array("success" => false);
         $list = $this->listFiles($id);
-        foreach($list as $file)
-        {
-            if($file["filename"] == $filename)
-                $response=array("success" => true, "code" => $file["code"]);
+        foreach ($list as $file) {
+            if ($file["filename"] == $filename)
+                $response = array("success" => true, "code" => $file["code"]);
         }
         return json_encode($response);
     }
@@ -132,70 +155,80 @@ class DiskFilesController extends FilesController
     public function setFileAction($id, $filename, $code)
     {
         $dir = $this->getDir($id);
-        if($this->fileExists($id,$dir.$filename))
-        {
-            file_put_contents($dir.$filename,$code);
+        if ($this->fileExists($id, $dir . $filename)) {
+            file_put_contents($dir . $filename, $code);
             return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
         }
         return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
     }
 
-    public function setWiselibFileAction($fpath, $id, $filename, $code)
+    public function setWiselibFileAction($fpath, $id, $filename, $code, $is_wiselib_clone = true)
     {
         $dir = $this->getDir($id);
-        if(file_exists($dir. $fpath))
-        {
-            file_put_contents($dir. $fpath,$code);
-            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
+        if ($is_wiselib_clone) {
+            syslog(LOG_INFO, "inside is_wiselib_clone");
+            if (file_exists($dir . $fpath)) {
+                file_put_contents($dir . $fpath, $code);
+                return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
+            }
+        } else {
+            syslog(LOG_INFO, "inside multi file project");
+            if ($this->fileExists($id, $dir . $filename)) {
+                syslog(LOG_INFO, "Writing to file = "  . $dir . $filename);
+                file_put_contents($dir . $filename, $code);
+                return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
+            }
         }
-        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => "NIL - " .$id , "filename" => $filename));
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => "NIL - " . $id, "filename" => $filename));
     }
 
-    public function deleteFileAction($id, $filename)
+    public
+    function deleteFileAction($id, $filename)
     {
         $fileExists = json_decode($this->fileExists($id, $filename), true);
-        if(!$fileExists["success"])
+        if (!$fileExists["success"])
             return json_encode($fileExists);
         $dir = $this->getDir($id);
-        unlink($dir.$filename);
+        unlink($dir . $filename);
         return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FILE_MSG);
     }
 
-    public function renameFileAction($id, $filename, $new_filename)
+    public
+    function renameFileAction($id, $filename, $new_filename)
     {
         $fileExists = json_decode($this->fileExists($id, $filename), true);
-        if(!$fileExists["success"])
+        if (!$fileExists["success"])
             return json_encode($fileExists);
 
         $canCreateFile = json_decode($this->canCreateFile($id, $new_filename), true);
-        if($canCreateFile["success"])
-        {
+        if ($canCreateFile["success"]) {
             $dir = $this->getDir($id);
-            rename($dir.$filename, $dir.$new_filename);
+            rename($dir . $filename, $dir . $new_filename);
             return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_RENAME_FILE_MSG);
         }
         return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_RENAME_FILE_MSG, array("id" => $id, "filename" => $new_filename, "error" => "This file already exists.", "old_filename" => $filename));
     }
 
 
-    protected function listFiles($id)
+    protected
+    function listFiles($id)
     {
         $dir = $this->getDir($id);
         $list = array();
         $objects = scandir($dir);
-        foreach ($objects as $object)
-        {
-            if(!is_dir($dir.$object))
-            {
+        foreach ($objects as $object) {
+            if (!is_dir($dir . $object)) {
                 $file["filename"] = $object;
-                $file["code"] = file_get_contents($dir.$object);
+                $file["code"] = file_get_contents($dir . $object);
                 $list[] = $file;
             }
         }
         return $list;
     }
 
-    public function listWiselibFiles($id){
+    public
+    function listWiselibFiles($id)
+    {
         $source = $this->getDir($id);
         if (!extension_loaded('zip') || !file_exists($source)) {
             return false;
@@ -210,32 +243,25 @@ class DiskFilesController extends FilesController
 
         $source = str_replace('\\', '/', realpath($source));
 
-        if (is_dir($source) === true)
-        {
+        if (is_dir($source) === true) {
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
 
-            foreach ($files as $file)
-            {
+            foreach ($files as $file) {
                 $file = str_replace('\\', '/', $file);
 
                 // Ignore "." and ".." folders
-                if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..', '.git', '.gitignore')) )
+                if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..', '.git', '.gitignore', '.c')))
                     continue;
 
                 $file = realpath($file);
 
-                if (is_dir($file) === true)
-                {
+                if (is_dir($file) === true) {
                     $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
-                }
-                else if (is_file($file) === true)
-                {
+                } else if (is_file($file) === true) {
                     $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
                 }
             }
-        }
-        else if (is_file($source) === true)
-        {
+        } else if (is_file($source) === true) {
             $zip->addFromString(basename($source), file_get_contents($source));
         }
 
@@ -243,7 +269,8 @@ class DiskFilesController extends FilesController
         return $destination;
     }
 
-    public function copyWiselibFiles($id)
+    public
+    function copyWiselibFiles($id)
     {
         $dir = $this->getDir($id);
         //var_dump("Copying files from " . $this->wiselib_src_dir . " to " . $dir);
@@ -252,35 +279,32 @@ class DiskFilesController extends FilesController
         return;
     }
 
-    private function deleteDirectory($dir)
+    private
+    function deleteDirectory($dir)
     {
-        if (is_dir($dir))
-        {
+        if (is_dir($dir)) {
             $objects = scandir($dir);
-            foreach ($objects as $object)
-            {
-                if ($object != "." && $object != "..")
-                {
-                    if (filetype($dir."/".$object) == "dir") $this->deleteDirectory($dir."/".$object); else unlink($dir."/".$object);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir . "/" . $object) == "dir") $this->deleteDirectory($dir . "/" . $object); else unlink($dir . "/" . $object);
                 }
             }
             reset($objects);
             rmdir($dir);
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
-    function recurse_copy($src,$dst) {
+    function recurse_copy($src, $dst)
+    {
         $dir = opendir($src);
         @mkdir($dst);
-        while(false !== ( $file = readdir($dir)) ) {
-            if (( $file != '.' ) && ( $file != '..' )) {
-                if ( is_dir($src . '/' . $file) ) {
-                    $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
-                }
-                else {
-                    copy($src . '/' . $file,$dst . '/' . $file);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
         }
@@ -288,19 +312,21 @@ class DiskFilesController extends FilesController
     }
 
 
-    public function getDir($id)
+    public
+    function getDir($id)
     {
-        return $this->dir.$this->type."/".$id."/";
+        return $this->dir . $this->type . "/" . $id . "/";
     }
 
-    public function __construct($directory, $type, SecurityContext $sc, $wsd)
+    public
+    function __construct($directory, $type, SecurityContext $sc, $wsd)
     {
-        if(!(substr_compare($directory, '/', 1, 1) === 0))
-            $directory = $directory.'/';
+        if (!(substr_compare($directory, '/', 1, 1) === 0))
+            $directory = $directory . '/';
         $this->dir = $directory;
         $this->type = $type;
         $this->sc = $sc;
-        $this->wiselib_src_dir=$wsd;
+        $this->wiselib_src_dir = $wsd;
     }
 }
 

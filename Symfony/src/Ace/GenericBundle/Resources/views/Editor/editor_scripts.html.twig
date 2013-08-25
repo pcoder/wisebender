@@ -11,7 +11,7 @@ function init_access_token() {
                 //store this
 
                 var url = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
-                $.get(url,{}, function (data) {
+                $.get(url, {}, function (data) {
                     //alert("saved return value = " + data);
                 });
             }
@@ -23,7 +23,7 @@ function init_access_token() {
 }
 
 
-function createNewFile(){
+function createNewFile() {
 
 }
 
@@ -81,7 +81,7 @@ function setOperationOutput(output) {
 function setOperationOutput(output, error) {
     $("#progress").hide('fast');
     $("#progress_val").width('0%');
-    if(error){
+    if (error) {
         output = "<span style='color: red'>" + output + "</span>";
     }
     $("#operation_output").html(output).show('fast');
@@ -91,9 +91,20 @@ function setOperationOutput(output, error) {
 function save() {
     loadCode();
     setOperationProgress(90);
+    {% if is_wiselib_clone is defined and is_wiselib_clone %}
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+        $("#save").addClass("btn-success");
+        $("#save_icon").addClass("icon-white");
+        data = JSON.parse(data);
+        setOperationOutput(data['message']);
+        window.setTimeout(function () {
+            $("#save").removeClass("btn-success");
+            $("#save_icon").removeClass("icon-white");
+        }, 500);
+    });
+    {% else %}
     var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
     nurl = nurl.replace('replaceme', window.selectedFile);
-    //$.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
     $.post(nurl, {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
@@ -104,31 +115,34 @@ function save() {
             $("#save_icon").removeClass("icon-white");
         }, 500);
     });
+    {% endif %}
+    //$.post("    {{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+
 }
 /*
-function save() {
-    loadCode();
-    setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
-        $("#save").addClass("btn-success");
-        $("#save_icon").addClass("icon-white");
-        data = JSON.parse(data);
-        setOperationOutput(data['message']);
-        window.setTimeout(function () {
-            $("#save").removeClass("btn-success");
-            $("#save_icon").removeClass("icon-white");
-        }, 500);
-        //   alert("Data received: " +JSON.stringify(data, null, 4));
-    });
-}:*/
+ function save() {
+ loadCode();
+ setOperationProgress(90);
+ $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
+ $("#save").addClass("btn-success");
+ $("#save_icon").addClass("icon-white");
+ data = JSON.parse(data);
+ setOperationOutput(data['message']);
+ window.setTimeout(function () {
+ $("#save").removeClass("btn-success");
+ $("#save_icon").removeClass("icon-white");
+ }, 500);
+ //   alert("Data received: " +JSON.stringify(data, null, 4));
+ });
+ }:*/
 
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
     $("#commitModal").modal('show');
 }
 
-function confirm_delete_from_github(repo_name){
-    $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" +repo_name+ "')");
+function confirm_delete_from_github(repo_name) {
+    $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" + repo_name + "')");
     $("#deleteProjectGitModal").modal("show");
 }
 
@@ -415,23 +429,25 @@ function verification_onSuccess() {
     editor.resize();
 }
 
-var test='';
-function compile(project){
+var test = '';
+function compile(project) {
     setOperationProgress(90);
     loadCode();
-    var fname="";
-    var fcontent="";
-    for(file in window.files){
+    var fname = "";
+    var fcontent = "";
+    for (file in window.files) {
         fname = file;
         fcontent = window.files[file];
     }
     var allfiles =
-        [{"filename": fname,
-          "content" : fcontent}];
+            [
+                {"filename": fname,
+                    "content": fcontent}
+            ];
     var json_data = {
-        "format" : "binary",
-        "build" : $("#cb_cp_select").val(),
-        "username" : $("#user").val(),
+        "format": "binary",
+        "build": $("#cb_cp_select").val(),
+        "username": $("#user").val(),
         "wiselibUUID": $("#cb_cf_select").val(),
         "files": allfiles
     };
@@ -445,11 +461,11 @@ function compile(project){
         async: true,
         data: JSON.stringify(json_data),
         success: function (result) {
-            if(result.success){
+            if (result.success) {
                 $("#compile").addClass("btn-success");
                 $("#compile_icon").addClass("icon-ok");
                 setOperationOutput("<p>Compilation ok!</p>");
-            }else{
+            } else {
                 $("#compile").addClass("btn-warning");
                 $("#compile_icon").addClass("icon-remove");
                 setOperationOutput("Compilation failed.");
@@ -460,19 +476,17 @@ function compile(project){
                 $("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
             }, 500);
 
-            if (result.success)
-            {
+            if (result.success) {
                 if (typeof verification_onSuccess == 'function')
                     verification_onSuccess();
                 //test = $.base64Decode(result.output);
                 test = result.output;
-                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" +result.output + "\",\"" +  project+ "\", \"" +$("#cb_cp_select").val() + "\");'>Download binary.</a></p>");
-                if($("#cb_cp_select").val() == "shawn"){
+                setOperationOutput("<p>Compilation ok! <a href='javascript:downloadBinary(\"" + result.output + "\",\"" + project + "\", \"" + $("#cb_cp_select").val() + "\");'>Download binary.</a></p>");
+                if ($("#cb_cp_select").val() == "shawn") {
                     //show Run configuration div
                 }
             }
-            else
-            {
+            else {
                 if (typeof verification_onFail == 'function')
                     verification_onFail(result.message);
             }
@@ -484,7 +498,7 @@ function compile(project){
     });
 }
 
-function downloadBinary(file, project, platform){
+function downloadBinary(file, project, platform) {
     var site_url = location.origin;
     site_url += "/download.php?fname=" + file + "&pname=" + project + "&platform=" + platform;
     window.location = site_url;
@@ -654,8 +668,8 @@ function createWiselibFolder() {
 function createWiselibFile() {
     setOperationProgress(90);
     var fp = $('#WiselibFileCreationModal').data('fpath');
-    if(fp==""){
-        fp="root";
+    if (fp == "") {
+        fp = "root";
     }
 
     $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename: $("#createWiselibFilefield").val(), 'fpath': fp}, function (data) {
@@ -748,7 +762,7 @@ $(document).ready(function () {
     });
 
     $("#commitSubmit").click(function () {
-		save();
+        save();
         var repo_name = $("#repoName").val().trim();
         var val = $('#commitMessage').val().trim();
         $('#commitModal').modal('hide');

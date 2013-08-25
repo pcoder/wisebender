@@ -494,6 +494,12 @@ class ProjectController extends Controller
         return new Response($list);
     }
 
+    public function getFilesCode($file, $project_filesId)
+    {
+        $list = $this->fc->getFilesCode($project_filesId);
+        return new Response($list);
+    }
+
     public function createFileAction($id, $filename, $code)
     {
         $perm = json_decode($this->checkWriteProjectPermissions($id), true);
@@ -564,10 +570,10 @@ class ProjectController extends Controller
 
     }
 
-    public function setWiselibFileAction($id, $project_id, $filename, $code)
+    public function setWiselibFileAction($id, $project_id, $filename, $code,$is_wiselib_clone=true)
     {
         $project = $this->getProjectById($project_id);
-        $set = $this->fc->setWiselibFileAction($id, $project->getProjectfilesId(), $filename, $code);
+        $set = $this->fc->setWiselibFileAction($id, $project->getProjectfilesId(), $filename, $code,$is_wiselib_clone);
         return new Response($set);
     }
 

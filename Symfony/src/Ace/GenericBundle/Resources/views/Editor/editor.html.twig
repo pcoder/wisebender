@@ -207,13 +207,14 @@
 
             window.files = {
                 {% for file in files %}
-                "{{file['filename']}}": "{{file['code'] | e('js')}}",
+                "{{file['filename']}}": "{{file['code']  | e('js') }}",
                 {% endfor %}
             };
 
             {% if files[0] is defined %}
             window.selectedFile = "{{files[0]['filename']}}";
-            $(".filelist")[0].setAttribute("style", "font-weight:bold;");
+            if(!$(".filelist")[0])
+                $(".filelist")[0].setAttribute("style", "font-weight:bold;");
             {% endif %}
 
             window.binary = null;

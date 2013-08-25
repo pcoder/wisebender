@@ -271,17 +271,20 @@ class DefaultController extends Controller
 
     public function saveCodeAction($id)
     {
-
         syslog(LOG_INFO, "editor save");
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
         $pid = $this->getRequest()->request->get('project_id');
-        //return new Response("id = " . $id . " and projectid=" . $pid);
         $files = $this->getRequest()->request->get('data');
         $files = json_decode($files, true);
         $response;
         $projectmanager = $this->get('ace_project.sketchmanager');
+
+        $is_wiselib_clone = $projectmanager->getIsWiselibClone($pid)->getContent();
+        $is_wiselib_clone = json_decode($is_wiselib_clone, true);
+        $is_wiselib_clone = $is_wiselib_clone["response"];
+
         foreach ($files as $key => $file) {
-            $response = $projectmanager->setWiselibFileAction($id, $pid, $key, htmlspecialchars_decode($file))->getContent();
+            $response = $projectmanager->setWiselibFileAction($id, $pid, $key, htmlspecialchars_decode($file),$is_wiselib_clone)->getContent();
             $response = json_decode($response, true);
             $response["project_id"] = $pid;
             if ($response["success"] == false)

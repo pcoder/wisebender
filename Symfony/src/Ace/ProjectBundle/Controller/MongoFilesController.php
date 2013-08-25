@@ -159,6 +159,16 @@ class MongoFilesController extends FilesController
     {
         //TODO
     }
+    /*
+ * For multiple file projects, retrieve the source code as key value pairs
+ * file_name => source_code
+ *
+ */
+
+    public function getFilesCode($project_filesId)
+    {
+        //TODO
+    }
 
     public function copyWiselibFiles($id)
     {
