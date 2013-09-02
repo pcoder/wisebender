@@ -137,9 +137,9 @@ function save() {
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
     var fnames_str = "";
-    for (var k in window.files){
+    for (var k in window.files) {
         if (window.files.hasOwnProperty(k)) {
-            fnames_str+="<li>" + k + "</li>";
+            fnames_str += "<li>" + k + "</li>";
         }
     }
     $("#m_files").html(fnames_str);
@@ -240,24 +240,41 @@ function pull_from_github(repo_name, git_commit_sha) {
                 dataType: 'json',
                 data: '',
                 success: function (data) {
+                    // DOING
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     old_commit_sha = json.object.sha;
                     if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
                         alert("Nothing to pull from the branch - master!")
                     } else {
+                        // http://developer.github.com/v3/repos/contents/#get-contents
                         // GET /repos/:owner/:repo/contents/:path
                         // get contents of the _app.cpp file from the master branch
+
                         $.ajax
                         ({
                             type: "GET",
-                            url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
+                            url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/?access_token=' + success.access_token,
                             dataType: 'json',
                             data: '',
                             success: function (data) {
-                                var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                var file_contents = json_file.content;
-                                file_contents = $.base64Decode(file_contents);
-                                window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
+                                var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                alert(json_resp);
+
+                                for (var key in json_resp) {
+                                    if (a.hasOwnProperty(key)) {
+                                        var content = json_resp[key];
+                                        if(content.type == "file"){
+                                            //save the file
+                                            if(!(content.name in window.files)){
+                                                createWiselibFile({{ project_id }}, content.name);
+                                            }else{
+                                                // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
+                                            }
+                                            window.files[content.name] = $.base64Decode(content.content);
+                                        }
+                                    }
+                                }
+
                                 save();
                                 update_git_sha(old_commit_sha);
                                 editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
@@ -267,6 +284,28 @@ function pull_from_github(repo_name, git_commit_sha) {
                                 return;
                             }
                         });
+
+
+                        /*$.ajax
+                         ({
+                         type: "GET",
+                         url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
+                         dataType: 'json',
+                         data: '',
+                         success: function (data) {
+                         var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
+                         var file_contents = json_file.content;
+                         file_contents = $.base64Decode(file_contents);
+                         window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
+                         save();
+                         update_git_sha(old_commit_sha);
+                         editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
+                         },
+                         error: function (request, status, error) {
+                         alert("ERROR: " + request.responseText);
+                         return;
+                         }
+                         });*/
                     }
                 },
                 error: function (request, status, error) {
@@ -294,16 +333,15 @@ function pull_from_github(repo_name, git_commit_sha) {
 
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
-    var sha_blob =  new Array();
+    var sha_blob = new Array();
     var fcontent = '';
     var json_data;
 
     // Create a new blob for each of the files
     // and store it in sha_blob
     var index = 0;
-    for (var k in window.files){
-        if (window.files.hasOwnProperty(k))
-        {
+    for (var k in window.files) {
+        if (window.files.hasOwnProperty(k)) {
             fcontent = window.files[k];
             json_data = {
                 "content": $('<div/>').html(fcontent).text(),
@@ -311,53 +349,55 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             };
 
 
-            $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data), function(data_blob) {
+            $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
 
-            }).fail(function() { alert("error"); })
-                    .success(function(data_blob){
+            }).fail(function () {
+                        alert("error");
+                    })
+                    .success(function (data_blob) {
                         var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
                         sha_blob[index++] = json_blob.sha;
                         console.log("sha is " + json_blob.sha);
                     })
 
 
-
             //if(k != "test.h")
 
             /*$.ajax
-            ({
-                type: "POST",
-                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
-                dataType: 'json',
-                async: false,
-                data: JSON.stringify(json_data),
-                success: function (data_blob) {
-                    //alert('JSON Data = ' + JSON.stringify(json_data));
-                    var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-                    sha_blob[index++] = json_blob.sha;
-                    //alert("Blob " + k  + " created! sha=" + sha_blob + "  index=" + (index-1));
-                    if(k=="test.h"){
-                        alert("wait here");
-                    }
-                },
-                error: function (request, status, error) {
-                    alert("ERROR: " + request.responseText);
-                    return;
-                }
-            });*/
+             ({
+             type: "POST",
+             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
+             dataType: 'json',
+             async: false,
+             data: JSON.stringify(json_data),
+             success: function (data_blob) {
+             //alert('JSON Data = ' + JSON.stringify(json_data));
+             var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+             sha_blob[index++] = json_blob.sha;
+             //alert("Blob " + k  + " created! sha=" + sha_blob + "  index=" + (index-1));
+             if(k=="test.h"){
+             alert("wait here");
+             }
+             },
+             error: function (request, status, error) {
+             alert("ERROR: " + request.responseText);
+             return;
+             }
+             });*/
         }
     }
 
     // b) Create a tree with the above blob
     // here we need to add all the blobs of the files created.
-    var new_tree_sha = ''; index=0;
-    var treestr ='';
-    for (var k in window.files){
+    var new_tree_sha = '';
+    index = 0;
+    var treestr = '';
+    for (var k in window.files) {
         if (window.files.hasOwnProperty(k)) {
-            treestr+= '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index++] + '"},';
+            treestr += '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index++] + '"},';
         }
     }
-    treestr = treestr.substr(0, treestr.length -1);
+    treestr = treestr.substr(0, treestr.length - 1);
 
     $.ajax
     ({
@@ -682,8 +722,8 @@ function selectFile(filename) {
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
-    if($("a:contains(" + filename + ")")[0])
-    $("a:contains(" + filename + ")")[0].setAttribute("style", "font-weight:bold;");
+    if ($("a:contains(" + filename + ")")[0])
+        $("a:contains(" + filename + ")")[0].setAttribute("style", "font-weight:bold;");
 }
 
 function loadCode() {
@@ -720,6 +760,16 @@ function createWiselibFile() {
         handleResponse(data);
     });
 }
+
+function createWiselibFile(id, filename) {
+    var fp = "root";
+    $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': id, filename: filename, 'fpath': fp}, function (data) {
+        // TODO handle smoothly
+        //$("#WiselibFileCreationModal").modal('hide');
+        //handleResponse(data);
+    });
+}
+
 
 function deleteFileModal(filename) {
     $("#filedeleteButton").attr("href", "javascript:deleteFile('" + filename + "');");
