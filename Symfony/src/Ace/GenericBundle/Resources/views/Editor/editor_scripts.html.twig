@@ -270,7 +270,9 @@ function pull_from_github(repo_name, git_commit_sha) {
                                             }else{
                                                 // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
                                             }
-                                            window.files[content.name] = $.base64Decode(content.content);
+                                            alert(content.content);
+                                            //window.files[content.name] = $.base64Decode(content.content);
+                                            window.files[content.name] = (content.content);
                                         }
                                     }
                                 }
