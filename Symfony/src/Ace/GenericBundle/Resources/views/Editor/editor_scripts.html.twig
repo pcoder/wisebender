@@ -258,10 +258,10 @@ function pull_from_github(repo_name, git_commit_sha) {
                             data: '',
                             success: function (data) {
                                 var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                alert(json_resp);
+                                alert(JSON.stringify(json_resp));
 
                                 for (var key in json_resp) {
-                                    if (a.hasOwnProperty(key)) {
+                                    if (json_resp.hasOwnProperty(key)) {
                                         var content = json_resp[key];
                                         if(content.type == "file"){
                                             //save the file
