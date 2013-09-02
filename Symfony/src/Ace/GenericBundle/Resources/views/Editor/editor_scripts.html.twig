@@ -298,30 +298,46 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob =  new Array();
     var fcontent = '';
-    var json_data = '';
+    var json_data;
 
     // Create a new blob for each of the files
     // and store it in sha_blob
     var index = 0;
     for (var k in window.files){
-        if(k=="test.h"){
-        alert("for " + k);
-        }
-        //if (window.files.hasOwnProperty(k))
+        if(k=="test.h")
         {
-            //alert("Key is " + k + ", value is" + target[k]);
+        //alert("for " + k);
+        }
+        if (window.files.hasOwnProperty(k))
+        {
+            //if(k=="test.h")
+            //alert("Key is " + k);
             fcontent = window.files[k];
             json_data = {
                 "content": $('<div/>').html(fcontent).text(),
                 "encoding": "utf-8"
             };
             if(k=="test.h"){
-                alert(json_data);
-                alert('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token);
+                //alert("json_data is " +JSON.stringify(json_data));
+                //alert('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token);
+                //alert(sha_blob);
             }
 
 
-            $.ajax
+            $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data), function(data_blob) {
+
+            }).fail(function() { alert("error"); })
+                    .success(function(data_blob){
+                        var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+                        sha_blob[index++] = json_blob.sha;
+                        console.log("sha is " + json_blob.sha);
+                    })
+
+
+
+            //if(k != "test.h")
+
+            /*$.ajax
             ({
                 type: "POST",
                 url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
@@ -341,9 +357,10 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
                     alert("ERROR: " + request.responseText);
                     return;
                 }
-            });
+            });*/
         }
     }
+    alert("sha of the blob is " + sha_blob);
 
    /* $.ajax
     ({
