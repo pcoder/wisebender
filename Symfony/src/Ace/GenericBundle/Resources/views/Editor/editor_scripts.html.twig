@@ -116,8 +116,6 @@ function save() {
         }, 500);
     });
     {% endif %}
-    //$.post("    {{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
-
 }
 /*
  function save() {
@@ -290,15 +288,49 @@ function pull_from_github(repo_name, git_commit_sha) {
 }
 
 
+// DOING
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
-    var sha_blob = '';
+    var sha_blob =  new Array();
     var fcontent = editor.getSession().getValue();
     var json_data = {
         "content": fcontent,
         "encoding": "utf-8"
     };
-    $.ajax
+
+    // Create a new blob for each of the files
+    // and store it in sha_blob
+    var index = 0;
+    for (var k in window.files){
+        if (window.files.hasOwnProperty(k)) {
+            //alert("Key is " + k + ", value is" + target[k]);
+            fcontent = window.files[k];
+            json_data = {
+                "content": fcontent,
+                "encoding": "utf-8"
+            };
+            $.ajax
+            ({
+                type: "POST",
+                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify(json_data),
+                success: function (data_blob) {
+                    //alert('JSON Data = ' + JSON.stringify(json_data));
+                    var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+                    sha_blob[index++] = json_blob.sha;
+                    //alert("Blob created! sha=" + sha_blob);
+                },
+                error: function (request, status, error) {
+                    alert("ERROR: " + request.responseText);
+                    return;
+                }
+            });
+        }
+    }
+
+   /* $.ajax
     ({
         type: "POST",
         url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
@@ -315,17 +347,27 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             alert("ERROR: " + request.responseText);
             return;
         }
-    });
+    });*/
 
     // b) Create a tree with the above blob
-    var new_tree_sha = '';
+    // here we need to add all the blobs of the files created.
+    var new_tree_sha = ''; index=0;
+    var treestr ='{ "base_tree": "' + old_commit_sha + '", "tree": [';
+    for (var k in window.files){
+        if (window.files.hasOwnProperty(k)) {
+            treestr+= '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index] + '"},';
+        }
+    }
+    treestr = treestr.substr(0, treestr.length -1)
+
     $.ajax
     ({
         type: "POST",
         url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/trees?access_token=' + token,
         dataType: 'json',
         async: false,
-        data: '{ "base_tree": "' + old_commit_sha + '", "tree": [{ "path": "' + repo_name + '_app.cpp' + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob + '"}]}',
+        data: '{ "base_tree": "' + old_commit_sha + '", "tree": [' + treestr +
+                ']}',
         success: function (data_tree) {
             var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
             new_tree_sha = json_tree.sha;
