@@ -292,8 +292,6 @@ function pull_from_github(repo_name, git_commit_sha) {
 
 }
 
-
-// DOING
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob =  new Array();
@@ -304,24 +302,13 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // and store it in sha_blob
     var index = 0;
     for (var k in window.files){
-        if(k=="test.h")
-        {
-        //alert("for " + k);
-        }
         if (window.files.hasOwnProperty(k))
         {
-            //if(k=="test.h")
-            //alert("Key is " + k);
             fcontent = window.files[k];
             json_data = {
                 "content": $('<div/>').html(fcontent).text(),
                 "encoding": "utf-8"
             };
-            if(k=="test.h"){
-                //alert("json_data is " +JSON.stringify(json_data));
-                //alert('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token);
-                //alert(sha_blob);
-            }
 
 
             $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data), function(data_blob) {
@@ -360,26 +347,6 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             });*/
         }
     }
-    alert("sha of the blob is " + sha_blob);
-
-   /* $.ajax
-    ({
-        type: "POST",
-        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
-        dataType: 'json',
-        async: false,
-        data: JSON.stringify(json_data),
-        success: function (data_blob) {
-            //alert('JSON Data = ' + JSON.stringify(json_data));
-            var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-            sha_blob = json_blob.sha;
-            //alert("Blob created! sha=" + sha_blob);
-        },
-        error: function (request, status, error) {
-            alert("ERROR: " + request.responseText);
-            return;
-        }
-    });*/
 
     // b) Create a tree with the above blob
     // here we need to add all the blobs of the files created.
