@@ -297,23 +297,30 @@ function pull_from_github(repo_name, git_commit_sha) {
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob =  new Array();
-    var fcontent = editor.getSession().getValue();
-    var json_data = {
-        "content": fcontent,
-        "encoding": "utf-8"
-    };
+    var fcontent = '';
+    var json_data = '';
 
     // Create a new blob for each of the files
     // and store it in sha_blob
     var index = 0;
     for (var k in window.files){
-        if (window.files.hasOwnProperty(k)) {
+        if(k=="test.h"){
+        alert("for " + k);
+        }
+        //if (window.files.hasOwnProperty(k))
+        {
             //alert("Key is " + k + ", value is" + target[k]);
             fcontent = window.files[k];
             json_data = {
-                "content": fcontent,
+                "content": $('<div/>').html(fcontent).text(),
                 "encoding": "utf-8"
             };
+            if(k=="test.h"){
+                alert(json_data);
+                alert('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token);
+            }
+
+
             $.ajax
             ({
                 type: "POST",
@@ -325,7 +332,10 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
                     //alert('JSON Data = ' + JSON.stringify(json_data));
                     var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
                     sha_blob[index++] = json_blob.sha;
-                    //alert("Blob created! sha=" + sha_blob);
+                    //alert("Blob " + k  + " created! sha=" + sha_blob + "  index=" + (index-1));
+                    if(k=="test.h"){
+                        alert("wait here");
+                    }
                 },
                 error: function (request, status, error) {
                     alert("ERROR: " + request.responseText);
@@ -357,10 +367,10 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // b) Create a tree with the above blob
     // here we need to add all the blobs of the files created.
     var new_tree_sha = ''; index=0;
-    var treestr ='{ "base_tree": "' + old_commit_sha + '", "tree": [';
+    var treestr ='';
     for (var k in window.files){
         if (window.files.hasOwnProperty(k)) {
-            treestr+= '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index] + '"},';
+            treestr+= '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index++] + '"},';
         }
     }
     treestr = treestr.substr(0, treestr.length -1);
