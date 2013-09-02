@@ -136,6 +136,13 @@ function save() {
 
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
+    var fnames_str = "";
+    for (var k in window.files){
+        if (window.files.hasOwnProperty(k)) {
+            fnames_str+="<li>" + k + "</li>";
+        }
+    }
+    $("#m_files").html(fnames_str);
     $("#commitModal").modal('show');
 }
 
@@ -145,8 +152,6 @@ function confirm_delete_from_github(repo_name) {
 }
 
 function delete_from_github(repo_name) {
-
-
     var oauthProvider = 'github';
     var user_name = '';
     var token = '';
@@ -358,7 +363,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             treestr+= '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index] + '"},';
         }
     }
-    treestr = treestr.substr(0, treestr.length -1)
+    treestr = treestr.substr(0, treestr.length -1);
 
     $.ajax
     ({
