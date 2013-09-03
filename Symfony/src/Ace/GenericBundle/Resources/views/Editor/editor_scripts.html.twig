@@ -118,7 +118,7 @@ function save() {
     {% endif %}
 }
 
-function save_selected_file(selected_file, files){
+function save_selected_file(selected_file, files) {
     var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
     nurl = nurl.replace('replaceme', selected_file);
     $.post(nurl, {data: JSON.stringify(files), project_id: {{ project_id }} }, function (data) {
@@ -282,12 +282,12 @@ function pull_from_github(repo_name, git_commit_sha) {
                                 for (var key in json_resp) {
                                     if (json_resp.hasOwnProperty(key)) {
                                         var content = json_resp[key];
-                                        if(content.type == "file"){
+                                        if (content.type == "file") {
                                             //save the file
-                                            if(!(content.name in window.files)){
+                                            if (!(content.name in window.files)) {
                                                 createWiselibFile({{ project_id }}, content.name);
                                                 //content.path;
-                                            }else{
+                                            } else {
                                                 // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
                                             }
 
@@ -406,41 +406,35 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             };
 
 
-            $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
-
-            }).fail(function () {
-                        alert("error");
-                    })
-                    .success(function (data_blob) {
-                        var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-                        sha_blob[index++] = json_blob.sha;
-                        console.log("sha is " + json_blob.sha);
-                    })
-
-
-            //if(k != "test.h")
-
-            /*$.ajax
-             ({
-             type: "POST",
-             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
-             dataType: 'json',
-             async: false,
-             data: JSON.stringify(json_data),
-             success: function (data_blob) {
-             //alert('JSON Data = ' + JSON.stringify(json_data));
+            /*
+             $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
+             }).fail(function () {
+             alert("error");
+             })
+             .success(function (data_blob) {
              var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
              sha_blob[index++] = json_blob.sha;
-             //alert("Blob " + k  + " created! sha=" + sha_blob + "  index=" + (index-1));
-             if(k=="test.h"){
-             alert("wait here");
-             }
-             },
-             error: function (request, status, error) {
-             alert("ERROR: " + request.responseText);
-             return;
-             }
-             });*/
+             console.log("sha is " + json_blob.sha);
+             })
+             */
+
+            $.ajax
+            ({
+                type: "POST",
+                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token,
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify(json_data),
+                success: function (data_blob) {
+                    //alert('JSON Data = ' + JSON.stringify(json_data));
+                    var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+                    sha_blob[index++] = json_blob.sha;
+                },
+                error: function (request, status, error) {
+                    alert("ERROR: " + request.responseText);
+                    return;
+                }
+            });
         }
     }
 
