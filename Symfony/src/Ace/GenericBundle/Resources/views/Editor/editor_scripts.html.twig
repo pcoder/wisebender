@@ -256,8 +256,11 @@ function pull_from_github(repo_name, git_commit_sha) {
                 data: '',
                 success: function (data) {
                     // DOING
+                    console.log('sha in db=' + git_commit_sha);
+                    console.log('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token);
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     old_commit_sha = json.object.sha;
+                    console.log('sha in github=' + old_commit_sha);
                     if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
                         alert("Nothing to pull from the branch - master!")
                     } else {
@@ -443,9 +446,11 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
 
     // b) Create a tree with the above blob
     // here we need to add all the blobs of the files created.
+
     var new_tree_sha = '';
     index = 0;
     var treestr = '';
+    alert(sha_blob);
     for (var k in window.files) {
         if (window.files.hasOwnProperty(k)) {
             treestr += '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index++] + '"},';
