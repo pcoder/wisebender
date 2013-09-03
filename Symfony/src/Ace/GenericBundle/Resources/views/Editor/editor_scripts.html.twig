@@ -117,6 +117,21 @@ function save() {
     });
     {% endif %}
 }
+
+function save_selected_file(selected_file, files){
+    var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
+    nurl = nurl.replace('replaceme', selected_file);
+    $.post(nurl, {data: JSON.stringify(files), project_id: {{ project_id }} }, function (data) {
+        $("#save").addClass("btn-success");
+        $("#save_icon").addClass("icon-white");
+        data = JSON.parse(data);
+        setOperationOutput(data['message']);
+        window.setTimeout(function () {
+            $("#save").removeClass("btn-success");
+            $("#save_icon").removeClass("icon-white");
+        }, 500);
+    });
+}
 /*
  function save() {
  loadCode();
@@ -256,9 +271,10 @@ function pull_from_github(repo_name, git_commit_sha) {
                             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/?access_token=' + success.access_token,
                             dataType: 'json',
                             data: '',
+                            async: false,
                             success: function (data) {
                                 var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                alert(JSON.stringify(json_resp));
+                                //alert(JSON.stringify(json_resp));
 
                                 for (var key in json_resp) {
                                     if (json_resp.hasOwnProperty(key)) {
@@ -267,19 +283,54 @@ function pull_from_github(repo_name, git_commit_sha) {
                                             //save the file
                                             if(!(content.name in window.files)){
                                                 createWiselibFile({{ project_id }}, content.name);
+                                                //content.path;
                                             }else{
                                                 // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
                                             }
-                                            alert(content.content);
+
+                                            $.ajax
+                                            ({
+                                                type: "GET",
+                                                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + success.access_token,
+                                                dataType: 'json',
+                                                data: '',
+                                                async: false,
+                                                success: function (datum) {
+                                                    var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
+                                                    var file_contents = json_file.content;
+                                                    file_contents = $.base64Decode(file_contents);
+                                                    //alert("Name: " + content.path + " ---- " + content.name + " ----> " + file_contents);
+                                                    window.files[content.path] = file_contents;
+                                                    save_selected_file(content.name, window.files);
+                                                    //window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
+                                                    //save();
+                                                    //update_git_sha(old_commit_sha);
+                                                    //editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
+                                                },
+                                                error: function (request, status, error) {
+                                                    alert("ERROR: " + request.responseText);
+                                                    return;
+                                                }
+                                            });
+
+                                            //alert(content.content);
                                             //window.files[content.name] = $.base64Decode(content.content);
-                                            window.files[content.name] = (content.content);
+                                            //window.files[content.name] = (content.content);
                                         }
                                     }
                                 }
 
-                                save();
-                                update_git_sha(old_commit_sha);
-                                editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
+
+                                //alert(JSON.stringify(window.files));
+                                //save();
+                                //window.location.href = window.location.href;
+                                //selectFile(repo_name + "_app.cpp");
+                                //alert(window.files[repo_name + "_app.cpp"]);
+                                editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
+
+
+                                //update_git_sha(old_commit_sha);
+                                //editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
                             },
                             error: function (request, status, error) {
                                 alert("ERROR: " + request.responseText);
@@ -330,6 +381,7 @@ function pull_from_github(repo_name, git_commit_sha) {
         }
     })
     ;
+    editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
 
 }
 
