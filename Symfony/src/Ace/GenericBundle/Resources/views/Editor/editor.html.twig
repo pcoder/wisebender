@@ -260,6 +260,7 @@
     {% include 'AceGenericBundle:Editor:info_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_project_delete_modal.html.twig' %}
+    {% include 'AceGenericBundle:Editor:git_pull_warning.html.twig' %}
 
     <div id="container_left">
         <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
@@ -303,7 +304,7 @@
                         {% else %}
                             <div id="div_pull_from_github">
                                 <button id="pull_from_github" class="btn"
-                                        onclick="pull_from_github('{{ project_name }}', '{{ git_commit_sha }}');"
+                                        onclick="show_git_pull_warning();"
                                         title="Pull Changes from GitHub">
                                     <i class="icon-cloud-download"></i>&nbsp;&nbsp;
                                     Pull Changes from GitHub

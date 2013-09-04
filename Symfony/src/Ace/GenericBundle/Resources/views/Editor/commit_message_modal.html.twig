@@ -1,10 +1,10 @@
 <input type="hidden" id="repoName" name="repoName" value="">
-<div class="modal hide fade" id="commitModal" style="height:80%; overflow:hidden;">
+<div class="modal hide fade" id="commitModal" style="overflow:hidden;">
     <div class="modal-header">
         <button id="commitModalClose" class="close" data-dismiss="modal">×</button>
-        <h3>Save to GitHub.</h3>
+        <h3>Save to GitHub</h3>
     </div>
-    <div class="modal-body span5" style="max-height:80%;%">
+    <div class="modal-body" style="max-height:80%;">
         <p>Committing changes to GitHub will overwrite your GitHub repo. Be careful.</p>
         <h5>Project Name:</h5>
         <p id="name">{{ project_name }}</p>
@@ -14,9 +14,9 @@
           </p>
         <h5>Commit Message:</h5>
         <textarea id="commitMessage"></textarea>
-        <div class="modal-footer">
-            <button id="commitSubmitC" data-dismiss="modal" class="btn">Cancel</button>
-            <button id="commitSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Commit!</button>
-        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="commitSubmitC" data-dismiss="modal" class="btn">Cancel</button>
+        <button id="commitSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Commit!</button>
     </div>
 </div>

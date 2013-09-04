@@ -161,6 +161,10 @@ function save_to_github(repo_name) {
     $("#commitModal").modal('show');
 }
 
+function show_git_pull_warning(){
+    $("#gitPullWarningModal").modal('show');
+}
+
 function confirm_delete_from_github(repo_name) {
     $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" + repo_name + "')");
     $("#deleteProjectGitModal").modal("show");
@@ -219,6 +223,11 @@ function delete_from_github(repo_name) {
 }
 
 function pull_from_github(repo_name, git_commit_sha) {
+    $("#gitPullWarningButton").addClass("disabled");
+    $("#gitPullWarningButtonC").addClass("disabled");
+    $("#gitPullWarningButton").html("<i class='icon-spinner icon-spin icon-large'></i> Pulling ...");
+
+
     var oauthProvider = 'github';
     var user_name = '';
     init_access_token();
@@ -383,6 +392,10 @@ function pull_from_github(repo_name, git_commit_sha) {
         }
     })
     ;
+    $("#gitPullWarningModal").removeClass("disabled");
+    $("#gitPullWarningModalC").removeClass("disabled");
+    $("#gitPullWarningModal").html("<i class='icon-cloud-download icon-white'> Fork!");
+    $("#gitPullWarningModal").modal('hide');
     editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
 
 }

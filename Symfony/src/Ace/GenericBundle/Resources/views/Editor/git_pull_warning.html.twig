@@ -1,0 +1,13 @@
+<div class="modal hide fade" id="gitPullWarningModal">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">&#215;</button>
+        <h3>Pull changes from GitHub</h3>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to pull changes from GitHub? This will overwrite the files in Wisebender.</p>
+    </div>
+    <div class="modal-footer">
+        <button id="gitPullWarningButtonC" data-dismiss="modal" class="btn">Cancel</button>
+        <button id="gitPullWarningButton" onClick="pull_from_github('{{ project_name }}', '{{ git_commit_sha }}')" data-loading-text="<i class='icon-spinner icon-spin'></i> Pulling" class="btn btn-submit" ></i><i class="icon-cloud-download icon-white"></i>  Pull!</button>
+    </div>
+</div>
