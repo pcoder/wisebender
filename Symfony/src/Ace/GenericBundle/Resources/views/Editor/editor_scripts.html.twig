@@ -166,7 +166,7 @@ function show_git_pull_warning(){
 }
 
 function confirm_delete_from_github(repo_name) {
-    $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" + repo_name + "')");
+    $("#deleteProjectGitButton").attr("href", "javascript:delete_from_github('" + repo_name + "');");
     $("#deleteProjectGitModal").modal("show");
 }
 
@@ -176,6 +176,11 @@ function delete_from_github(repo_name) {
     var token = '';
     // get the user's username :user
     init_access_token();
+
+    $("#deleteProjectGitButton").addClass("disabled");
+    $("#deleteProjectGitButtonC").addClass("disabled");
+    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
+
     OAuth.popup(oauthProvider, function (err, suc) {
         if (suc) {
             $.ajax
@@ -193,7 +198,6 @@ function delete_from_github(repo_name) {
                         dataType: 'json',
                         success: function () {
                             alert("Repository '" + repo_name + "' deleted on GitHub.com!");
-                            $("#deleteProjectGitModal").modal("hide");
                             $.post("{{ path('AceUtilitiesBundle_setprojectgiturl', {'id':project_id} ) }}", {data: ""}, function (data) {
                                 $("#div_git_url").html("");
                                 $("#div_delete_from_github").html("");
@@ -220,6 +224,11 @@ function delete_from_github(repo_name) {
             // $('#result').html("// Result error <br /><br />" + err);
         }
     });
+    $("#deleteProjectGitModal").modal("hide");
+    $("#deleteProjectGitButton").removeClass("disabled");
+    $("#deleteProjectGitButtonC").removeClass("disabled");
+    $("#deleteProjectGitButton").html("<i class='icon-trash icon-white'> Delete!");
+
 }
 
 function pull_from_github(repo_name, git_commit_sha) {
