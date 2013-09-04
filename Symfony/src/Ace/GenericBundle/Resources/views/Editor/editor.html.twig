@@ -285,50 +285,46 @@
         <br/>
         <hr/>
         {% if is_wiselib_clone is defined and not is_wiselib_clone %}
-            <div>
-                <div class="btn-group" style="margin-left:0px; vertical-align: middle;">
-                    <button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
-                            title="Send to GitHub">
-                        <i id="save_icon" class="icon-cloud-upload"></i>&nbsp;&nbsp;
-                        Send to GitHub
-                    </button>
-                    <br/>
 
+                <div class="btn-group" style="margin-left:0px; vertical-align: middle;">
+                    <label><h5><i class="icon-github icon-large"></i> GitHub Tools</h5></label>
+
+                    <span  style="padding-right: 5px;"><button id="save_to_github" class="btn" onclick="save_to_github('{{ project_name }}');"
+                            title="Send to GitHub">
+                        <i id="save_icon" class="icon-cloud-upload"></i>
+                        Send
+                    </button></span>
                     {% if git_url is not defined or git_url == "" %}
-                        <div id="div_git_url" style="display: none;"></div>
-                        <div id="div_pull_from_github" style="display: none;"></div>
-                        <div id="div_delete_from_github" style="display: none;"></div>
+                        <span id="div_git_url" style="display: none;"></span>
+                        <span id="div_pull_from_github" style="display: none;"></span>
+                        <span id="div_delete_from_github" style="display: none;"></span>
                     {% else %}
-                        <br/>
                         {% if git_commit_sha is not defined or git_commit_sha == "" %}
                         {% else %}
-                            <div id="div_pull_from_github">
+                        <span id="div_pull_from_github" style="padding-right: 5px;">
                                 <button id="pull_from_github" class="btn"
                                         onclick="show_git_pull_warning();"
                                         title="Pull Changes from GitHub">
-                                    <i class="icon-cloud-download"></i>&nbsp;&nbsp;
-                                    Pull Changes from GitHub
-                                </button>
-                            </div>
-                            <br/>
+                                    <i class="icon-cloud-download"></i>
+                                    Pull
+                                </button></span>
                         {% endif %}
-                        <div id="div_delete_from_github">
-                            <button id="confirm_delete_from_github" class="btn"
+                        <span id="div_delete_from_github">
+                            <button id="confirm_delete_from_github" class="btn  btn-danger"
                                     onclick="confirm_delete_from_github('{{ project_name }}');"
-                                    title="Send to GitHub">
-                                <i id="github_delete_icon" class="delete_icon"></i>
-                                Delete from GitHub
+                                    title="Delete the project from GitHub">
+                                <i id="github_delete_icon" class="icon-trash icon-white"></i>
+                                Delete
                             </button>
-                        </div>
+                        </span>
                         <br/>
-                        <div id="div_git_url" style="display: block;"><a
+                        <div id="div_git_url" style="display: block;padding-top: 15px;"><a
                                     href="{{ git_url }}" target="_blank">
                                 <pre>{{ git_url }}</pre>
                             </a></div>
                     {% endif %}
                 </div>
-            </div>
-            <hr/>
+           <hr/>
         {% endif %}
 
         <h4>
