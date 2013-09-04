@@ -907,10 +907,14 @@ $(document).ready(function () {
     });
 
     $("#commitSubmit").click(function () {
+        $("#commitSubmit").addClass("disabled");
+        $("#commitSubmitC").addClass("disabled");
+        $("#commitSubmit").html("<i class='icon-spinner icon-spin icon-large'></i> Committing...");
+
         save();
         var repo_name = $("#repoName").val().trim();
         var val = $('#commitMessage').val().trim();
-        $('#commitModal').modal('hide');
+        //$('#commitModal').modal('hide');
 
         if (val == "") {
             $("#commitModal").modal('show');
@@ -1025,6 +1029,11 @@ $(document).ready(function () {
             }
         })
         ;
+        $("#commitSubmit").removeClass("disabled");
+        $("#commitSubmitC").removeClass("disabled");
+        $("#commitSubmit").html("<i class='icon-github icon-white'>&nbsp;&nbsp;Commit!");
+        $('#commitModal').modal('hide');
+
     })
     ;
 

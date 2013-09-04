@@ -5,17 +5,18 @@
         <h3>Save to GitHub.</h3>
     </div>
     <div class="modal-body span5" style="max-height:80%;%">
+        <p>Committing changes to GitHub will overwrite your GitHub repo. Be careful.</p>
         <h5>Project Name:</h5>
         <p id="name">{{ project_name }}</p>
-        <br/>
         <h5>Files:</h5>
         <p id="m_files">
 
           </p>
-        <br/>
         <h5>Commit Message:</h5>
         <textarea id="commitMessage"></textarea>
-        <br/><br/>
-        <button id="commitSubmit" class="btn" value="Commit">Commit</button>
+        <div class="modal-footer">
+            <button id="commitSubmitC" data-dismiss="modal" class="btn">Cancel</button>
+            <button id="commitSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Commit!</button>
+        </div>
     </div>
 </div>
