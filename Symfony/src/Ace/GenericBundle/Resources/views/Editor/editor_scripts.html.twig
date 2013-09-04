@@ -255,7 +255,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                 dataType: 'json',
                 data: '',
                 success: function (data) {
-                    // DOING
                     console.log('sha in db=' + git_commit_sha);
                     console.log('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token);
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
