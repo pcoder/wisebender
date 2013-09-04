@@ -1005,8 +1005,10 @@ $(document).ready(function () {
                                         $("#div_git_url").css('display', 'block');
                                         $("#div_git_url").css('padding-top', '15px');
                                         $("#div_git_url").css('padding-bottom', '15px');
-                                        $("#div_delete_from_github").html("\<button id=\"delete_from_github\" class=\"btn\" onclick=\"confirm_delete_from_github('{{ project_name }}');\" title=\"Delete from GitHub\"\>\<i id=\"github_delete_icon\" class=\"delete_icon\"\>\</i\>Delete from GitHub\</button\>");
-                                        $("#div_delete_from_github").css('display', 'block');
+                                        $("#div_pull_from_github").html("\<button id=\"pull_from_github\" class=\"btn\" onclick=\"show_git_pull_warning();\" title=\"Pull Changes from GitHub\"\>\<i class=\"icon-cloud-download\"\>\</i\> Pull\</button\>");
+                                        $("#div_delete_from_github").html("\<button id=\"confirm_delete_from_github\" class=\"btn  btn-danger\" onclick=\"confirm_delete_from_github('{{ project_name }}');\"                                        title=\"Delete the project from GitHub\"\>\<i id=\"github_delete_icon\" class=\"icon-trash icon-white\"\>\</i\> Delete\</button\>");
+                                        //$("#div_pull_from_github").css('display', 'inline');
+                                        //$("#div_delete_from_github").css('display', 'inline');
                                     });
                                 },
                                 error: function (request, status, error) {
