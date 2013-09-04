@@ -392,9 +392,9 @@ function pull_from_github(repo_name, git_commit_sha) {
         }
     })
     ;
-    $("#gitPullWarningModal").removeClass("disabled");
-    $("#gitPullWarningModalC").removeClass("disabled");
-    $("#gitPullWarningModal").html("<i class='icon-cloud-download icon-white'> Fork!");
+    $("#gitPullWarningButton").removeClass("disabled");
+    $("#gitPullWarningButtonC").removeClass("disabled");
+    $("#gitPullWarningButton").html("<i class='icon-cloud-download icon-white'> Pull!");
     $("#gitPullWarningModal").modal('hide');
     editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
 
