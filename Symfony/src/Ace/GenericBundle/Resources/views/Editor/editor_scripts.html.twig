@@ -285,7 +285,7 @@ function pull_from_github(repo_name, git_commit_sha) {
                                         if (content.type == "file") {
                                             //save the file
                                             if (!(content.name in window.files)) {
-                                                createWiselibFile({{ project_id }}, content.name);
+                                                createWiselibFileIDFL({{ project_id }}, content.name);
                                                 //content.path;
                                             } else {
                                                 // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
@@ -419,7 +419,6 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
                 "encoding": "utf-8"
             };
 
-            alert(sha_blob);
             $.ajax
             ({
                 type: "POST",
@@ -809,14 +808,13 @@ function createWiselibFile() {
     if (fp == "") {
         fp = "root";
     }
-
     $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFileCreationModal').data('id'), filename: $("#createWiselibFilefield").val(), 'fpath': fp}, function (data) {
         $("#WiselibFileCreationModal").modal('hide');
         handleResponse(data);
     });
 }
 
-function createWiselibFile(id, filename) {
+function createWiselibFileIDFL(id, filename) {
     var fp = "root";
     $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': id, filename: filename, 'fpath': fp}, function (data) {
         // TODO handle smoothly
@@ -836,6 +834,7 @@ function deleteFile(filename) {
     var val = { "filename": filename };
     $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function (data) {
         handleResponse(data);
+        window.files[filename] = "";
     });
 }
 
