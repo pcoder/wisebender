@@ -388,6 +388,20 @@ function pull_from_github(repo_name, git_commit_sha) {
 
 }
 
+
+/*
+ $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
+ }).fail(function () {
+ alert("error");
+ })
+ .success(function (data_blob) {
+ var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
+ sha_blob[index++] = json_blob.sha;
+ console.log("sha is " + json_blob.sha);
+ })
+ */
+//            alert("sending request " +             "$.ajax   ({type: \"POST\",  url: 'https://api.github.com/repos/" + user_name + "/" + repo_name + "/git/blobs?access_token='" + token + ",  dataType: 'json',                async: false, data: " + JSON.stringify(json_data) + ",   success: function (data_blob) { var json_blob =  + $.parseJSON(JSON.stringify(data_blob, undefined, 2)); " +
+//                  sha_blob[index] + " = json_blob.sha; },     error: function (request, status, error) {  alert(\"ERROR: \" + request.responseText);  return;  } });");
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob = new Array();
@@ -405,19 +419,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
                 "encoding": "utf-8"
             };
 
-
-            /*
-             $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
-             }).fail(function () {
-             alert("error");
-             })
-             .success(function (data_blob) {
-             var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
-             sha_blob[index++] = json_blob.sha;
-             console.log("sha is " + json_blob.sha);
-             })
-             */
-
+            alert(sha_blob);
             $.ajax
             ({
                 type: "POST",
