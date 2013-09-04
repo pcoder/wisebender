@@ -445,7 +445,6 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     var new_tree_sha = '';
     index = 0;
     var treestr = '';
-    alert(sha_blob);
     for (var k in window.files) {
         if (window.files.hasOwnProperty(k)) {
             treestr += '{ "path": "' + k + '", "mode": "100644", "type": "blob", "sha": "' + sha_blob[index++] + '"},';
