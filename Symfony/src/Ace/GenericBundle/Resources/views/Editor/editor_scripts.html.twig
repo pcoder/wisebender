@@ -161,7 +161,7 @@ function save_to_github(repo_name) {
     $("#commitModal").modal('show');
 }
 
-function show_git_pull_warning(){
+function show_git_pull_warning() {
     $("#gitPullWarningModal").modal('show');
 }
 
@@ -423,6 +423,81 @@ function pull_from_github(repo_name, git_commit_sha) {
  */
 //            alert("sending request " +             "$.ajax   ({type: \"POST\",  url: 'https://api.github.com/repos/" + user_name + "/" + repo_name + "/git/blobs?access_token='" + token + ",  dataType: 'json',                async: false, data: " + JSON.stringify(json_data) + ",   success: function (data_blob) { var json_blob =  + $.parseJSON(JSON.stringify(data_blob, undefined, 2)); " +
 //                  sha_blob[index] + " = json_blob.sha; },     error: function (request, status, error) {  alert(\"ERROR: \" + request.responseText);  return;  } });");
+
+
+function compare_files(user_name, repo_name, token) {
+    var comp = new Array();
+    $.ajax
+    ({
+        type: "GET",
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/?access_token=' + token,
+        dataType: 'json',
+        data: '',
+        async: false,
+        success: function (data) {
+            var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
+            for (var key in json_resp) {
+                if (json_resp.hasOwnProperty(key)) {
+                    var content = json_resp[key];
+                    if (content.type == "file") {
+                        //check the contents of the files
+                        if (!(content.name in window.files)) {
+                            //files deleted
+                            comp[content.name] = "D";
+                        } else {
+                            // check if updated
+                            $.ajax
+                            ({
+                                type: "GET",
+                                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + token,
+                                dataType: 'json',
+                                data: '',
+                                async: false,
+                                success: function (datum) {
+                                    var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
+                                    var file_contents = json_file.content;
+                                    file_contents = $.base64Decode(file_contents);
+
+                                    alert("Checking file_contents ----> " + file_contents + "&&&&&&&&&&&&&&&" + "window.files ===== " + window.files[content.path]);
+                                    if(file_contents == window.files[content.path]){
+                                        alert(content.path + " - file same.");
+                                        comp[content.name] = ""
+                                    }else{
+                                        alert("file updated");
+                                        comp[content.name] = "M";
+                                    }
+                                },
+                                error: function (request, status, error) {
+                                    alert("ERROR: " + request.responseText);
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+
+            //alert(JSON.stringify(window.files));
+            //save();
+            //window.location.href = window.location.href;
+            //selectFile(repo_name + "_app.cpp");
+            //alert(window.files[repo_name + "_app.cpp"]);
+            editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
+
+
+            //update_git_sha(old_commit_sha);
+            //editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
+        },
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
+            return;
+        }
+    });
+
+}
+
+
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
     var sha_blob = new Array();
@@ -990,7 +1065,11 @@ $(document).ready(function () {
                     success: function (data) {
                         var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                         old_commit_sha = json.object.sha;
-                        src_commit(user_name, repo_name, success.access_token, old_commit_sha, val);
+
+                        // doing with the syncronization of the project
+                        compare_files(user_name, repo_name, success.access_token);
+
+ //                       src_commit(user_name, repo_name, success.access_token, old_commit_sha, val);
                     },
                     error: function (request, status, error) {
                         var json_r = $.parseJSON(request.responseText);
