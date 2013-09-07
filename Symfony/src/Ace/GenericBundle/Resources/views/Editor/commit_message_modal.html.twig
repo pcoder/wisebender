@@ -20,3 +20,17 @@
         <button id="commitSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Commit!</button>
     </div>
 </div>
+<div class="modal hide fade" id="commitValidateModal" style="overflow:hidden;">
+    <div class="modal-header">
+        <button id="commitModalClose" class="close" data-dismiss="modal">×</button>
+        <h3>Confirmation.</h3>
+    </div>
+    <div class="modal-body" style="max-height:80%;">
+        The following changes will be sent to GitHub repo.
+        <p id="commitValidateBody"></p>
+    </div>
+    <div class="modal-footer">
+        <button id="commitValidateSubmitC" data-dismiss="modal" class="btn">Cancel</button>
+        <button id="commitValidateSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Yes</button>
+    </div>
+</div>
