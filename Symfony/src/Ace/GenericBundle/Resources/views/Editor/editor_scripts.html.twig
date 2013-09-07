@@ -499,8 +499,28 @@ function compare_files(user_name, repo_name, token) {
            comp[key] = "N";
         }
     }
-    alert(JSON.stringify($.toJSON(comp)));
 
+    var strN = "New Files: ";
+    var strD = "Deleted Files: ";
+    var strS = "Unmodified Files: ";
+    var strM = "Modified Files: ";
+    for (var key in comp){
+        switch(comp[key]){
+            case "N":
+                    strN+= "<i>" + key + "</i>";
+                break;
+            case "D":
+                strD+= "<i>" + key + "</i>";
+                break;
+            case "S":
+                strS+= "<i>" + key + "</i>";
+                break;
+            case "M":
+                strM+= "<i>" + key + "</i>";
+                break;
+        }
+    }
+    alert(strN.join("\n").join(strD).join("\n").join(strS).join("\n").join(strM));
 }
 
 
