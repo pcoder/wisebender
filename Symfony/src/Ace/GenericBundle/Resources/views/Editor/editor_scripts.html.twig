@@ -450,9 +450,10 @@ function pull_from_github(repo_name, git_commit_sha) {
 //            alert("sending request " +             "$.ajax   ({type: \"POST\",  url: 'https://api.github.com/repos/" + user_name + "/" + repo_name + "/git/blobs?access_token='" + token + ",  dataType: 'json',                async: false, data: " + JSON.stringify(json_data) + ",   success: function (data_blob) { var json_blob =  + $.parseJSON(JSON.stringify(data_blob, undefined, 2)); " +
 //                  sha_blob[index] + " = json_blob.sha; },     error: function (request, status, error) {  alert(\"ERROR: \" + request.responseText);  return;  } });");
 
-
+var comp_files, shas;
 function compare_files(user_name, repo_name, token) {
     var comp = new Array();
+    shas = new Array();
     $.ajax
     ({
         type: "GET",
@@ -472,6 +473,7 @@ function compare_files(user_name, repo_name, token) {
                             if (!(content.name in window.files)) {
                                 //files deleted
                                 comp[content.name] = "D";
+                                shas[content.name] = json_resp[key].sha;
                             } else {
                                 // check if updated
                                 $.ajax
@@ -484,11 +486,12 @@ function compare_files(user_name, repo_name, token) {
                                     success: function (datum) {
                                         var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
                                         var file_contents = json_file.content;
+                                        shas[content.name] = json_file.sha;
                                         file_contents = $.base64Decode(file_contents);
 
                                         if (file_contents == window.files[content.path]) {
                                             //alert(content.path + " - file same.");
-                                            comp[content.name] = ""
+                                            comp[content.name] = "S"
                                         } else {
                                             //alert("file updated");
                                             comp[content.name] = "M";
@@ -536,6 +539,7 @@ function compare_files(user_name, repo_name, token) {
                 break;
         }
     }
+    comp_files = comp;
     $('#commitValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
     $('#commitValidateModal').modal('show');
 }
@@ -1113,6 +1117,42 @@ $(document).ready(function () {
                     success: function (data) {
                         var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                         old_commit_sha = json.object.sha;
+                        // doing change here to save the exact copy of the project.
+                        for (var key in comp_files) {
+                            switch (comp_files[key]) {
+                                case "N":
+
+                                    break;
+                                case "D":
+                                    // delete the file from GitHub
+                                    // DELETE /repos/:owner/:repo/contents/:path
+                                        alert("Deleting " + key);
+                                    $.ajax
+                                    ({
+                                        type: "DELETE",
+                                        url: 'https://api.github.com/repos/' + user_name+ '/'+repo_name+'/contents/' +key+'?access_token=' + success.access_token,
+                                        dataType: 'json',
+                                        async: false,
+                                        data: '{ "message": "' + val + '", "sha": "' +shas[key]+ '"}',
+                                        success: function (data) {
+                                            // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
+                                            var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                                            old_commit_sha = json.commit.sha;
+                                        },
+                                        error: function (request, status, error) {
+                                            alert("ERROR: " + request.responseText);
+                                        }
+                                    });
+                                    break;
+                                case "S":
+
+                                    break;
+                                case "M":
+
+                                    break;
+                            }
+                        }
+
                         src_commit(user_name, repo_name, success.access_token, old_commit_sha, val);
                     },
                     error: function (request, status, error) {
