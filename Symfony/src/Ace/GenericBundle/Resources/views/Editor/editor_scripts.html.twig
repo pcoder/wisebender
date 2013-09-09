@@ -414,12 +414,38 @@ function pull_from_github(repo_name, git_commit_sha) {
         }
     })
     ;
+
+
     $("#gitPullWarningButton").removeClass("disabled");
     $("#gitPullWarningButtonC").removeClass("disabled");
     $("#gitPullWarningButton").html("<i class='icon-cloud-download icon-white'></i> Pull!");
     $("#gitPullWarningModal").modal('hide');
-    editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
 
+    // delete file or add new file needs a page refresh!!!
+    var reload = false;
+    for (var key in comp_files_pull) {
+        switch (comp_files_pull[key]) {
+            case "D":
+                // delete the file from GitHub
+                // DELETE /repos/:owner/:repo/contents/:path
+                //alert("Deleting " + key);
+                deleteFile(key);
+            case "N":
+                reload = true;
+                break;
+            case "S":
+
+                break;
+            case "M":
+
+                break;
+        }
+    }
+    if (reload) {
+        location.reload();
+    } else {
+        editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
+    }
 }
 
 
