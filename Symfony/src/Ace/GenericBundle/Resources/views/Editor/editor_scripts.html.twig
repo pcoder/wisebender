@@ -188,7 +188,34 @@ function save_to_github(repo_name) {
 }
 
 function show_git_pull_warning() {
-    $("#gitPullWarningModal").modal('show');
+
+    var oauthProvider = 'github';
+    var user_name = '';
+    var token = '';
+    // get the user's username :user
+    init_access_token();
+
+    OAuth.popup(oauthProvider, function (err, suc) {
+        if (suc) {
+            $.ajax
+            ({
+                async: false,
+                type: "GET",
+                url: 'https://api.github.com/user?access_token=' + suc.access_token,
+                dataType: 'json',
+                success: function (data) {
+                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                    user_name = json.login;
+                    // doing with the syncronization of the project
+                    var repo_name = $('#repoName_pull').val();
+                    compare_files_pull(user_name, repo_name, suc.access_token);
+                }
+            });
+        }
+    });
+
+    //compare_files_pull(user_name, repo_name, token);
+    //$("#gitPullWarningModal").modal('show');
 }
 
 function confirm_delete_from_github(repo_name) {
@@ -294,10 +321,12 @@ function pull_from_github(repo_name, git_commit_sha) {
             var old_commit_sha = '';
             $.ajax
             ({
+                cache: false,
                 type: "GET",
                 url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token,
                 dataType: 'json',
                 data: '',
+                async: false,
                 success: function (data) {
                     console.log('sha in db=' + git_commit_sha);
                     console.log('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token);
@@ -313,6 +342,7 @@ function pull_from_github(repo_name, git_commit_sha) {
 
                         $.ajax
                         ({
+                            cache: false,
                             type: "GET",
                             url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/?access_token=' + success.access_token,
                             dataType: 'json',
@@ -321,7 +351,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                             success: function (data) {
                                 var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
                                 //alert(JSON.stringify(json_resp));
-
                                 for (var key in json_resp) {
                                     if (json_resp.hasOwnProperty(key)) {
                                         var content = json_resp[key];
@@ -345,66 +374,25 @@ function pull_from_github(repo_name, git_commit_sha) {
                                                     var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
                                                     var file_contents = json_file.content;
                                                     file_contents = $.base64Decode(file_contents);
-                                                    //alert("Name: " + content.path + " ---- " + content.name + " ----> " + file_contents);
                                                     window.files[content.path] = file_contents;
                                                     save_selected_file(content.name, window.files);
-                                                    //window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
-                                                    //save();
-                                                    //update_git_sha(old_commit_sha);
-                                                    //editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
                                                 },
                                                 error: function (request, status, error) {
                                                     alert("ERROR: " + request.responseText);
                                                     return;
                                                 }
                                             });
-
-                                            //alert(content.content);
-                                            //window.files[content.name] = $.base64Decode(content.content);
-                                            //window.files[content.name] = (content.content);
                                         }
                                     }
                                 }
 
-
-                                //alert(JSON.stringify(window.files));
-                                //save();
-                                //window.location.href = window.location.href;
-                                //selectFile(repo_name + "_app.cpp");
-                                //alert(window.files[repo_name + "_app.cpp"]);
                                 editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
-
-
-                                //update_git_sha(old_commit_sha);
-                                //editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
                             },
                             error: function (request, status, error) {
                                 alert("ERROR: " + request.responseText);
                                 return;
                             }
                         });
-
-
-                        /*$.ajax
-                         ({
-                         type: "GET",
-                         url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + repo_name + '_app.cpp?access_token=' + success.access_token + '&ref=' + old_commit_sha,
-                         dataType: 'json',
-                         data: '',
-                         success: function (data) {
-                         var json_file = $.parseJSON(JSON.stringify(data, undefined, 2));
-                         var file_contents = json_file.content;
-                         file_contents = $.base64Decode(file_contents);
-                         window.files["'" + repo_name + "_app.cpp" + "'"] = file_contents;
-                         save();
-                         update_git_sha(old_commit_sha);
-                         editor.getSession().setValue($("<div/>").html(window.files["'" + repo_name + "_app.cpp" + "'"]).text().replace(/&quot;/g, "\""));
-                         },
-                         error: function (request, status, error) {
-                         alert("ERROR: " + request.responseText);
-                         return;
-                         }
-                         });*/
                     }
                 },
                 error: function (request, status, error) {
@@ -422,14 +410,13 @@ function pull_from_github(repo_name, git_commit_sha) {
             });
         }
         else {
-            //$('#result').html("// Result error <br /><br />" + error);
             alert("// Result error <br /><br />" + error);
         }
     })
     ;
     $("#gitPullWarningButton").removeClass("disabled");
     $("#gitPullWarningButtonC").removeClass("disabled");
-    $("#gitPullWarningButton").html("<i class='icon-cloud-download icon-white'> Pull!");
+    $("#gitPullWarningButton").html("<i class='icon-cloud-download icon-white'></i> Pull!");
     $("#gitPullWarningModal").modal('hide');
     editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
 
@@ -451,6 +438,7 @@ function pull_from_github(repo_name, git_commit_sha) {
 //                  sha_blob[index] + " = json_blob.sha; },     error: function (request, status, error) {  alert(\"ERROR: \" + request.responseText);  return;  } });");
 
 var comp_files, shas;
+var comp_files_pull, shas_pull;
 function compare_files(user_name, repo_name, token) {
     var comp = new Array();
     shas = new Array();
@@ -557,6 +545,108 @@ function compare_files(user_name, repo_name, token) {
     }
 }
 
+
+function compare_files_pull(user_name, repo_name, token) {
+    var comp = new Array();
+    shas_pull = new Array();
+    $.ajax
+    ({
+        cache: false,
+        type: "GET",
+        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/?access_token=' + token,
+        dataType: 'json',
+        data: '',
+        async: false,
+        success: function (data) {
+            var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
+            var key;
+            for (key in json_resp) {
+                if (json_resp[key].name.match(/.cpp|.h$/) != null) {
+                    if (json_resp.hasOwnProperty(key)) {
+                        var content = json_resp[key];
+                        if (content.type == "file") {
+                            //check the contents of the files
+                            if (!(content.name in window.files)) {
+                                //files deleted
+                                comp[content.name] = "N";
+                                shas_pull[content.name] = json_resp[key].sha;
+                            } else {
+                                // check if updated
+                                $.ajax
+                                ({
+                                    cache: false,
+                                    type: "GET",
+                                    url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + token,
+                                    dataType: 'json',
+                                    data: '',
+                                    async: false,
+                                    success: function (datum) {
+                                        var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
+                                        var file_contents = json_file.content;
+                                        shas_pull[content.name] = json_file.sha;
+                                        var current_file = window.files[content.path];
+                                        current_file = current_file.replace(/&quot;/g, "\"");
+                                        current_file = current_file.replace(/&amp;/g, "&");
+                                        current_file = current_file.replace(/&gt;/g, ">");
+                                        current_file = current_file.replace(/&lt;/g, "<");
+                                        file_contents = $.base64Decode(file_contents);
+
+                                        if (file_contents == current_file) {
+                                            comp[content.name] = "S"
+                                        } else {
+                                            comp[content.name] = "M";
+                                        }
+                                    },
+                                    error: function (request, status, error) {
+                                        alert("ERROR: " + request.responseText);
+                                        return;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
+            return;
+        }
+    });
+    for (var key in window.files) {
+        if (!(key in comp) && key.match(/.cpp|.h$/) != null) {
+            comp[key] = "D";
+        }
+    }
+
+    var strN = "<h5>New Files:</h5><ul>";
+    var strD = "<h5>Deleted Files:</h5><ul>";
+    var strS = "<h5>Unmodified Files:</h5><ul>";
+    var strM = "<h5>Modified Files:</h5><ul>";
+    for (var key in comp) {
+        switch (comp[key]) {
+            case "N":
+                strN += "<li>" + key + "</li>";
+                break;
+            case "D":
+                strD += "<li>" + key + "</li>";
+                break;
+            case "S":
+                strS += "<li>" + key + "</li>";
+                break;
+            case "M":
+                strM += "<li>" + key + "</li>";
+                break;
+        }
+    }
+    comp_files_pull = comp;
+    if (strN.trim() == "<h5>New Files:</h5><ul>" && strD.trim() == "<h5>Deleted Files:</h5><ul>" && strM.trim() == "<h5>Modified Files:</h5><ul>")
+        $('#noChangePullModal').modal('show');
+    else {
+        $('#pullValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
+        $('#gitPullWarningModal').modal('show');
+    }
+}
 
 function src_commit(user_name, repo_name, token, old_commit_sha, val) {
     // a) Create a blob
