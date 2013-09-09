@@ -493,7 +493,8 @@ function compare_files(user_name, repo_name, token) {
                                             //alert(content.path + " - file same.");
                                             comp[content.name] = "S"
                                         } else {
-                                            //alert("file updated");
+                                            alert("file difference" + file_contents + "\n$$$$$$$$$$$$$$$$$$$$$$" + window.files[content.path]);
+                                            alert("file updated");
                                             comp[content.name] = "M";
                                         }
                                     },
