@@ -538,7 +538,6 @@ function compare_files(user_name, repo_name, token) {
     }
     $('#commitValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
     $('#commitValidateModal').modal('show');
-    //alert(strN.concat("\n").concat(strD).concat("\n").concat(strS).concat("\n").concat(strM));
 }
 
 
@@ -1045,6 +1044,11 @@ function refreshFiles() {
 $(document).ready(function () {
     $("#commitModalClose").click(function () {
         return;
+    });
+
+    $("#commitValidateSubmit").click(function () {
+       $('#commitValidateModal').modal('hide');
+       $('#commitModal').modal('show');
     });
 
     $("#commitSubmit").click(function () {
