@@ -523,7 +523,7 @@ function compare_files(user_name, repo_name, token) {
         }
     });
     for (var key in window.files) {
-        if (!(key in comp)) {
+        if (!(key in comp) && key.match(/.cpp|.h$/) != null) {
             comp[key] = "N";
         }
     }
