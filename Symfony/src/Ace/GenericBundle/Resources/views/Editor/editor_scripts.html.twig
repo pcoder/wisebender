@@ -205,7 +205,7 @@ function delete_from_github(repo_name) {
 
     $("#deleteProjectGitButton").addClass("disabled");
     $("#deleteProjectGitButtonC").addClass("disabled");
-    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></ul> Deleting ...");
+    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
 
     OAuth.popup(oauthProvider, function (err, suc) {
         if (suc) {
@@ -260,7 +260,7 @@ function delete_from_github(repo_name) {
 function pull_from_github(repo_name, git_commit_sha) {
     $("#gitPullWarningButton").addClass("disabled");
     $("#gitPullWarningButtonC").addClass("disabled");
-    $("#gitPullWarningButton").html("<i class='icon-spinner icon-spin icon-large'></ul> Pulling ...");
+    $("#gitPullWarningButton").html("<i class='icon-spinner icon-spin icon-large'></i> Pulling ...");
 
 
     var oauthProvider = 'github';
@@ -1071,7 +1071,7 @@ $(document).ready(function () {
     $("#commitSubmit").click(function () {
         $("#commitSubmit").addClass("disabled");
         $("#commitSubmitC").addClass("disabled");
-        $("#commitSubmit").html("<i class='icon-spinner icon-spin icon-large'></ul> Committing...");
+        $("#commitSubmit").html("<i class='icon-spinner icon-spin icon-large'></i> Committing...");
 
         save();
         var repo_name = $("#repoName").val().trim();
