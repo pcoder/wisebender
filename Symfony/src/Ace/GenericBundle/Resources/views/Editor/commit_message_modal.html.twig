@@ -33,3 +33,16 @@
         <button id="commitValidateSubmit" data-loading-text="<i class='icon-spinner icon-spin'></i> Committing ... " class="btn btn-submit" value="Commit"><i class="icon-github icon-white"></i>&nbsp;&nbsp;Yes</button>
     </div>
 </div>
+<div class="modal hide fade" id="noChangeModal" style="overflow:hidden;">
+    <div class="modal-header">
+        <button id="noChangeModalClose" class="close" data-dismiss="modal">×</button>
+        <h3>No change.</h3>
+    </div>
+    <div class="modal-body" style="max-height:80%;">
+        There was no change detected. No change to be committed to GitHub.
+        <p id="noChangeModalBody"></p>
+    </div>
+    <div class="modal-footer">
+        <button id="noChangeModalC" data-dismiss="modal" class="btn">OK</button>
+    </div>
+</div>

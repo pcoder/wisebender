@@ -479,6 +479,7 @@ function compare_files(user_name, repo_name, token) {
                                 // check if updated
                                 $.ajax
                                 ({
+                                    cache: false,
                                     type: "GET",
                                     url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + token,
                                     dataType: 'json',
@@ -489,10 +490,10 @@ function compare_files(user_name, repo_name, token) {
                                         var file_contents = json_file.content;
                                         shas[content.name] = json_file.sha;
                                         var current_file = window.files[content.path];
-                                        current_file = current_file.replace(/&quot;/g,"\"");
-                                        current_file = current_file.replace(/&amp;/g,"&");
-                                        current_file = current_file.replace(/&gt;/g,">");
-                                        current_file = current_file.replace(/&lt;/g,"<");
+                                        current_file = current_file.replace(/&quot;/g, "\"");
+                                        current_file = current_file.replace(/&amp;/g, "&");
+                                        current_file = current_file.replace(/&gt;/g, ">");
+                                        current_file = current_file.replace(/&lt;/g, "<");
                                         file_contents = $.base64Decode(file_contents);
 
                                         if (file_contents == current_file) {
@@ -527,10 +528,10 @@ function compare_files(user_name, repo_name, token) {
         }
     }
 
-    var strN = "<h5>New Files:</h5><ul> ";
-    var strD = "<h5>Deleted Files:</h5> <ul>  ";
-    var strS = "<h5>Unmodified Files:</h5> <ul>  ";
-    var strM = "<h5>Modified Files:</h5>  <ul> ";
+    var strN = "<h5>New Files:</h5><ul>";
+    var strD = "<h5>Deleted Files:</h5><ul>";
+    var strS = "<h5>Unmodified Files:</h5><ul>";
+    var strM = "<h5>Modified Files:</h5><ul>";
     for (var key in comp) {
         switch (comp[key]) {
             case "N":
@@ -548,8 +549,12 @@ function compare_files(user_name, repo_name, token) {
         }
     }
     comp_files = comp;
-    $('#commitValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
-    $('#commitValidateModal').modal('show');
+    if (strN.trim() == "<h5>New Files:</h5><ul>" && strD.trim() == "<h5>Deleted Files:</h5><ul>" && strM.trim() == "<h5>Modified Files:</h5><ul>")
+        $('#noChangeModal').modal('show');
+    else {
+        $('#commitValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
+        $('#commitValidateModal').modal('show');
+    }
 }
 
 
@@ -1059,8 +1064,8 @@ $(document).ready(function () {
     });
 
     $("#commitValidateSubmit").click(function () {
-       $('#commitValidateModal').modal('hide');
-       $('#commitModal').modal('show');
+        $('#commitValidateModal').modal('hide');
+        $('#commitModal').modal('show');
     });
 
     $("#commitSubmit").click(function () {
@@ -1134,14 +1139,14 @@ $(document).ready(function () {
                                 case "D":
                                     // delete the file from GitHub
                                     // DELETE /repos/:owner/:repo/contents/:path
-                                        //alert("Deleting " + key);
+                                    //alert("Deleting " + key);
                                     $.ajax
                                     ({
                                         type: "DELETE",
-                                        url: 'https://api.github.com/repos/' + user_name+ '/'+repo_name+'/contents/' +key+'?access_token=' + success.access_token,
+                                        url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + key + '?access_token=' + success.access_token,
                                         dataType: 'json',
                                         async: false,
-                                        data: '{ "message": "' + val + '", "sha": "' +shas[key]+ '"}',
+                                        data: '{ "message": "' + val + '", "sha": "' + shas[key] + '"}',
                                         success: function (data) {
                                             // alert("Repository '"+ repo_name + "' created successfully on GitHub.com!");
                                             var json = $.parseJSON(JSON.stringify(data, undefined, 2));
