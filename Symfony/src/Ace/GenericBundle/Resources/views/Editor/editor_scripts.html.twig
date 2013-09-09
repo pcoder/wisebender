@@ -164,14 +164,11 @@ function save_to_github(repo_name) {
     // get the user's username :user
     init_access_token();
 
-    $("#deleteProjectGitButton").addClass("disabled");
-    $("#deleteProjectGitButtonC").addClass("disabled");
-    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
-
     OAuth.popup(oauthProvider, function (err, suc) {
         if (suc) {
             $.ajax
             ({
+                async: false,
                 type: "GET",
                 url: 'https://api.github.com/user?access_token=' + suc.access_token,
                 dataType: 'json',
@@ -182,6 +179,8 @@ function save_to_github(repo_name) {
                     compare_files(user_name, repo_name, suc.access_token);
                 }
             });
+        }
+    });
 
 
     //$("#m_files").html(fnames_str);
@@ -463,42 +462,46 @@ function compare_files(user_name, repo_name, token) {
         async: false,
         success: function (data) {
             var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
-            for (var key in json_resp && key.match(/.cpp|.h$/)!=null) {
-                if (json_resp.hasOwnProperty(key)) {
-                    var content = json_resp[key];
-                    if (content.type == "file") {
-                        //check the contents of the files
-                        if (!(content.name in window.files)) {
-                            //files deleted
-                            comp[content.name] = "D";
-                        } else {
-                            // check if updated
-                            $.ajax
-                            ({
-                                type: "GET",
-                                url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + token,
-                                dataType: 'json',
-                                data: '',
-                                async: false,
-                                success: function (datum) {
-                                    var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
-                                    var file_contents = json_file.content;
-                                    file_contents = $.base64Decode(file_contents);
+            var key;
+            for (key in json_resp) {
+                alert(json_resp[key].name);
+                if (json_resp[key].name.match(/.cpp|.h$/) != null) {
+                    if (json_resp.hasOwnProperty(key)) {
+                        var content = json_resp[key];
+                        if (content.type == "file") {
+                            //check the contents of the files
+                            if (!(content.name in window.files)) {
+                                //files deleted
+                                comp[content.name] = "D";
+                            } else {
+                                // check if updated
+                                $.ajax
+                                ({
+                                    type: "GET",
+                                    url: 'https://api.github.com/repos/' + user_name + '/' + repo_name + '/contents/' + content.path + '?access_token=' + token,
+                                    dataType: 'json',
+                                    data: '',
+                                    async: false,
+                                    success: function (datum) {
+                                        var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
+                                        var file_contents = json_file.content;
+                                        file_contents = $.base64Decode(file_contents);
 
-                                    //alert("Checking file_contents ----> " + file_contents + "&&&&&&&&&&&&&&&" + "window.files ===== " + window.files[content.path]);
-                                    if(file_contents == window.files[content.path]){
-                                        //alert(content.path + " - file same.");
-                                        comp[content.name] = ""
-                                    }else{
-                                        //alert("file updated");
-                                        comp[content.name] = "M";
+                                        alert("Checking file_contents ----> " + file_contents + "&&&&&&&&&&&&&&&" + "window.files ===== " + window.files[content.path]);
+                                        if (file_contents == window.files[content.path]) {
+                                            alert(content.path + " - file same.");
+                                            comp[content.name] = ""
+                                        } else {
+                                            alert("file updated");
+                                            comp[content.name] = "M";
+                                        }
+                                    },
+                                    error: function (request, status, error) {
+                                        alert("ERROR: " + request.responseText);
+                                        return;
                                     }
-                                },
-                                error: function (request, status, error) {
-                                    alert("ERROR: " + request.responseText);
-                                    return;
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }
@@ -511,31 +514,31 @@ function compare_files(user_name, repo_name, token) {
     });
     for (var key in window.files) {
         if (!(key in comp)) {
-           comp[key] = "N";
+            comp[key] = "N";
         }
     }
 
-    var strN = "New Files: ";
-    var strD = "Deleted Files: ";
-    var strS = "Unmodified Files: ";
-    var strM = "Modified Files: ";
-    for (var key in comp){
-        switch(comp[key]){
+    var strN = "<p><h5>New Files:</h5> ";
+    var strD = "<p><h5>Deleted Files:</h5>  ";
+    var strS = "<p><h5>Unmodified Files:</h5>  ";
+    var strM = "<p><h5>Modified Files:</h5>  ";
+    for (var key in comp) {
+        switch (comp[key]) {
             case "N":
-                    strN+= "<i>" + key + "</i>";
+                strN += "<i>" + key + "</i>";
                 break;
             case "D":
-                strD+= "<i>" + key + "</i>";
+                strD += "<i>" + key + "</i>";
                 break;
             case "S":
-                strS+= "<i>" + key + "</i>";
+                strS += "<i>" + key + "</i>";
                 break;
             case "M":
-                strM+= "<i>" + key + "</i>";
+                strM += "<i>" + key + "</i>";
                 break;
         }
     }
-    $('#commitValidateBody').html(strN.concat("\n").concat(strD).concat("\n").concat(strS).concat("\n").concat(strM));
+    $('#commitValidateBody').html(strN.concat("</p>").concat(strD).concat("</p>").concat(strS).concat("</p>").concat(strM).concat("</p>"));
     $('#commitValidateModal').modal('show');
     //alert(strN.concat("\n").concat(strD).concat("\n").concat(strS).concat("\n").concat(strM));
 }
