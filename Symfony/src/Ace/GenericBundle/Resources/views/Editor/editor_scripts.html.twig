@@ -205,7 +205,7 @@ function delete_from_github(repo_name) {
 
     $("#deleteProjectGitButton").addClass("disabled");
     $("#deleteProjectGitButtonC").addClass("disabled");
-    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
+    $("#deleteProjectGitButton").html("<i class='icon-spinner icon-spin icon-large'></ul> Deleting ...");
 
     OAuth.popup(oauthProvider, function (err, suc) {
         if (suc) {
@@ -260,7 +260,7 @@ function delete_from_github(repo_name) {
 function pull_from_github(repo_name, git_commit_sha) {
     $("#gitPullWarningButton").addClass("disabled");
     $("#gitPullWarningButtonC").addClass("disabled");
-    $("#gitPullWarningButton").html("<i class='icon-spinner icon-spin icon-large'></i> Pulling ...");
+    $("#gitPullWarningButton").html("<i class='icon-spinner icon-spin icon-large'></ul> Pulling ...");
 
 
     var oauthProvider = 'github';
@@ -464,7 +464,6 @@ function compare_files(user_name, repo_name, token) {
             var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
             var key;
             for (key in json_resp) {
-                alert(json_resp[key].name);
                 if (json_resp[key].name.match(/.cpp|.h$/) != null) {
                     if (json_resp.hasOwnProperty(key)) {
                         var content = json_resp[key];
@@ -487,12 +486,11 @@ function compare_files(user_name, repo_name, token) {
                                         var file_contents = json_file.content;
                                         file_contents = $.base64Decode(file_contents);
 
-                                        alert("Checking file_contents ----> " + file_contents + "&&&&&&&&&&&&&&&" + "window.files ===== " + window.files[content.path]);
                                         if (file_contents == window.files[content.path]) {
-                                            alert(content.path + " - file same.");
+                                            //alert(content.path + " - file same.");
                                             comp[content.name] = ""
                                         } else {
-                                            alert("file updated");
+                                            //alert("file updated");
                                             comp[content.name] = "M";
                                         }
                                     },
@@ -518,27 +516,27 @@ function compare_files(user_name, repo_name, token) {
         }
     }
 
-    var strN = "<p><h5>New Files:</h5> ";
-    var strD = "<p><h5>Deleted Files:</h5>  ";
-    var strS = "<p><h5>Unmodified Files:</h5>  ";
-    var strM = "<p><h5>Modified Files:</h5>  ";
+    var strN = "<h5>New Files:</h5><ul> ";
+    var strD = "<h5>Deleted Files:</h5> <ul>  ";
+    var strS = "<h5>Unmodified Files:</h5> <ul>  ";
+    var strM = "<h5>Modified Files:</h5>  <ul> ";
     for (var key in comp) {
         switch (comp[key]) {
             case "N":
-                strN += "<i>" + key + "</i>";
+                strN += "<li>" + key + "</li>";
                 break;
             case "D":
-                strD += "<i>" + key + "</i>";
+                strD += "<li>" + key + "</li>";
                 break;
             case "S":
-                strS += "<i>" + key + "</i>";
+                strS += "<li>" + key + "</li>";
                 break;
             case "M":
-                strM += "<i>" + key + "</i>";
+                strM += "<li>" + key + "</li>";
                 break;
         }
     }
-    $('#commitValidateBody').html(strN.concat("</p>").concat(strD).concat("</p>").concat(strS).concat("</p>").concat(strM).concat("</p>"));
+    $('#commitValidateBody').html(strN.concat("</ul>").concat(strD).concat("</ul>").concat(strS).concat("</ul>").concat(strM).concat("</ul>"));
     $('#commitValidateModal').modal('show');
     //alert(strN.concat("\n").concat(strD).concat("\n").concat(strS).concat("\n").concat(strM));
 }
@@ -1052,7 +1050,7 @@ $(document).ready(function () {
     $("#commitSubmit").click(function () {
         $("#commitSubmit").addClass("disabled");
         $("#commitSubmitC").addClass("disabled");
-        $("#commitSubmit").html("<i class='icon-spinner icon-spin icon-large'></i> Committing...");
+        $("#commitSubmit").html("<i class='icon-spinner icon-spin icon-large'></ul> Committing...");
 
         save();
         var repo_name = $("#repoName").val().trim();
