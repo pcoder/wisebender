@@ -487,14 +487,20 @@ function compare_files(user_name, repo_name, token) {
                                         var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
                                         var file_contents = json_file.content;
                                         shas[content.name] = json_file.sha;
+                                        var current_file = window.files[content.path];
+                                        current_file = current_file.replace(/&quot;/g,"\"");
+                                        current_file = current_file.replace(/&amp;/g,"&");
+                                        current_file = current_file.replace(/&gt;/g,">");
+                                        current_file = current_file.replace(/&lt;/g,"<");
                                         file_contents = $.base64Decode(file_contents);
 
-                                        if (file_contents == window.files[content.path]) {
+                                        if (file_contents == current_file) {
                                             //alert(content.path + " - file same.");
                                             comp[content.name] = "S"
                                         } else {
-                                            alert("file difference" + file_contents + "\n$$$$$$$$$$$$$$$$$$$$$$" + window.files[content.path]);
-                                            alert("file updated");
+                                            //alert(file_contents);
+                                            //alert(current_file);
+                                            //alert("file updated");
                                             comp[content.name] = "M";
                                         }
                                     },
@@ -1127,7 +1133,7 @@ $(document).ready(function () {
                                 case "D":
                                     // delete the file from GitHub
                                     // DELETE /repos/:owner/:repo/contents/:path
-                                        alert("Deleting " + key);
+                                        //alert("Deleting " + key);
                                     $.ajax
                                     ({
                                         type: "DELETE",
