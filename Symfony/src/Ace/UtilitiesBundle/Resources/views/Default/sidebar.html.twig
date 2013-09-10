@@ -20,8 +20,6 @@
 
     }
 
-
-    //Manual shallow js object copy - faster than .extend()
     function jsObjClone(obj) {
         var objcopy = {};
         for (var i in obj) {
@@ -103,43 +101,6 @@
                                 success: function (data) {
                                     // create project
                                     sendFork(url, user_name, repo, access_token);
-/*                                    $.ajax
-                                    ({
-                                        type: "POST",
-                                        url: '{{ path('AceUtilitiesBundle_forkproject') }}',
-                                        dataType: 'json',
-                                        async: true,
-                                        data: '{"project_url" : "' + url + '", "user" : "' + user_name + '"}',
-                                        success: function (data) {
-                                            var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                            if (json.success) {
-                                                alert("Repository " + repo + " forked!");
-                                                location.reload();
-                                            } else {
-                                                //rollback fork
-                                                $.ajax
-                                                ({
-                                                    type: "DELETE",
-                                                    url: 'https://api.github.com/repos/' + user_name + '/' + repo + '?access_token=' + access_token,
-                                                    dataType: 'json',
-                                                    success: function () {
-                                                    },
-                                                    error: function (request, status, error) {
-                                                    }
-                                                });
-                                                alert(json.message);
-                                                $("#forkProjectButton").removeClass("disabled");
-                                                $("#forkProjectButtonC").removeClass("disabled");
-                                                $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
-                                            }
-                                        },
-                                        error: function (request, status, error) {
-                                            $("#forkProjectButton").removeClass("disabled");
-                                            $("#forkProjectButtonC").removeClass("disabled");
-                                            $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
-                                            alert("ERROR: " + request.responseText);
-                                        }
-                                    });*/
                                 },
                                 error: function (request, status, error) {
                                     $("#forkProjectButton").removeClass("disabled");
