@@ -21,7 +21,6 @@ class DiskFilesController extends FilesController
 
     public function createAction()
     {
-
         $projects = scandir($this->dir);
         $current_user = $this->sc->getToken()->getUser();
         $name = $current_user->getUsername();

@@ -69,16 +69,17 @@ class DefaultController extends Controller
             $project_name = substr($project_name, 0, strpos($project_name, "."));
 
         $is_public = true;
-        $text = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/" .$project_name . "_app.cpp");
-        if($text === false) $text = "";
+//        $text = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/" .$project_name . "_app.cpp");
+//        if($text === false) $text = "";
+//
+//        $readme = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/README.md");
+//        if($readme === false) $readme = "";
 
-        $readme = @file_get_contents("https://raw.github.com/" . $uname . "/" . $project_name . "/master/README.md");
-        if($readme === false) $readme = "";
-
-        if($text == ""){
-            return new Response(json_encode(array("success" => false, "message" => "Could not find '" . $project_name . "_app.cpp' file! Please ensure that the GitHub repository has #{projectname}_app.cpp file.")));
-        }
-
+//        if($text == ""){
+//            return new Response(json_encode(array("success" => false, "message" => "Could not find '" . $project_name . "_app.cpp' file! Please ensure that the GitHub repository has #{projectname}_app.cpp file.")));
+//        }
+        $text = "";
+        $readme="";
         $purl = "https://github.com/" .$uname . "/" . $project_name . ".git";
 
         $response = $this->get('ace_project.sketchmanager')->createWiselibProjectAction($user["id"], $project_name, $text, $is_public, $readme, $purl)->getContent();
