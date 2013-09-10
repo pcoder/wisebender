@@ -191,7 +191,6 @@
                                                                         data :{'id': _id, filename: content.name, 'fpath': fp},
                                                                         async : false,
                                                                         success: function (dat) {
-                                                                            alert("Getting " + content.path);
                                                                             // save the content
                                                                             $.ajax
                                                                             ({
@@ -223,7 +222,6 @@
                                                 var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
                                                 nurl = nurl.replace('replaceme', content.name);
                                                 nfiles = jsObjClone(nfiles);
-                                                alert(nfiles);
                                                 $.ajax({
                                                     cache: false,
                                                     type: "post",
@@ -234,7 +232,9 @@
 
                                                     },
                                                     error: function (dat){
-
+                                                        alert("Repository " + repo + " created on Wiselib!");
+                                                        // Interesting - no popup here.
+                                                        location.reload();
                                                     }
                                                 });
                                             },
@@ -244,8 +244,6 @@
                                             }
                                         });
 
-                                        alert("Repository " + repo + " created on Wiselib!");
-                                        location.reload();
                                     } else {
                                         alert("Could not create project " + repo +". " + json.message);
                                         $("#forkProjectButton").removeClass("disabled");
