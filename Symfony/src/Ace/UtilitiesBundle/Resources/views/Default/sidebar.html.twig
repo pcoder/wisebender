@@ -98,11 +98,12 @@
                                 type: "POST",
                                 url: 'https://api.github.com/repos/' + owner + '/' + repo + '/forks?access_token=' + access_token,
                                 dataType: 'json',
-                                async: true,
+                                async: false,
                                 data: '',
                                 success: function (data) {
                                     // create project
-                                    $.ajax
+                                    sendFork(url, user_name, repo, access_token);
+/*                                    $.ajax
                                     ({
                                         type: "POST",
                                         url: '{{ path('AceUtilitiesBundle_forkproject') }}',
@@ -138,7 +139,7 @@
                                             $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
                                             alert("ERROR: " + request.responseText);
                                         }
-                                    });
+                                    });*/
                                 },
                                 error: function (request, status, error) {
                                     $("#forkProjectButton").removeClass("disabled");
@@ -151,118 +152,8 @@
                         }else{
                             // user trying to fork his own project.
                             // check if the project exists and send the files.
+                             sendFork(url, user_name, repo, access_token);
 
-                            // get project_name from url
-                            $.ajax
-                            ({
-                                type: "POST",
-                                url: '{{ path('AceUtilitiesBundle_forkproject') }}',
-                                dataType: 'json',
-                                async: false,
-                                data: '{"project_url" : "' + url + '", "user" : "' + user_name + '"}',
-                                success: function (data) {
-                                    var json = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                    if (json.success) {
-                                        var _id = json.id;
-                                        // get contents of the project and save them one by one
-                                        $.ajax
-                                        ({
-                                            cache: false,
-                                            type: "GET",
-                                            url: 'https://api.github.com/repos/' + user_name + '/' + repo + '/contents/?access_token=' + access_token,
-                                            dataType: 'json',
-                                            data: '',
-                                            async: false,
-                                            success: function (data) {
-                                                var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
-                                                var key;
-                                                var nfiles = new Array();
-                                                for (key in json_resp) {
-                                                    if (json_resp[key].name.match(/.cpp|.h$/) != null) {
-                                                        if (json_resp.hasOwnProperty(key)) {
-                                                            var content = json_resp[key];
-                                                            if (content.type == "file") {
-                                                                //create the file
-                                                                var fp = "root";
-                                                                $.ajax({
-                                                                        cache: false,
-                                                                        type: "post",
-                                                                        url: "{{ path('AceUtilitiesBundle_createWiselibFolder') }}",
-                                                                        data :{'id': _id, filename: content.name, 'fpath': fp},
-                                                                        async : false,
-                                                                        success: function (dat) {
-                                                                            // save the content
-                                                                            $.ajax
-                                                                            ({
-                                                                                cache: false,
-                                                                                type: "GET",
-                                                                                url: 'https://api.github.com/repos/' + user_name + '/' + repo + '/contents/' + content.path + '?access_token=' + access_token,
-                                                                                dataType: 'json',
-                                                                                data: '',
-                                                                                async: false,
-                                                                                success: function (datum) {
-                                                                                    var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
-                                                                                    var file_content = $.base64Decode(json_file.content);
-                                                                                    nfiles[content.name] =file_content;
-                                                                                },
-                                                                                error: function (request, status, error) {
-                                                                                    alert("ERROR: " + request.responseText);
-                                                                                    return;
-                                                                                }
-                                                                            });
-                                                                        },
-                                                                        error: function (dat){
-
-                                                                        }
-                                                                });
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
-                                                nurl = nurl.replace('replaceme', content.name);
-                                                nfiles = jsObjClone(nfiles);
-                                                $.ajax({
-                                                    cache: false,
-                                                    type: "post",
-                                                    url: nurl,
-                                                    data :{'data': JSON.stringify(nfiles), 'project_id': _id },
-                                                    async : false,
-                                                    success: function (dat) {
-
-                                                    },
-                                                    error: function (dat){
-                                                        alert("Repository " + repo + " created on Wiselib!");
-                                                        // Interesting - no popup here.
-                                                        location.reload();
-                                                    }
-                                                });
-                                            },
-                                            error: function (request, status, error) {
-                                                alert("ERROR: " + request.responseText);
-                                                return;
-                                            }
-                                        });
-
-                                    } else {
-                                        alert("Could not create project " + repo +". " + json.message);
-                                        $("#forkProjectButton").removeClass("disabled");
-                                        $("#forkProjectButtonC").removeClass("disabled");
-                                        $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
-                                    }
-                                },
-                                error: function (request, status, error) {
-                                    $("#forkProjectButton").removeClass("disabled");
-                                    $("#forkProjectButtonC").removeClass("disabled");
-                                    $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
-                                    alert("ERROR: " + request.responseText);
-                                }
-                            });
-
-//
-//                            $("#forkProjectButton").removeClass("disabled");
-//                            $("#forkProjectButtonC").removeClass("disabled");
-//                            $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
                         }
                     },
                     error: function (request, status, error) {
@@ -283,6 +174,124 @@
         }
     }
 
+
+    function sendFork(url, user_name, repo, access_token){
+        $.ajax
+        ({
+            type: "POST",
+            url: '{{ path('AceUtilitiesBundle_forkproject') }}',
+            dataType: 'json',
+            async: false,
+            data: '{"project_url" : "' + url + '", "user" : "' + user_name + '"}',
+            success: function (data) {
+                var json = $.parseJSON(JSON.stringify(data, undefined, 2));
+                if (json.success) {
+                    var _id = json.id;
+                    // get contents of the project and save them one by one
+                    $.ajax
+                    ({
+                        cache: false,
+                        type: "GET",
+                        url: 'https://api.github.com/repos/' + user_name + '/' + repo + '/contents/?access_token=' + access_token,
+                        dataType: 'json',
+                        data: '',
+                        async: false,
+                        success: function (data) {
+                            var json_resp = $.parseJSON(JSON.stringify(data, undefined, 2));
+                            var key, app;
+                            var nfiles = new Array();
+                            var _app_file_found = false;
+                            for (key in json_resp) {
+                                if (json_resp[key].name.match(/.cpp|.h$/) != null) {
+                                    if (json_resp.hasOwnProperty(key)) {
+                                        var content = json_resp[key];
+                                        if (content.type == "file") {
+                                            app = repo + '_app.cpp';
+                                            if(content.path == app){
+                                                _app_file_found = true;
+                                            }
+                                            //create the file
+                                            var fp = "root";
+                                            $.ajax({
+                                                cache: false,
+                                                type: "post",
+                                                url: "{{ path('AceUtilitiesBundle_createWiselibFolder') }}",
+                                                data :{'id': _id, filename: content.name, 'fpath': fp},
+                                                async : false,
+                                                success: function (dat) {
+                                                    // save the content
+                                                    $.ajax
+                                                    ({
+                                                        cache: false,
+                                                        type: "GET",
+                                                        url: 'https://api.github.com/repos/' + user_name + '/' + repo + '/contents/' + content.path + '?access_token=' + access_token,
+                                                        dataType: 'json',
+                                                        data: '',
+                                                        async: false,
+                                                        success: function (datum) {
+                                                            var json_file = $.parseJSON(JSON.stringify(datum, undefined, 2));
+                                                            var file_content = $.base64Decode(json_file.content);
+                                                            nfiles[content.name] =file_content;
+                                                        },
+                                                        error: function (request, status, error) {
+                                                            alert("ERROR: " + request.responseText);
+                                                            return;
+                                                        }
+                                                    });
+                                                },
+                                                error: function (dat){
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            if(!_app_file_found){
+                                alert("Wisebender expects main method in {project_name}_app.cpp file. " +'\n'+ "Since this file was not found, the compilation of the project may fail.")
+                            }
+                            var nurl = '{{ path('AceUtilitiesBundle_savecode', {'id': 'replaceme'}) }}';
+                            nurl = nurl.replace('replaceme', content.name);
+                            nfiles = jsObjClone(nfiles);
+                            $.ajax({
+                                cache: false,
+                                type: "post",
+                                url: nurl,
+                                data :{'data': JSON.stringify(nfiles), 'project_id': _id },
+                                async : false,
+                                success: function (dat) {
+                                    alert("Repository " + repo + " created on Wiselib!");
+                                    // Interesting - no popup here.
+                                    location.reload();
+                                },
+                                error: function (dat){
+                                    alert("Repository " + repo + " created on Wiselib!");
+                                    // Interesting - no popup here.
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert("ERROR: " + request.responseText);
+                            return;
+                        }
+                    });
+
+                } else {
+                    alert("Could not create project " + repo +". " + json.message);
+                    $("#forkProjectButton").removeClass("disabled");
+                    $("#forkProjectButtonC").removeClass("disabled");
+                    $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
+                }
+            },
+            error: function (request, status, error) {
+                $("#forkProjectButton").removeClass("disabled");
+                $("#forkProjectButtonC").removeClass("disabled");
+                $("#forkProjectButton").html("<i class='icon-code-fork icon-white'> Fork!");
+                alert("ERROR: " + request.responseText);
+            }
+        });
+    }
 </script>
 <div class="well">
     <ul class="nav nav-list" id="sidebar-list-header">

@@ -426,9 +426,6 @@ function pull_from_github(repo_name, git_commit_sha) {
     for (var key in comp_files_pull) {
         switch (comp_files_pull[key]) {
             case "D":
-                // delete the file from GitHub
-                // DELETE /repos/:owner/:repo/contents/:path
-                //alert("Deleting " + key);
                 deleteFile(key);
             case "N":
                 reload = true;
