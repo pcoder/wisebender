@@ -10,28 +10,25 @@
         $.contextMenu({
             selector: '.context-menu-one',
             callback: function(key, options) {
-                //alert(JSON.stringify(options, null, 4));
                 var m = "clicked: " + key;
-                //alert($(this).attr("fpath") + " and pid = " + {{ project_id  }});
-                //window.console && console.log(m) || alert(m);
                 if(key=="Add_New_Directory"){
-                    //$("#WiselibFolderCreationModal").val($(this).data('id'))
                     $('#WiselibFolderCreationModal').data('fpath', $(this).attr("fpath"));
                     $('#WiselibFolderCreationModal').data('id', {{ project_id }});
                     $("#WiselibFolderCreationModal").modal('show');
-                    //$.post("{{ path('AceUtilitiesBundle_createWiselibFile') }}", {fpath: $(this).attr("fpath"), project_id: {{ project_id }}, filename: "test.cpp" }, function (data) {
-
-                        //alert("Data received: " +JSON.stringify(data, null, 4));
-                        //handleResponse(data);
-                    //});
                 }else{
                     $('#WiselibFileCreationModal').data('fpath', $(this).attr("fpath"));
                     $('#WiselibFileCreationModal').data('id', {{ project_id }});
                     $("#WiselibFileCreationModal").modal('show');
                 }
-
             },
             items: {
+/*                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+                "copy": {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: "quit"}*/
                 "Add_New_File": {name: "Add New File", icon: "edit"},
                 "Add_New_Directory": {name: "Add New Directory", icon: "edit"}
             }
