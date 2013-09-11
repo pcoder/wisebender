@@ -6,12 +6,11 @@
 <script src="{{ asset("js/jquery-data/jquery.base64.min.js") }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset("js/FileSaver.min.js") }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" class="">
-    $(function(){
+    $(function () {
         $.contextMenu({
             selector: '.context-menu-one',
-            callback: function(key, options) {
-                var m = "clicked: " + key;
-                switch(key){
+            callback: function (key, options) {
+                switch (key) {
                     case "Add_New_Directory":
                         $('#WiselibFolderCreationModal').data('fpath', $(this).attr("fpath"));
                         $('#WiselibFolderCreationModal').data('id', {{ project_id }});
@@ -30,22 +29,27 @@
                 }
             },
             items: {
-/*                "edit": {name: "Edit", icon: "edit"},
-                "cut": {name: "Cut", icon: "cut"},
-                "copy": {name: "Copy", icon: "copy"},
-                "paste": {name: "Paste", icon: "paste"},
-                "delete": {name: "Delete", icon: "delete"},
-                "sep1": "---------",
-                "quit": {name: "Quit", icon: "quit"}*/
                 "Add_New_File": {name: "Add New File", icon: "add"},
                 "Add_New_Directory": {name: "Add New Directory", icon: "edit"},
                 "Delete_Directory": {name: "Delete Directory", icon: "delete"}
             }
         });
 
-        $('.context-menu-one').on('click', function(e){
-            //console.log('clicked', this);
-        })
+        $.contextMenu({
+            selector: '.context-menu-two',
+            callback: function (key, options) {
+                switch (key) {
+                    case "Delete_File":
+                        $('#WiselibFileDeletionModal').data('fpath', $(this).attr("fpath"));
+                        $('#WiselibFileDeletionModal').data('id', {{ project_id }});
+                        $("#WiselibFileDeletionModal").modal('show');
+                        break;
+                }
+            },
+            items: {
+                "Delete_File": {name: "Delete File", icon: "delete"}
+            }
+        });
     });
 
     OAuth.initialize('pXB0AkTIviqG1Xer8_qPtgbs16E');
