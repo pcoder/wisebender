@@ -339,9 +339,10 @@ function pull_from_github(repo_name, git_commit_sha) {
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     old_commit_sha = json.object.sha;
                     console.log('sha in github=' + old_commit_sha);
-                    if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
-                        alert("Nothing to pull from the branch - master!")
-                    } else {
+//                    if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
+//                        alert("Nothing to pull from the branch - master!")
+//                    } else
+                    {
                         // http://developer.github.com/v3/repos/contents/#get-contents
                         // GET /repos/:owner/:repo/contents/:path
                         // get contents of the _app.cpp file from the master branch
