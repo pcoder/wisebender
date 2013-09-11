@@ -45,7 +45,7 @@
         #container_right {
             position: absolute;
             top: 60px;
-            bottom: 40px;
+            bottom: 0px;
             /*padding: 0px;*/
             left: 400px;
             right: 35px;
@@ -55,7 +55,7 @@
         #editor {
             position: fixed;
             top: 60px;
-            bottom: 40px;
+            bottom: 0px;
             background: white;
             padding: 0px;
             left: 400px;
@@ -120,6 +120,21 @@
             border-color: rgba(0, 0, 0, 0.15);
             border-style: solid;
             text-align: center;
+        }
+
+        #file_name {
+            position: absolute;
+            left: 450px;
+            top:38px;
+            background: #C7C7C7;
+            z-index: 0;
+            padding: 3px 15px 3px 15px;
+            border-radius: 3px 0 3px 0;
+            border-width: 0px;
+            border-color: rgba(0, 0, 0, 0.15);
+            border-style: solid;
+            text-align: center;
+            font-size: 12px;
         }
 
         #speed_label, #toggle_connect_serial {
@@ -261,7 +276,7 @@
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_project_delete_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_pull_warning.html.twig' %}
-
+    <div id="file_name">test</div>
     <div id="container_left">
         <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
             <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">
