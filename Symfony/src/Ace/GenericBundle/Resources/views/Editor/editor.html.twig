@@ -126,7 +126,7 @@
             position: absolute;
             left: 450px;
             top:38px;
-            background: #C7C7C7;
+            background: #D7D7D7;
             z-index: 0;
             padding: 3px 15px 3px 15px;
             border-radius: 3px 0 3px 0;
@@ -276,7 +276,7 @@
     {% include 'AceGenericBundle:Editor:commit_message_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_project_delete_modal.html.twig' %}
     {% include 'AceGenericBundle:Editor:git_pull_warning.html.twig' %}
-    <div id="file_name">test</div>
+    <div id="file_name">{% if fpath is defined %}{{ fpath }}{% endif %}</div>
     <div id="container_left">
         <div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
             <button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal">

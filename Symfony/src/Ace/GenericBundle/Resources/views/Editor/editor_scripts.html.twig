@@ -1044,8 +1044,11 @@ function selectFile(filename) {
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
-    if ($("a:contains(" + filename + ")")[0])
+    if ($("a:contains(" + filename + ")")[0]){
         $("a:contains(" + filename + ")")[0].setAttribute("style", "font-weight:bold;");
+        $('#file_name').html(filename);
+    }
+
 }
 
 function loadCode() {
