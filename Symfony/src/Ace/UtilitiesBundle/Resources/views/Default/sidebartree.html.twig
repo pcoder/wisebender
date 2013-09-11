@@ -4,7 +4,7 @@
         <li><input type="checkbox" id="item-0" {% if (file["isChecked"]) is defined %}checked{% endif %} /><label class="context-menu-one" for="item-0"  fpath="{{ file_root ~ key }}" > {{ key }}</label>
         <ul>{% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": file[dir_count], "file_root": file_root ~ key ~ "/", "project_id": project_id} %}</ul>
     {% else %}
-        <li><a href="{{ path('AceGenericBundle_edit',{'fpath':file_root ~ file, 'project_id': project_id  }) }}" >{{ file }}</a></li>
+        <li><a style="color: rgb(0,136,204); text-decoration: none; font-size: 14px; font-family:  'Helvetica Neue',Helvetica,Arial,sans-serif" href="{{ path('AceGenericBundle_edit',{'fpath':file_root ~ file, 'project_id': project_id  }) }}" >{{ file }}</a></li>
     {% endif %}
     {% set dir_count=0 %}
 {% endfor %}
