@@ -562,7 +562,6 @@ class ProjectController extends Controller
         }
     }
 
-
     public function getFileAction($id, $filename)
     {
         $perm = json_decode($this->checkReadProjectPermissions($id), true);
