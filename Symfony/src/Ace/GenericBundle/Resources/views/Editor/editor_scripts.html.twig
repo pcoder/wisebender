@@ -1095,7 +1095,7 @@ function createWiselibFileIDFL(id, filename) {
 }
 
 function deleteWiselibFolder(){
-    var fp = $('#WiselibFileDeletionModal').data('fpath');
+    var fp = $('#WiselibFolderDeletionModal').data('fpath');
     if (fp == "") {
         fp = "root";
     }
@@ -1111,17 +1111,16 @@ function deleteWiselibFolder(){
         url: '{{ path('AceUtilitiesBundle_deleteWiselibFolder') }}',
         dataType: 'json',
         async: false,
-        data: {'id': $('#WiselibFileDeletionModal').data('id'), 'fpath': fp},
+        data: {'id': $('#WiselibFolderDeletionModal').data('id'), 'fpath': fp},
         success: function (data) {
             handleResponse(data);
         },
         error: function (request, status, error) {
             alert("ERROR: " + request.responseText);
-            //return;
         }
     });
 
-    $('#WiselibFileDeletionModal').modal('hide');
+    $('#WiselibFolderDeletionModal').modal('hide');
 
     $("#deleteFolderButton").removeClass("disabled");
     $("#deleteFolderButtonC").removeClass("disabled");

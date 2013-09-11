@@ -23,7 +23,9 @@
                         $("#WiselibFileCreationModal").modal('show');
                         break;
                     case "Delete_Directory":
-
+                        $('#WiselibFolderDeletionModal').data('fpath', $(this).attr("fpath"));
+                        $('#WiselibFolderDeletionModal').data('id', {{ project_id }});
+                        $("#WiselibFolderDeletionModal").modal('show');
                         break;
                 }
             },

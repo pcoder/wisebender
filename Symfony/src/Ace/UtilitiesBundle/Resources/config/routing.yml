@@ -136,3 +136,9 @@ AceUtilitiesBundle_createWiselibFolder:
   defaults: { _controller: AceUtilitiesBundle:Default:createWiselibFolder }
   requirements:
      _method:  POST
+
+AceUtilitiesBundle_deleteWiselibFolder:
+  pattern:  /deleteWiselibFolder
+  defaults: { _controller: AceUtilitiesBundle:Default:deleteWiselibFolder }
+  requirements:
+     _method:  POST
