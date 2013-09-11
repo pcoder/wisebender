@@ -59,6 +59,19 @@ class DiskFilesController extends FilesController
             return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_FOLDER_MSG, array("error" => "No projectfiles found with id: " . $id));
     }
 
+    public function deleteWiselibFileAction($id,$fpath)
+    {
+        syslog(LOG_INFO, "deleteWiselibFileAction");
+
+        $dir = $this->getDir($id);
+        if($fpath[0] =='/')
+            $fpath = substr($fpath,1);
+        if ($this->deleteFile($dir.$fpath))
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FILE_MSG);
+        else
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_FILE_MSG, array("error" => "File not found with path " . $fpath));
+    }
+
     public function listFilesAction($id)
     {
         $list = $this->listFiles($id);
@@ -305,6 +318,15 @@ class DiskFilesController extends FilesController
         } else return false;
     }
 
+    private
+    function deleteFile($dir)
+    {
+        syslog(LOG_INFO, "deleteFile dir= ". $dir);
+        if (file_exists($dir)) {
+            unlink($dir);
+            return true;
+        } else return false;
+    }
     function recurse_copy($src, $dst)
     {
         $dir = opendir($src);

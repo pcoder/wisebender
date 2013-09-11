@@ -484,6 +484,23 @@ class DefaultController extends Controller
         return new Response(json_encode($response));
     }
 
+    public function deleteWiselibFileAction(){
+        $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+        $fpath = $this->getRequest()->request->get('fpath');
+        $project_id = $this->getRequest()->request->get('id');
+
+        $projectmanager = $this->get('ace_project.sketchmanager');
+        $response;
+        $response = $projectmanager->deleteWiselibFileAction($project_id, $fpath)->getContent();
+        $response = json_decode($response, true);
+        $response["project_id"] =  $project_id;
+        $response["fpath"] =  "main.cpp";
+        $response["redirect_to"] = "true";
+        return new Response(json_encode($response));
+    }
+
+
+
     public function deleteFileAction($id)
     {
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);

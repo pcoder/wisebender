@@ -562,6 +562,22 @@ class ProjectController extends Controller
         }
     }
 
+    public function deleteWiselibFileAction($id, $fpath){
+        $perm = json_decode($this->checkWriteProjectPermissions($id), true);
+        if (!$perm['success']) {
+            return new Response(json_encode($perm));
+        }
+
+        $project = $this->getProjectById($id);
+        $deletion = json_decode($this->fc->deleteWiselibFileAction($project->getProjectfilesId(), $fpath), true);
+
+        if ($deletion["success"] == true) {
+            return new Response(json_encode(array("success" => true)));
+        } else {
+            return new Response(json_encode(array("success" => false, "id" => $project->getProjectfilesId())));
+        }
+    }
+
     public function getFileAction($id, $filename)
     {
         $perm = json_decode($this->checkReadProjectPermissions($id), true);

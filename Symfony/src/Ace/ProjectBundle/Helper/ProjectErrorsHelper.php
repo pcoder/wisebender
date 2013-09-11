@@ -47,6 +47,7 @@ class ProjectErrorsHelper {
     const SUCC_DELETE_FOLDER_MSG = "Folder was deleted successfully.";
     const FAIL_DELETE_FOLDER_MSG = "Folder could not be deleted.";
 
+
 	public static function success($msg, $info = array())
     {
         $toReturn = array("success" => "true", "message" => $msg) + $info;
