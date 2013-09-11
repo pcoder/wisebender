@@ -48,6 +48,17 @@ class DiskFilesController extends FilesController
             return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_PROJ_MSG, array("error" => "No projectfiles found with id: " . $id));
     }
 
+    public function deleteFolderAction($id,$fpath)
+    {
+        $dir = $this->getDir($id);
+        if($fpath[0] =='/')
+            $fpath = substr($fpath,1);
+        if ($this->deleteDirectory($dir.$fpath))
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FOLDER_MSG);
+        else
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_FOLDER_MSG, array("error" => "No projectfiles found with id: " . $id));
+    }
+
     public function listFilesAction($id)
     {
         $list = $this->listFiles($id);

@@ -44,6 +44,8 @@ class ProjectErrorsHelper {
 
     const INITIAL_COMMIT_MESSAGE = "This is a [Wiselib](https://github.com/ibr-alg/wiselib/wiki)-based application created using [Wisebender](https://github.com/pcoder/wisebender).";
 
+    const SUCC_DELETE_FOLDER_MSG = "Folder was deleted successfully.";
+    const FAIL_DELETE_FOLDER_MSG = "Folder could not be deleted.";
 
 	public static function success($msg, $info = array())
     {
