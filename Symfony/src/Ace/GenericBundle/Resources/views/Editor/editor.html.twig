@@ -350,7 +350,7 @@
             {% if files_wiselib %}
                 <div {% if is_wiselib_clone is defined and is_wiselib_clone %} class="css-treeview" {% endif %}>
                     <ul>
-                        {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id} only %}
+                        {% include "AceUtilitiesBundle:Default:sidebartree.html.twig" with { "files_wiselib": files_wiselib , "file_root": "", "project_id": project_id, "fpath": fpath} only %}
                     </ul>
                 </div>
             {% endif %}
