@@ -477,6 +477,10 @@ class DefaultController extends Controller
         $response;
         $response = $projectmanager->deleteWiselibFolderAction($project_id, $fpath)->getContent();
         $response = json_decode($response, true);
+        //$redirect_to =  "editCOLONmain.cpp\?project_id\=" + $project_id;
+        $response["project_id"] =  $project_id;
+        $response["fpath"] =  "main.cpp";
+        $response["redirect_to"] = "true";
         return new Response(json_encode($response));
     }
 

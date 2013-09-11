@@ -43,7 +43,13 @@ function renameFilename() {
 function handleResponse(response) {
     var response = JSON.parse(response);
     if (response["success"])
-        location.reload();
+        if(response["redirect_to"] !=null){
+            var redirect_to = '{{ path('AceGenericBundle_edit', { 'project_id': 'replacepid', 'fpath': 'replacefpath' }) }}';
+            redirect_to = redirect_to.replace(/replacepid/g, response["project_id"]);
+            redirect_to = redirect_to.replace(/replacefpath/g, response["fpath"]);
+            location.href = redirect_to;
+        }else
+            location.reload();
     else {
         setOperationOutput(response["error"], true);
         $(".modal").modal('hide');
@@ -1113,7 +1119,7 @@ function deleteWiselibFolder(){
         async: false,
         data: {'id': $('#WiselibFolderDeletionModal').data('id'), 'fpath': fp},
         success: function (data) {
-            handleResponse(data);
+            handleResponse(JSON.stringify(data));
         },
         error: function (request, status, error) {
             alert("ERROR: " + request.responseText);

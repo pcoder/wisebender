@@ -49,7 +49,7 @@ class ProjectErrorsHelper {
 
 	public static function success($msg, $info = array())
     {
-        $toReturn = array("success" => true, "message" => $msg) + $info;
+        $toReturn = array("success" => "true", "message" => $msg) + $info;
         return json_encode($toReturn);
     }
 
