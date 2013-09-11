@@ -1094,6 +1094,39 @@ function createWiselibFileIDFL(id, filename) {
     });
 }
 
+function deleteWiselibFolder(){
+    var fp = $('#WiselibFileDeletionModal').data('fpath');
+    if (fp == "") {
+        fp = "root";
+    }
+
+    $("#deleteFolderButton").addClass("disabled");
+    $("#deleteFolderButtonC").addClass("disabled");
+    $("#deleteFolderButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
+
+    $.ajax
+    ({
+        cache: false,
+        type: "POST",
+        url: '{{ path('AceUtilitiesBundle_deleteWiselibFolder') }}',
+        dataType: 'json',
+        async: false,
+        data: {'id': $('#WiselibFileDeletionModal').data('id'), 'fpath': fp},
+        success: function (data) {
+            handleResponse(data);
+        },
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
+            //return;
+        }
+    });
+
+    $('#WiselibFileDeletionModal').modal('hide');
+
+    $("#deleteFolderButton").removeClass("disabled");
+    $("#deleteFolderButtonC").removeClass("disabled");
+    $("#deleteFolderButton").html("<i class='btn-danger icon-white'> Delete!");
+}
 
 function deleteFileModal(filename) {
     $("#filedeleteButton").attr("href", "javascript:deleteFile('" + filename + "');");

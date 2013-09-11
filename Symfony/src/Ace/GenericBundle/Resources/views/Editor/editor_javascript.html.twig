@@ -11,14 +11,20 @@
             selector: '.context-menu-one',
             callback: function(key, options) {
                 var m = "clicked: " + key;
-                if(key=="Add_New_Directory"){
-                    $('#WiselibFolderCreationModal').data('fpath', $(this).attr("fpath"));
-                    $('#WiselibFolderCreationModal').data('id', {{ project_id }});
-                    $("#WiselibFolderCreationModal").modal('show');
-                }else{
-                    $('#WiselibFileCreationModal').data('fpath', $(this).attr("fpath"));
-                    $('#WiselibFileCreationModal').data('id', {{ project_id }});
-                    $("#WiselibFileCreationModal").modal('show');
+                switch(key){
+                    case "Add_New_Directory":
+                        $('#WiselibFolderCreationModal').data('fpath', $(this).attr("fpath"));
+                        $('#WiselibFolderCreationModal').data('id', {{ project_id }});
+                        $("#WiselibFolderCreationModal").modal('show');
+                        break;
+                    case "Add_New_File":
+                        $('#WiselibFileCreationModal').data('fpath', $(this).attr("fpath"));
+                        $('#WiselibFileCreationModal').data('id', {{ project_id }});
+                        $("#WiselibFileCreationModal").modal('show');
+                        break;
+                    case "Delete_Directory":
+
+                        break;
                 }
             },
             items: {
