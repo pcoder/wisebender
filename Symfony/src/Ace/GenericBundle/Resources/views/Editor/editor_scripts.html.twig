@@ -1134,6 +1134,39 @@ function deleteWiselibFolder(){
     $("#deleteFolderButton").html("<i class='btn-danger icon-white'> Delete!");
 }
 
+function deleteWiselibFile(){
+    var fp = $('#WiselibFileDeletionModal').data('fpath');
+    if (fp == "") {
+        fp = "root";
+    }
+
+    $("#deleteFileButton").addClass("disabled");
+    $("#deleteFileButtonC").addClass("disabled");
+    $("#deleteFileButton").html("<i class='icon-spinner icon-spin icon-large'></i> Deleting ...");
+
+    $.ajax
+    ({
+        cache: false,
+        type: "POST",
+        url: '{{ path('AceUtilitiesBundle_deleteWiselibFile') }}',
+        dataType: 'json',
+        async: false,
+        data: {'id': $('#WiselibFileDeletionModal').data('id'), 'fpath': fp},
+        success: function (data) {
+            handleResponse(JSON.stringify(data));
+        },
+        error: function (request, status, error) {
+            alert("ERROR: " + request.responseText);
+        }
+    });
+
+    $('#WiselibFileDeletionModal').modal('hide');
+
+    $("#deleteFileButton").removeClass("disabled");
+    $("#deleteFileButtonC").removeClass("disabled");
+    $("#deleteFileButton").html("<i class='btn-danger icon-white'> Delete!");
+}
+
 function deleteFileModal(filename) {
     $("#filedeleteButton").attr("href", "javascript:deleteFile('" + filename + "');");
     $("#filedeleteModal").modal('show');
