@@ -468,7 +468,7 @@ class DefaultController extends Controller
         return new Response(json_encode($response));
     }
 
-    public function deleteWiselibFolder(){
+    public function deleteWiselibFolderAction(){
         $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
         $fpath = $this->getRequest()->request->get('fpath');
         $project_id = $this->getRequest()->request->get('id');
