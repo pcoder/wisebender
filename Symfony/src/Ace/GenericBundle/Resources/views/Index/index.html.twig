@@ -22,7 +22,9 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<!-- bxSlider CSS file -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <!-- bxSlider CSS file -->
 	<link href=" {{ asset("jquery.bxslider/jquery.bxslider.css") }}" rel="stylesheet" />
 
 	<style>
@@ -80,19 +82,17 @@
 						Code faster and easier</p>
 				</div>
 				<div class="span4">
-					<p style="text-align: center; font-size: 150px"><i class="icon-signin"></i></p>
-
-					<h3 class="hero-paragraph-title">Deploy</h3>
-
+					<p style="text-align: center; font-size: 150px"><i class="icon-github-alt"></i></p>
+					<h3 class="hero-paragraph-title">Sync. & Share</h3>
 					<p class="hero-paragraph">
-						Deploy your Wiselib-based code on the cloud environment and validate it.</p>
+                        Share your work, fork Wiselib projects from GitHub, create Wiselib source clones, save and pull from GitHub, coordinate and collaborate with others.
+						</p>
 				</div>
 				<div class="span4">
-					<p style="text-align: center; font-size: 150px"><i class="icon-group"></i></p>
+					<p style="text-align: center; font-size: 150px"><i class="icon-download-alt"></i></p>
 
-					<h3 class="hero-paragraph-title">Share</h3>
-
-					<p class="hero-paragraph">Share your work, fork from github, coordinate and collaborate with others.</p>
+					<h3 class="hero-paragraph-title">Build</h3>
+					<p class="hero-paragraph">Build your Wiselib-based applications for different platforms like iSense, Shawn etc. instantly and obtain binary for deployment.</p>
 				</div>
 			</div>
 		</div>
@@ -104,5 +104,5 @@
 	{% include 'AceGenericBundle:Index:supporters.html.twig' %}
 
 	{# Use default parser #}
-	{{ wiselib_wiki|markdown }}
+	{#{{ wiselib_wiki|markdown }}#}
 {% endblock %}
