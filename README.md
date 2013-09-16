@@ -1,21 +1,23 @@
 Wisebender
 ==========
 
-Wisebender is a proposed Wiselib-based online source code editor infrastructure for the cloud. This is a fork of [codebender.cc](http://codebender.cc). The [Wiselib](http://www.wiselib.org) framework is difficult and time-consuming in installation. We have so many different platforms (including different WSN hardware platforms, Android, Linux, iOS, and the Shawn simulator), and installation/configuration for each platform is (i) _different_, (ii) _complicated_, and (iii) _time consuming_. Many developers prefer using preinstalled [Wiselib-based virtual machine](http://www.ibr.cs.tu-bs.de/alg/wisebed/). This may not be the quickest and the easiest way of developing applications based on Wiselib. Hence, this project aims at easing the aforementioned problems by providing user with cloud infrastructure to write/import/compile Wiselib-based source code on the fly.
+Wisebender is a Wiselib-based online source code editor infrastructure for the cloud. This is a fork of [codebender.cc](http://codebender.cc). The [Wiselib](http://www.wiselib.org) framework is difficult and time-consuming in installation. We have so many different platforms (including different WSN hardware platforms, Android, Linux, iOS, and the Shawn simulator), and installation/configuration for each platform is (i) _different_, (ii) _complicated_, and (iii) _time consuming_. Many developers prefer using preinstalled [Wiselib-based virtual machine](http://www.ibr.cs.tu-bs.de/alg/wisebed/). This may not be the quickest and the easiest way of developing applications based on Wiselib. Hence, this project aims at easing the aforementioned problems by providing user with cloud infrastructure to write/import/compile Wiselib-based source code on the fly.
 
 This repository was created to manage the source code for the GSoC 2013 - [Wiselib Online Editing Service Project](https://google-melange.appspot.com/gsoc/project/google/gsoc2013/m_ravi/6001). More information on the status of the project and my experiences on the work can be found at the [Wisebender blog](http://wisebender.wordpress.com).
 
 
-Proposition
------------
+Functionalities
+---------------
 
-Allow Wiselib-based code to be compiled on the cloud in of the following three ways.
+The Wisebender facilitates a Wiselib developer by providing the following functionalities.
 
-1. Fork Wiselib GitHub code and allow the user to modify the code on the platform
+1. Allows user to clone Wiselib Framework source and edit it instantly on the browser and also allows user to save the source code on the cloud. The a user can have multiple clones of Wiselib Framework.
 
-2. Upload the user to upload his/her own Wiselib-based code
+2. Allows the user to create Wiselib-based applications (projects) on the cloud, edit the source code and compile it against one of the chosen Wiselib Frameworks for a particular OS. Currently, iSense 5139, iSense 5148, and Shawn simulator are supported. The output of the compilation is a binary file which can be downloaded and flashed/used on a corresponding device.
 
-3. Import a Wiselib-based code on GitHub repository into Wisebender and then compile it.
+3. Allows user to instantly save a project as a repository on GitHub and vice versa. A user can choose to delete it from GitHub also. 
+ 
+4. Allows user to Fork a Wiselib-based application code on GitHub and import it into Wisebender as a project.
 
 
 Installation
@@ -57,3 +59,6 @@ Create the database schema for the application using doctrine.
 
 If everything goes fine, you should find the application up and running.
 
+Notes
+-----
+1. The project uses [OAuth.io](https://oauth.io/) service for obtaining the `access_token` for GitHub requests. To make this working, one needs to register the service and create an application for GitHub allowing the following scopes: `delete_repo`, `public_repo`, `repo`, `repo:status`, `user`, `user:email`. Once this is done, the public key generated for the application must be passed to `OAuth.initialize();` method on line 56 of `Symfony/src/Ace/GenericBundle/Resources/views/Editor/editor_javascript.html.twig` file.
