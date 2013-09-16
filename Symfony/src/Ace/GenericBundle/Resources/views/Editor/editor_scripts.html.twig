@@ -12,7 +12,6 @@ function init_access_token() {
 
                 var url = '{{ path("AceUserBundle_set_access_token") }}?access_token=' + access_token;
                 $.get(url, {}, function (data) {
-                    //alert("saved return value = " + data);
                 });
             }
             else {
@@ -60,21 +59,6 @@ function setOperationProgress(newprogress) {
     $("#progress").show('fast');
     $("#progress_val").width(newprogress + '%');
     $("#operation_output").hide('fast');
-    // $("#progress").show('fast');
-    // if(newprogress < 10)
-    // 	window.currentProgress = 0.5*newprogress;
-    // else
-    // 	window.currentProgress = 0;
-    // $("#progress_val").width(window.currentProgress+'%');
-    //
-    // window.maxProgress = newprogress;
-    // window.interval = setInterval(function()
-    // {
-    // 	$("#progress_val").width(window.currentProgress+'%');
-    // 	if(window.currentProgress < window.maxProgress)
-    // 		window.currentProgress++;
-    // },10);
-    // $("#operation_output").hide('fast');
 }
 
 function setOperationOutput(output) {
@@ -138,22 +122,6 @@ function save_selected_file(selected_file, files) {
         }, 500);
     });
 }
-/*
- function save() {
- loadCode();
- setOperationProgress(90);
- $.post("{{ path('AceUtilitiesBundle_savecode', {'id': fpath}) }}", {data: JSON.stringify(window.files), project_id: {{ project_id }} }, function (data) {
- $("#save").addClass("btn-success");
- $("#save_icon").addClass("icon-white");
- data = JSON.parse(data);
- setOperationOutput(data['message']);
- window.setTimeout(function () {
- $("#save").removeClass("btn-success");
- $("#save_icon").removeClass("icon-white");
- }, 500);
- //   alert("Data received: " +JSON.stringify(data, null, 4));
- });
- }:*/
 
 function save_to_github(repo_name) {
     $("#repoName").val(repo_name);
@@ -187,10 +155,6 @@ function save_to_github(repo_name) {
             });
         }
     });
-
-
-    //$("#m_files").html(fnames_str);
-    //$("#commitModal").modal('show');
 }
 
 function show_git_pull_warning() {
@@ -219,9 +183,6 @@ function show_git_pull_warning() {
             });
         }
     });
-
-    //compare_files_pull(user_name, repo_name, token);
-    //$("#gitPullWarningModal").modal('show');
 }
 
 function confirm_delete_from_github(repo_name) {
@@ -277,10 +238,9 @@ function delete_from_github(repo_name) {
                     alert("ERROR: " + req.responseText);
                 }
             });
-            //$('#result').html("// Result success <br /><br />" + JSON.stringify(suc, undefined, 2));
         }
         else {
-            // $('#result').html("// Result error <br /><br />" + err);
+            $('#result').html("// Result error <br /><br />" + err);
         }
     });
     $("#deleteProjectGitModal").modal("hide");
@@ -334,14 +294,9 @@ function pull_from_github(repo_name, git_commit_sha) {
                 data: '',
                 async: false,
                 success: function (data) {
-                    console.log('sha in db=' + git_commit_sha);
-                    console.log('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/refs/heads/master?access_token=' + success.access_token);
                     var json = $.parseJSON(JSON.stringify(data, undefined, 2));
                     old_commit_sha = json.object.sha;
-                    console.log('sha in github=' + old_commit_sha);
-//                    if (old_commit_sha.trim().toLowerCase() == git_commit_sha) {
-//                        alert("Nothing to pull from the branch - master!")
-//                    } else
+
                     {
                         // http://developer.github.com/v3/repos/contents/#get-contents
                         // GET /repos/:owner/:repo/contents/:path
@@ -365,7 +320,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                                             //save the file
                                             if (!(content.name in window.files)) {
                                                 createWiselibFileIDFL({{ project_id }}, content.name);
-                                                //content.path;
                                             } else {
                                                 // there is the same file on GitHub and Wisebender but probably with differences. Ask user to keep which version of the file.
                                             }
@@ -405,7 +359,6 @@ function pull_from_github(repo_name, git_commit_sha) {
                 error: function (request, status, error) {
                     var json_r = $.parseJSON(request.responseText);
                     if (json_r.message.toLowerCase() == "git repository is empty.") {
-                        //src_commit(user_name, repo_name, success.access_token);
                         // TODO find a solution for this case!
                     } else if (json_r.message.toLowerCase().trim() == "not found") {
                         // the repo doesn't exist
@@ -451,21 +404,6 @@ function pull_from_github(repo_name, git_commit_sha) {
         editor.getSession().setValue($("<div/>").html(window.files[repo_name + "_app.cpp"]).text().replace(/&quot;/g, "\""));
     }
 }
-
-
-/*
- $.post('https://api.github.com/repos/' + user_name + '/' + repo_name + '/git/blobs?access_token=' + token, JSON.stringify(json_data),function (data_blob) {
- }).fail(function () {
- alert("error");
- })
- .success(function (data_blob) {
- var json_blob = $.parseJSON(JSON.stringify(data_blob, undefined, 2));
- sha_blob[index++] = json_blob.sha;
- console.log("sha is " + json_blob.sha);
- })
- */
-//            alert("sending request " +             "$.ajax   ({type: \"POST\",  url: 'https://api.github.com/repos/" + user_name + "/" + repo_name + "/git/blobs?access_token='" + token + ",  dataType: 'json',                async: false, data: " + JSON.stringify(json_data) + ",   success: function (data_blob) { var json_blob =  + $.parseJSON(JSON.stringify(data_blob, undefined, 2)); " +
-//                  sha_blob[index] + " = json_blob.sha; },     error: function (request, status, error) {  alert(\"ERROR: \" + request.responseText);  return;  } });");
 
 var comp_files, shas;
 var comp_files_pull, shas_pull;
@@ -518,9 +456,6 @@ function compare_files(user_name, repo_name, token) {
                                             //alert(content.path + " - file same.");
                                             comp[content.name] = "S"
                                         } else {
-                                            //alert(file_contents);
-                                            //alert(current_file);
-                                            //alert("file updated");
                                             comp[content.name] = "M";
                                         }
                                     },
@@ -536,8 +471,6 @@ function compare_files(user_name, repo_name, token) {
             }
         },
         error: function (request, status, error) {
-            //alert("ERROR: " + request.responseText);
-            //return;
         }
     });
     for (var key in window.files) {
@@ -739,7 +672,6 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
         success: function (data_tree) {
             var json_tree = $.parseJSON(JSON.stringify(data_tree, undefined, 2));
             new_tree_sha = json_tree.sha;
-            //alert("Tree created! sha=" + new_tree_sha);
         },
         error: function (request, status, error) {
             alert("ERROR: " + request.responseText);
@@ -762,7 +694,6 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
         success: function (data_commit) {
             var json_commit = $.parseJSON(JSON.stringify(data_commit, undefined, 2));
             new_commit_sha = json_commit.sha;
-            //alert("Committed the changes! sha=" + new_commit_sha);
         },
         error: function (request, status, error) {
             alert("ERROR: " + request.responseText);
@@ -784,10 +715,7 @@ function src_commit(user_name, repo_name, token, old_commit_sha, val) {
             if (typeof json_patch.object.sha === "undefined") {
                 alert("ERROR. Response from reference update was " + json_patch);
             } else {
-                //alert("Reference updated! sha=" + new_tree_sha);
-                //alert("The project was successfully saved to GitHub.");
                 update_git_sha(json_patch.object.sha);
-                //alert("how");
                 setOperationOutput("The project was successfully saved to GitHub.");
             }
         },
@@ -1072,8 +1000,6 @@ function createFile() {
 }
 function createWiselibFolder() {
     setOperationProgress(90);
-    //var val = { filename:$("#createWiselibFolderfield").val() };
-    //alert("Posting id=" + $('#WiselibFolderCreationModal').data('id') + ", " + $("#createWiselibFolderfield").val() + ", " + $('#WiselibFolderCreationModal').data('fpath'));
     $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': $('#WiselibFolderCreationModal').data('id'), filename: $("#createWiselibFolderfield").val(), 'fpath': $('#WiselibFolderCreationModal').data('fpath'), 'folder': true}, function (data) {
         $("#WiselibFolderCreationModal").modal('hide');
         handleResponse(data);
@@ -1096,8 +1022,6 @@ function createWiselibFileIDFL(id, filename) {
     var fp = "root";
     $.post("{{ path('AceUtilitiesBundle_createWiselibFolder') }}", {'id': id, filename: filename, 'fpath': fp}, function (data) {
         // TODO handle smoothly
-        //$("#WiselibFileCreationModal").modal('hide');
-        //handleResponse(data);
     });
 }
 
@@ -1412,7 +1336,6 @@ $(document).ready(function () {
                 });
             }
             else {
-                //$('#result').html("// Result error <br /><br />" + error);
                 alert("// Result error <br /><br />" + error);
             }
         })
