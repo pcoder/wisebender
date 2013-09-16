@@ -1,3 +1,6 @@
+Copyright (c) 2013, M.Ravi and the wisebender team
+All rights reserved.
+
 Copyright (c) 2011, Vasileios Georgitzikis and the codebender team
 All rights reserved.
 

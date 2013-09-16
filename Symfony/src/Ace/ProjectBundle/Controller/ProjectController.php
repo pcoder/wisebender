@@ -85,19 +85,15 @@ class ProjectController extends Controller
 
     function dirToArray($dir, $selected_dir = "")
     {
-
         $result = array();
         $cdir = scandir($dir);
-        //var_dump($checked_folders);
+
         foreach ($cdir as $key => $value) {
             if (!in_array($value, array(".", "..", "doc", "apps", "util", ".git"))) {
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
                     $str = substr($selected_dir, 0, strlen($value));
-                    //var_dump("Comparing  " . $str . " and " . $value);
                     if (strcmp($str, $value) == 0 && substr($selected_dir, strlen($value), 1) == "/") {
-                        //var_dump($selected_dir . " has " . $value . " at 0th position?? and ends with a slash with length of " . $value);
                         $selected_dir = substr($selected_dir, strlen($value) + 1);
-                        //var_dump("Folder " . $dir . DIRECTORY_SEPARATOR . $value . " isChecked");
                         $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $selected_dir), "isdir" => true, "isChecked" => true);
                     } else {
                         $result[$value] = array($this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $selected_dir), "isdir" => true);
@@ -113,7 +109,6 @@ class ProjectController extends Controller
 
     public function listWiselibDirAction($owner, $id, $selected_dir = "")
     {
-        $src_dir = "";
         if ($id == "") {
             $private_access = false;
             $current_user = $this->sc->getToken()->getUser();
@@ -216,11 +211,6 @@ class ProjectController extends Controller
 
     public function cloneWiselibAction($owner)
     {
-        //$perm = json_decode($this->checkReadProjectPermissions($id), true);
-        //if(!$perm['success'])
-        //{
-        //    return new Response(json_encode($perm));
-        //}
 
         $new_name = "Wiselib";
         $nameExists = json_decode($this->nameExists($owner, $new_name), true);

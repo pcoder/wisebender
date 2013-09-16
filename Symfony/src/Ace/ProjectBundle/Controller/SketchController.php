@@ -120,30 +120,6 @@ class SketchController extends ProjectController
             $project = $this->getProjectById($id);
             $name = $project->getName();
 
-            //$filename = $name.".ino";
-/*
-            $response1 = json_decode($this->renameFileAction($id, $filename, $new_name.".ino.bkp")->getContent(), true);
-            if($response1["success"])
-            {
-                $response2 = json_decode($this->renameFileAction($id, $new_name.".ino.bkp", $new_name.".ino")->getContent(), true);
-                if($response2["success"])
-                {
-                    $project->setName($new_name);
-                    $em = $this->em;
-                    $em->persist($project);
-                    $em->flush();
-                }
-                else
-                {
-                    $output = $response2;
-                    $output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
-                }
-            }
-            else
-            {
-                $output = $response1;
-                $output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
-            }*/
             $project->setName($new_name);
             $em = $this->em;
             $em->persist($project);
