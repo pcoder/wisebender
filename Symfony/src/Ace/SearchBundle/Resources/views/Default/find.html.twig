@@ -29,7 +29,7 @@
 	<tr>
 	<th>Username</th>
 	<th>Full Name</th>
-	<th style="text-align: right">Karma</th>
+	<!--th style="text-align: right">Karma</th-->
 	</tr>
 	</thead>
 	<tbody>
@@ -37,9 +37,9 @@
 		<tr>
 		<td><a href="{{path('AceGenericBundle_user',{'user':user['username']})}}">{{user['username']}}</a></td>
 		<td>{{user["firstname"]}} {{user["lastname"]}}</td>
-		<td>
+		<!--td>
 			{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
-		</td>
+		</td-->
 		</tr>
 	{% endfor %}
 	</tbody>
