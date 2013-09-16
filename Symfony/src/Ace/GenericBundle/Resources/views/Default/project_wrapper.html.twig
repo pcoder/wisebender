@@ -315,7 +315,8 @@
     {
         populate({{ json|json_encode()|raw }});
 
-	    $("#operation_output").text("Ready");
+        $("#operation_output").hide();
+	    //$("#operation_output").text("Ready");
 
 	    window.alert_interval = window.setInterval(function(){
 		    if($(".alert").length > 0)

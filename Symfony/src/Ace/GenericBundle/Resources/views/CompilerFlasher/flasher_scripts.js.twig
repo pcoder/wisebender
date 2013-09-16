@@ -5,7 +5,10 @@
 
     function initializePlugin()
     {
-        if (isMobile())
+        $("#operation_output").hide();
+        $("#plugin_div").hide();
+        // We don't need plugin as of now
+        /*if (isMobile())
         {
             $("#plugin_div").hide();
         }
@@ -34,8 +37,7 @@
 	                version = $("#cb_cf").data().pluginVersion;
                 validateVersion(version);
             }, 100);
-        }
-
+        }*/
     }
 
     function parseVersionString(str) {
@@ -71,7 +73,7 @@
 
     function validateVersion(version)
     {
-        if (comparePluginVersions(parseVersionString(window.plugin.version), parseVersionString(version)) < 0)
+        /*if (comparePluginVersions(parseVersionString(window.plugin.version), parseVersionString(version)) < 0)
         {
             var alert = browserSpecificPluginInstall("You need to update the Codebender Plugin. ");
             show_alert(alert, "alertupdatediv");
@@ -79,7 +81,7 @@
             var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
             show_alert(alert, "alertupdatediv");
         } else
-            enableUSB();
+            enableUSB();*/
     }
 
     function getbin(callback) {
