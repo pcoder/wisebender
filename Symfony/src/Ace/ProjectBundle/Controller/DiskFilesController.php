@@ -240,7 +240,8 @@ class DiskFilesController extends FilesController
         $list = array();
         $objects = scandir($dir);
         foreach ($objects as $object) {
-            if (!is_dir($dir . $object)) {
+            // hardcoded to ignore .gitignore and Doxyfile
+            if (!is_dir($dir. $object) && $object != "Doxyfile" && $object != ".gitignore") {
                 $file["filename"] = $object;
                 $file["code"] = file_get_contents($dir . $object);
                 $list[] = $file;
@@ -296,8 +297,6 @@ class DiskFilesController extends FilesController
     function copyWiselibFiles($id)
     {
         $dir = $this->getDir($id);
-        //var_dump("Copying files from " . $this->wiselib_src_dir . " to " . $dir);
-        //die();
         $this->recurse_copy($this->wiselib_src_dir, $dir);
         return;
     }
