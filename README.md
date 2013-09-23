@@ -1,6 +1,18 @@
 Wisebender
 ==========
 
+
+<object width="640" height="390">
+  <param name="movie"
+         value="https://www.youtube.com/v/IOZQO1rmLt0?version=3&autoplay=0"></param>
+  <param name="allowScriptAccess" value="always"></param>
+  <embed src="https://www.youtube.com/v/IOZQO1rmLt0?version=3&autoplay=0"
+         type="application/x-shockwave-flash"
+         allowscriptaccess="always"
+         width="640" height="390"></embed>
+</object>
+
+
 <iframe id="ytplayer" type="text/html" width="640" height="390"
   src="http://www.youtube.com/embed/IOZQO1rmLt0?autoplay=0&origin=https://github.com/pcoder/wisebender"
   frameborder="0"/>
