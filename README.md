@@ -68,3 +68,7 @@ Notes
 1. The project uses [OAuth.io](https://oauth.io/) service for obtaining the `access_token` for GitHub requests. To make this working, one needs to register the service and create an application for GitHub allowing the following scopes: `delete_repo`, `public_repo`, `repo`, `repo:status`, `user`, `user:email`. Once this is done, the public key generated for the application must be passed to `OAuth.initialize();` method on line 56 of `Symfony/src/Ace/GenericBundle/Resources/views/Editor/editor_javascript.html.twig` file.
 2. The project uses simple PHP scripts for obtaining codes for compiling against various platforms and for download of the binary file (See project [wb-compiler](https://github.com/pcoder/wb-compiler)). The files `Symfony/web/compiler.php` and `Symfony/web/download.php` have some hardcoded paths for locating Project's sketches and compilation output directory. They must be appropriately updated for compilation and download binary to work properly.
 3. In order to compile a Wiselib-based application, the compiler must be supplied with a class with a main function. Wisebender assumes this class as `{project_name}_app.cpp` file, which is created by default when a project is created. In case of deletion of this file or using a new file as a main class, the compilation may not work properly. So, it is recommended that the main class (the class with the main method) follows this naming convention.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pcoder/wisebender/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
